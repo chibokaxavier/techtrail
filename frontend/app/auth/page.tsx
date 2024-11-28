@@ -20,14 +20,17 @@ const page = () => {
   };
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formData2, setFormData2] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [errors2, setErrors2] = useState({ name: "", email: "", password: "" });
 
   const handleSignIn = (e: any) => {
     const { name, value } = e.target;
-    setIsSubmitted(false);
     // Update form data
     setFormData((prev) => ({ ...prev, [name]: value }));
-
     // Validate inputs
     if (name === "email") {
       const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -48,9 +51,8 @@ const page = () => {
     }
   };
 
-  const handleSignUpSubmit = (e: any) => {
+  const handleSignInSubmit = (e: any) => {
     e.preventDefault();
-    setIsSubmitted(true);
     // Submit logic here
     console.log("Form submitted:", formData);
   };
@@ -61,6 +63,55 @@ const page = () => {
     errors.email !== "" ||
     errors.password !== "";
 
+  const handleSignUp = (e: any) => {
+    const { name, value } = e.target;
+    // Update form data
+    setFormData2((prev) => ({ ...prev, [name]: value }));
+    // Validate inputs
+
+    if (name === "email") {
+      const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      setErrors2((prev) => ({
+        ...prev,
+        email: emailValid || value === "" ? "" : "Invalid email address",
+      }));
+    }
+
+    if (name === "password") {
+      setErrors2((prev) => ({
+        ...prev,
+        password:
+          value.length >= 8 || value.length === 0
+            ? ""
+            : "Password must be at least 8 characters",
+      }));
+    }
+
+    if (name === "name") {
+      setErrors2((prev) => ({
+        ...prev,
+        name:
+          value.length >= 4 || value.length === 0
+            ? ""
+            : "Name must be at least 4 characters",
+      }));
+    }
+  };
+
+  const handleSignUpSubmit = (e: any) => {
+    e.preventDefault();
+    // Submit logic here
+    console.log("Form submitted:", formData);
+  };
+
+  const isButton2Disabled =
+    !formData2.name ||
+    !formData2.email ||
+    !formData2.password ||
+    errors2.email !== "" ||
+    errors2.password !== "";
+
+  console.log(formData2);
   return (
     <div className="flex flex-col min-h-screen ">
       <div className="flex items-center justify-center min-h-screen bg-background">
@@ -83,7 +134,7 @@ const page = () => {
                   Enter your email and password to access your account.
                 </CardDescription>
               </CardHeader>
-              <form onSubmit={handleSignUpSubmit}>
+              <form onSubmit={handleSignInSubmit}>
                 <CardContent className="space-y-2">
                   <div className="space-y-1">
                     <Label htmlFor="email">User Email</Label>
@@ -129,27 +180,56 @@ const page = () => {
                   Enter your details to get started
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="space-y-1">
-                  <Label htmlFor="email">User Name</Label>
-                  <Input id="name" type="name" placeholder="John Doe" />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="email">User Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="johndoe@gmail.com"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="current">Password</Label>
-                  <Input id="current" type="password" />
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button>Sign up</Button>
-              </CardFooter>
+              <form onSubmit={handleSignUpSubmit}>
+                <CardContent className="space-y-2">
+                  <div className="space-y-1">
+                    <Label htmlFor="email">User Name</Label>
+                    <Input
+                      id="name"
+                      type="name"
+                      name="name"
+                      placeholder="John Doe"
+                      value={formData2.name}
+                      onChange={handleSignUp}
+                    />
+                    {errors2.name && (
+                      <p className="text-red-500 text-sm">{errors2.name}</p>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="email">User Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      name="email"
+                      value={formData2.email}
+                      onChange={handleSignUp}
+                      placeholder="johndoe@gmail.com"
+                    />
+                    {errors2.email && (
+                      <p className="text-red-500 text-sm">{errors2.email}</p>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="current">Password</Label>
+                    <Input
+                      id="current"
+                      type="password"
+                      name="password"
+                      onChange={handleSignUp}
+                      value={formData2.password}
+                    />
+                    {errors2.password && (
+                      <p className="text-red-500 text-sm">{errors2.password}</p>
+                    )}
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button type="submit" disabled={isButton2Disabled}>
+                    Sign up
+                  </Button>
+                </CardFooter>
+              </form>
             </Card>
           </TabsContent>
         </Tabs>
