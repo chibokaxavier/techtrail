@@ -1,5 +1,5 @@
 import User from "../model/userSchema.js";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 const registerUser = async (req, res) => {
   const { userName, email, password, role } = req.body;
@@ -17,7 +17,7 @@ const registerUser = async (req, res) => {
   const user = await newUser.save();
   res
     .status(200)
-    .json({ success: true, token, message: "User created successfully" });
+    .json({ success: true,  message: "User created successfully" });
 };
 
 export { registerUser };

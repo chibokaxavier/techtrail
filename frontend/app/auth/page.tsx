@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import axiosInstance from "@/api/axiosInstance";
 
 const page = () => {
   const [activeTab, setActiveTab] = useState("signIn");
@@ -98,10 +99,14 @@ const page = () => {
     }
   };
 
-  const handleSignUpSubmit = (e: any) => {
+  const handleSignUpSubmit = async (e: any) => {
     e.preventDefault();
     // Submit logic here
-    console.log("Form submitted:", formData);
+    const res = await axiosInstance.post("/api/v1/register", {
+      ...formData2,
+      role: "user",
+    });
+    console.log("Form submitted:", res.data);
   };
 
   const isButton2Disabled =

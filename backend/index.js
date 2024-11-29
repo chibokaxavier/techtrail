@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import userRouter from "./routes/userRoute.js";
 dotenv.config();
 
 const app = express();
@@ -23,4 +24,5 @@ const connectDb = async () => {
 };
 app.use(express.json());
 app.use(cors(corsOption));
+app.use("/api/v1", userRouter);
 connectDb();
