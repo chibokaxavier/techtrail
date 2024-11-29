@@ -9,6 +9,7 @@ const Header = () => {
         <GraduationCap className="mr-5 size-10 " />{" "}
         <span className="text-2xl font-extrabold">TechTrail</span>
       </Link>
+      
     </header>
   );
 };

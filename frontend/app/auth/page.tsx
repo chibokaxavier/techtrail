@@ -13,12 +13,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import axiosInstance from "@/api/axiosInstance";
+import { useStoreContext } from "@/context/authContext";
+import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 const page = () => {
   const [activeTab, setActiveTab] = useState("signIn");
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
+  const { setToken, token, setAuth } = useStoreContext();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [formData2, setFormData2] = useState({
@@ -52,11 +57,42 @@ const page = () => {
     }
   };
 
-  const handleSignInSubmit = (e: any) => {
+  const handleSignInSubmit = async (e: any) => {
     e.preventDefault();
-    // Submit logic here
-    console.log("Form submitted:", formData);
+    try {
+      const res = await axiosInstance.post("/api/v1/login", formData);
+      console.log("Response data:", res.data);
+
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token);
+        setAuth({ authenticate: true, user: res.data.validUser });
+        setToken(res.data.token);
+        toast({ description: "r" });
+        setFormData({
+          email: "",
+          password: "",
+        });
+      } else {
+        toast(res.data.message);
+      }
+    } catch (error: unknown) {
+      console.error("Error occurred:", error);
+
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.data) {
+          console.log(
+            "Error response from server:",
+            error.response.data.message
+          );
+          toast(error.response.data.message);
+        }
+      } else {
+        console.log("Unknown error occurred");
+        toast({ description: "An unexpected error occurred." });
+      }
+    }
   };
+  console.log(token);
 
   const isButtonDisabled =
     !formData.email ||
@@ -101,12 +137,41 @@ const page = () => {
 
   const handleSignUpSubmit = async (e: any) => {
     e.preventDefault();
-    // Submit logic here
-    const res = await axiosInstance.post("/api/v1/register", {
-      ...formData2,
-      role: "user",
-    });
-    console.log("Form submitted:", res.data);
+    try {
+      const res = await axiosInstance.post("/api/v1/register", {
+        ...formData2,
+        role: "user",
+      });
+      console.log("Response data:", res.data);
+
+      if (res.data.success) {
+        console.log("Success block executed");
+        toast({ description: "r" });
+        setFormData2({
+          userName: "",
+          email: "",
+          password: "",
+        });
+      } else {
+        console.log("API responded with success = false");
+        toast(res.data.message);
+      }
+    } catch (error: unknown) {
+      console.error("Error occurred:", error);
+
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.data) {
+          console.log(
+            "Error response from server:",
+            error.response.data.message
+          );
+          toast(error.response.data.message);
+        }
+      } else {
+        console.log("Unknown error occurred");
+        toast({ description: "An unexpected error occurred." });
+      }
+    }
   };
 
   const isButton2Disabled =
@@ -117,7 +182,6 @@ const page = () => {
     errors2.email !== "" ||
     errors2.password !== "";
 
-  console.log(formData2);
   return (
     <div className="flex flex-col min-h-screen ">
       <div className="flex items-center justify-center min-h-screen bg-background">

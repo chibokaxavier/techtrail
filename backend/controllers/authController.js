@@ -1,5 +1,6 @@
 import User from "../model/userSchema.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const registerUser = async (req, res) => {
   const { userName, email, password, role } = req.body;
@@ -43,6 +44,7 @@ const loginUser = async (req, res) => {
       process.env.JWT_SECRET, 
       { expiresIn: "120m" }
     );
+    console.log(token)
     const { password: pass, ...validUser } = user._doc;
     res
       .cookie("token", token, { httpOnly: false })
