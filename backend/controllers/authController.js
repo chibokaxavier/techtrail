@@ -15,9 +15,43 @@ const registerUser = async (req, res) => {
 
   const newUser = new User({ userName, email, role, password: hashedPassword });
   const user = await newUser.save();
-  res
-    .status(200)
-    .json({ success: true,  message: "User created successfully" });
+  res.status(200).json({ success: true, message: "User created successfully" });
 };
 
-export { registerUser };
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid Credentials" });
+    }
+    const token = jwt.sign(
+      {
+        _id: user._id,
+        userName: user.userName,
+        role: user.role,
+        email: user.email,
+      },
+      process.env.JWT_SECRET, 
+      { expiresIn: "120m" }
+    );
+    const { password: pass, ...validUser } = user._doc;
+    res
+      .cookie("token", token, { httpOnly: false })
+      .status(200)
+      .json({ validUser, token, success: true, message: "Log in successful" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export { registerUser, loginUser };
