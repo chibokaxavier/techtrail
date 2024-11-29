@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${jetBrainsMono.variable} ${jetBrainsMono.variable} antialiased`}
+        className={` ${jetBrainsMono.variable} ${jetBrainsMono.variable} antialiased`}
       >
         <AuthProvider>
           <PrimeReactProvider>

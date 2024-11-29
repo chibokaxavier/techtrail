@@ -1,5 +1,7 @@
 "use client";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+
 import {
   createContext,
   Dispatch,
@@ -38,7 +40,7 @@ export default function AuthProvider({ children }: ProviderProps) {
     return null;
   });
   const [auth, setAuth] = useState<Auth>({ authenticate: false, user: null });
-
+  const router = useRouter();
   const checkAuth = async () => {
     console.log("first");
     try {
@@ -58,6 +60,7 @@ export default function AuthProvider({ children }: ProviderProps) {
       console.log("removed");
       setToken(null);
       localStorage.removeItem("token");
+      router.push("/auth");
     }
   };
 
