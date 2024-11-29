@@ -80,8 +80,6 @@ const page = () => {
     e.preventDefault();
     try {
       const res = await axiosInstance.post("/api/v1/login", formData);
-      console.log("Response data:", res.data);
-
       if (res.data.success) {
         localStorage.setItem("token", res.data.token);
         setAuth({ authenticate: true, user: res.data.validUser });

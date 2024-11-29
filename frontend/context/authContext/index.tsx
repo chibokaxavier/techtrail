@@ -40,14 +40,23 @@ export default function AuthProvider({ children }: ProviderProps) {
   const [auth, setAuth] = useState<Auth>({ authenticate: false, user: null });
 
   const checkAuth = async () => {
-    const res = await axios.get("http://localhost:4000/api/v1/checkStatus", {
-      headers: { token },
-    });
-    if (res.data.success) {
-      setAuth({ authenticate: true, user: res.data.user });
-    
-    } else {
+    console.log("first");
+    try {
+      const res = await axios.get("http://localhost:4000/api/v1/checkStatus", {
+        headers: { token },
+      });
+      if (res.data.success) {
+        setAuth({ authenticate: true, user: res.data.user });
+      } else {
+        setAuth({ authenticate: false, user: null });
+        console.log("removed");
+        setToken(null);
+        localStorage.removeItem("token");
+      }
+    } catch (error) {
       setAuth({ authenticate: false, user: null });
+      console.log("removed");
+      setToken(null);
       localStorage.removeItem("token");
     }
   };
@@ -55,7 +64,7 @@ export default function AuthProvider({ children }: ProviderProps) {
   useEffect(() => {
     checkAuth();
   }, []);
- 
+
   const contextValue: StoreContextType = {
     token,
     setToken,
