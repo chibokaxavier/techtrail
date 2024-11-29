@@ -1,6 +1,6 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -16,14 +16,17 @@ import axiosInstance from "@/api/axiosInstance";
 import { useStoreContext } from "@/context/authContext";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
+import { Toast } from "primereact/toast";
+import { useRouter } from "next/navigation";
 
 const page = () => {
+  const toast = useRef<Toast>(null);
   const [activeTab, setActiveTab] = useState("signIn");
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
   const { setToken, token, setAuth } = useStoreContext();
-  const { toast } = useToast();
+
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [formData2, setFormData2] = useState({
@@ -32,7 +35,7 @@ const page = () => {
     password: "",
   });
   const [errors2, setErrors2] = useState({ name: "", email: "", password: "" });
-
+  const router = useRouter();
   const handleSignIn = (e: any) => {
     const { name, value } = e.target;
     // Update form data
@@ -56,6 +59,22 @@ const page = () => {
       }));
     }
   };
+  const showSuccess = (message: any) => {
+    toast.current?.show({
+      severity: "success",
+      summary: "Success",
+      detail: message,
+      life: 3000,
+    });
+  };
+  const showError = (message: any) => {
+    toast.current?.show({
+      severity: "error",
+      summary: "Success",
+      detail: message,
+      life: 3000,
+    });
+  };
 
   const handleSignInSubmit = async (e: any) => {
     e.preventDefault();
@@ -67,13 +86,14 @@ const page = () => {
         localStorage.setItem("token", res.data.token);
         setAuth({ authenticate: true, user: res.data.validUser });
         setToken(res.data.token);
-        toast({ description: "r" });
+        showSuccess(res.data.message);
         setFormData({
           email: "",
           password: "",
         });
+        router.push("/");
       } else {
-        toast(res.data.message);
+        showError(res.data.message);
       }
     } catch (error: unknown) {
       console.error("Error occurred:", error);
@@ -84,15 +104,14 @@ const page = () => {
             "Error response from server:",
             error.response.data.message
           );
-          toast(error.response.data.message);
+          showError(error.response.data.message);
         }
       } else {
         console.log("Unknown error occurred");
-        toast({ description: "An unexpected error occurred." });
+        showError("An unexpected error occurred.");
       }
     }
   };
-  console.log(token);
 
   const isButtonDisabled =
     !formData.email ||
@@ -146,7 +165,7 @@ const page = () => {
 
       if (res.data.success) {
         console.log("Success block executed");
-        toast({ description: "r" });
+        showSuccess(res.data.message);
         setFormData2({
           userName: "",
           email: "",
@@ -154,7 +173,7 @@ const page = () => {
         });
       } else {
         console.log("API responded with success = false");
-        toast(res.data.message);
+        showError(res.data.message);
       }
     } catch (error: unknown) {
       console.error("Error occurred:", error);
@@ -165,11 +184,11 @@ const page = () => {
             "Error response from server:",
             error.response.data.message
           );
-          toast(error.response.data.message);
+          showError(error.response.data.message);
         }
       } else {
         console.log("Unknown error occurred");
-        toast({ description: "An unexpected error occurred." });
+        showError("An unexpected error occurred.");
       }
     }
   };
@@ -184,6 +203,7 @@ const page = () => {
 
   return (
     <div className="flex flex-col min-h-screen ">
+      <Toast ref={toast} position="bottom-right" />
       <div className="flex items-center justify-center min-h-screen bg-background">
         <Tabs
           value={activeTab}

@@ -44,7 +44,7 @@ const loginUser = async (req, res) => {
       process.env.JWT_SECRET, 
       { expiresIn: "120m" }
     );
-    console.log(token)
+    
     const { password: pass, ...validUser } = user._doc;
     res
       .cookie("token", token, { httpOnly: false })

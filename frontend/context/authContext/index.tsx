@@ -45,7 +45,7 @@ export default function AuthProvider({ children }: ProviderProps) {
     });
     if (res.data.success) {
       setAuth({ authenticate: true, user: res.data.user });
-      console.log("first");
+    
     } else {
       setAuth({ authenticate: false, user: null });
       localStorage.removeItem("token");
@@ -55,6 +55,7 @@ export default function AuthProvider({ children }: ProviderProps) {
   useEffect(() => {
     checkAuth();
   }, []);
+ 
   const contextValue: StoreContextType = {
     token,
     setToken,

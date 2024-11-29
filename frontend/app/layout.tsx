@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import { Sorts_Mill_Goudy } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/context/authContext";
 import Header from "@/components/Header";
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import { PrimeReactProvider } from "primereact/api";
 
 const jetBrainsMono = Sorts_Mill_Goudy({
   subsets: ["latin"],
@@ -26,8 +27,10 @@ export default function RootLayout({
         className={`${jetBrainsMono.variable} ${jetBrainsMono.variable} antialiased`}
       >
         <AuthProvider>
-          <Header />
-          {children}
+          <PrimeReactProvider>
+            <Header />
+            {children}
+          </PrimeReactProvider>
         </AuthProvider>
       </body>
     </html>
