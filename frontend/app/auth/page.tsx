@@ -21,7 +21,7 @@ const page = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [formData2, setFormData2] = useState({
-    name: "",
+    userName: "",
     email: "",
     password: "",
   });
@@ -87,7 +87,7 @@ const page = () => {
       }));
     }
 
-    if (name === "name") {
+    if (name === "userName") {
       setErrors2((prev) => ({
         ...prev,
         name:
@@ -105,9 +105,10 @@ const page = () => {
   };
 
   const isButton2Disabled =
-    !formData2.name ||
+    !formData2.userName ||
     !formData2.email ||
     !formData2.password ||
+    errors2.name !== "" ||
     errors2.email !== "" ||
     errors2.password !== "";
 
@@ -187,9 +188,9 @@ const page = () => {
                     <Input
                       id="name"
                       type="name"
-                      name="name"
+                      name="userName"
                       placeholder="John Doe"
-                      value={formData2.name}
+                      value={formData2.userName}
                       onChange={handleSignUp}
                     />
                     {errors2.name && (
