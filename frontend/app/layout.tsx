@@ -14,6 +14,17 @@ const jetBrainsMono = Sorts_Mill_Goudy({
 
 export const metadata: Metadata = {
   title: "TechTrail",
+  openGraph: {
+    title: "TechTrail",
+    images: [
+      {
+        url: "/avatar.jpg", // Path to your image in the public directory
+        alt: "TechTrail Logo", // Alternate text for accessibility
+        width: 1200, // Recommended width for Open Graph images
+        height: 630, // Recommended height for Open Graph images
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -23,6 +34,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta property="og:title" content="TechTrail" />
+        <meta property="og:image" content="http://localhost:3000/avatar.jpg" />
+        <meta property="og:image:alt" content="TechTrail Logo" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+      </head>
       <body
         className={` ${jetBrainsMono.variable} ${jetBrainsMono.variable} antialiased`}
       >
