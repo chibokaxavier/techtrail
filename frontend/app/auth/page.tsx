@@ -19,6 +19,7 @@ import axios from "axios";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const page = () => {
   const toast = useRef<Toast>(null);
@@ -26,10 +27,11 @@ const page = () => {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
-  const { setToken, token, setAuth,auth } = useStoreContext();
+  const { setToken, token, setAuth, auth } = useStoreContext();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const [formData2, setFormData2] = useState({
     userName: "",
     email: "",
@@ -79,6 +81,7 @@ const page = () => {
 
   const handleSignInSubmit = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await axiosInstance.post("/api/v1/login", formData);
       if (res.data.success) {
@@ -86,17 +89,19 @@ const page = () => {
         setAuth({ authenticate: true, user: res.data.validUser });
         setToken(res.data.token);
         showSuccess(res.data.message);
+        setLoading(false);
         setFormData({
           email: "",
           password: "",
         });
-        router.push("/");
+        // router.push(`/${res.data.validUser.role}`);
       } else {
         showError(res.data.message);
+        setLoading(false);
       }
     } catch (error: unknown) {
       console.error("Error occurred:", error);
-
+      setLoading(false);
       if (axios.isAxiosError(error)) {
         if (error.response && error.response.data) {
           console.log(
@@ -155,28 +160,30 @@ const page = () => {
 
   const handleSignUpSubmit = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await axiosInstance.post("/api/v1/register", {
         ...formData2,
-        role: "user",
+        role: "student",
       });
       console.log("Response data:", res.data);
 
       if (res.data.success) {
         console.log("Success block executed");
         showSuccess(res.data.message);
+        setLoading(false);
         setFormData2({
           userName: "",
           email: "",
           password: "",
         });
+        setActiveTab("signIn");
       } else {
-        console.log("API responded with success = false");
         showError(res.data.message);
+        setLoading(false);
       }
     } catch (error: unknown) {
-      console.error("Error occurred:", error);
-
+      setLoading(false);
       if (axios.isAxiosError(error)) {
         if (error.response && error.response.data) {
           console.log(
@@ -186,8 +193,7 @@ const page = () => {
           showError(error.response.data.message);
         }
       } else {
-        console.log("Unknown error occurred");
-        showError("An unexpected error occurred.");
+        showError("An unexpected error occurred here.");
       }
     }
   };
@@ -255,8 +261,14 @@ const page = () => {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button type="submit" disabled={isButtonDisabled}>
-                    Sign in
+                  <Button
+                    className={`${
+                      isButtonDisabled ? "cursor-not-allowed" : ""
+                    }`}
+                    type="submit"
+                    disabled={isButtonDisabled}
+                  >
+                    {loading ? "Signing you in !" : "Sign in"}
                   </Button>
                 </CardFooter>
               </form>
@@ -316,7 +328,7 @@ const page = () => {
                 </CardContent>
                 <CardFooter>
                   <Button type="submit" disabled={isButton2Disabled}>
-                    Sign up
+                    {loading ? "Signing you up !" : "Sign up"}
                   </Button>
                 </CardFooter>
               </form>

@@ -1,4 +1,3 @@
-'use client'
 import type { Metadata } from "next";
 import { Sorts_Mill_Goudy } from "next/font/google";
 import "./globals.css";
@@ -14,7 +13,7 @@ const jetBrainsMono = Sorts_Mill_Goudy({
   variable: "--font-Sorts_Mill_Goudy",
 });
 
-const metadata: Metadata = {
+ export const metadata: Metadata = {
   title: "TechTrail",
   openGraph: {
     title: "TechTrail",
