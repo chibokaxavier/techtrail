@@ -3,17 +3,20 @@ import { usePathname, useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
 interface Protect {
-  authenticate: boolean;
-  user: {
-    _id: string;
-    userName: string;
-    role: string;
-    email: string;
-  } | null;
-  element: ReactNode;
+  authenticate: boolean | undefined;
+  user:
+    | {
+        _id: string;
+        userName: string;
+        role: string;
+        email: string;
+      }
+    | null
+    | undefined;
+  children: ReactNode;
 }
 
-const ProtectedRoute = ({ authenticate, user, element }: Protect) => {
+const ProtectedRoute = ({ authenticate, user, children }: Protect) => {
   const pathName = usePathname();
   const router = useRouter();
   if (!authenticate && !pathName.includes("/auth")) {
@@ -21,17 +24,23 @@ const ProtectedRoute = ({ authenticate, user, element }: Protect) => {
     return null;
   }
   if (
-    (authenticate && user?.role !== "instructor" && pathName.includes("/instructor")) ||
+    (authenticate &&
+      user?.role !== "instructor" &&
+      pathName.includes("/instructor")) ||
     pathName.includes("/auth")
   ) {
     router.push("/");
     return null;
   }
-  if (authenticate && user?.role !== "instructor" && !pathName.includes("/instructor")) {
+  if (
+    authenticate &&
+    user?.role !== "instructor" &&
+    !pathName.includes("/instructor")
+  ) {
     router.push("/instructor");
     return null;
   }
-  return <>{element}</>;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;
