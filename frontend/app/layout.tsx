@@ -1,10 +1,12 @@
+'use client'
 import type { Metadata } from "next";
 import { Sorts_Mill_Goudy } from "next/font/google";
 import "./globals.css";
-import AuthProvider from "@/context/authContext";
+import AuthProvider, { useStoreContext } from "@/context/authContext";
 import Header from "@/components/Header";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { PrimeReactProvider } from "primereact/api";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const jetBrainsMono = Sorts_Mill_Goudy({
   subsets: ["latin"],
@@ -12,7 +14,7 @@ const jetBrainsMono = Sorts_Mill_Goudy({
   variable: "--font-Sorts_Mill_Goudy",
 });
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: "TechTrail",
   openGraph: {
     title: "TechTrail",
@@ -32,6 +34,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+ 
   return (
     <html lang="en">
       <head>
@@ -46,8 +49,10 @@ export default function RootLayout({
       >
         <AuthProvider>
           <PrimeReactProvider>
-            <Header />
-            {children}
+            <ProtectedRoute >
+              <Header />
+              {children}
+            </ProtectedRoute>
           </PrimeReactProvider>
         </AuthProvider>
       </body>

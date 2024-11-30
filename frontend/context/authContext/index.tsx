@@ -1,7 +1,6 @@
 "use client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
 import {
   createContext,
   Dispatch,
@@ -27,11 +26,13 @@ interface Auth {
 interface StoreContextType {
   token: string | null;
   setToken: Dispatch<SetStateAction<string | null>>;
-  auth: Auth | null; // Cart items are now full CartItem objects
+  auth: Auth | null;
   setAuth: React.Dispatch<React.SetStateAction<Auth>>;
+  loading: boolean;
 }
 
 export const AuthContext = createContext<StoreContextType | null>(null);
+
 export default function AuthProvider({ children }: ProviderProps) {
   const [token, setToken] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
@@ -40,9 +41,10 @@ export default function AuthProvider({ children }: ProviderProps) {
     return null;
   });
   const [auth, setAuth] = useState<Auth>({ authenticate: false, user: null });
+  const [loading, setLoading] = useState(true); // New loading state
   const router = useRouter();
+
   const checkAuth = async () => {
-    console.log("first");
     try {
       const res = await axios.get("http://localhost:4000/api/v1/checkStatus", {
         headers: { token },
@@ -51,16 +53,15 @@ export default function AuthProvider({ children }: ProviderProps) {
         setAuth({ authenticate: true, user: res.data.user });
       } else {
         setAuth({ authenticate: false, user: null });
-        console.log("removed");
         setToken(null);
         localStorage.removeItem("token");
       }
     } catch (error) {
       setAuth({ authenticate: false, user: null });
-      console.log("removed");
       setToken(null);
       localStorage.removeItem("token");
-      router.push("/auth");
+    } finally {
+      setLoading(false); // Set loading to false after auth check is complete
     }
   };
 
@@ -73,7 +74,9 @@ export default function AuthProvider({ children }: ProviderProps) {
     setToken,
     auth,
     setAuth,
+    loading,
   };
+
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );

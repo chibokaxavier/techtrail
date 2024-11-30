@@ -6,9 +6,9 @@ import React from "react";
 const page = () => {
   const { auth } = useStoreContext();
   return (
-    <ProtectedRoute authenticate={auth?.authenticate} user={auth?.user}>
+  
       <div>page</div>
-    </ProtectedRoute>
+   
   );
 };
 

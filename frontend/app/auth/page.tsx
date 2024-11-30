@@ -18,6 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const page = () => {
   const toast = useRef<Toast>(null);
@@ -25,7 +26,7 @@ const page = () => {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
-  const { setToken, token, setAuth } = useStoreContext();
+  const { setToken, token, setAuth,auth } = useStoreContext();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
@@ -200,6 +201,7 @@ const page = () => {
     errors2.password !== "";
 
   return (
+    // <ProtectedRoute authenticate={auth?.authenticate} user={auth?.user}>
     <div className="flex flex-col min-h-screen ">
       <Toast ref={toast} position="bottom-right" />
       <div className="flex items-center justify-center min-h-screen bg-background">
@@ -323,6 +325,7 @@ const page = () => {
         </Tabs>
       </div>
     </div>
+    // </ProtectedRoute>
   );
 };
 
