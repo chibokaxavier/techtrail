@@ -1,6 +1,9 @@
+import CourseLandingPage from "@/components/CourseLandingPage";
+import Curriculum from "@/components/Curriculum";
+import Settings from "@/components/Settings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 
 const page = () => {
@@ -17,10 +20,19 @@ const page = () => {
           <div className="container mx-auto p-4">
             <Tabs>
               <TabsList>
-                <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
+                <TabsTrigger value="curriculum">Curiculum</TabsTrigger>
                 <TabsTrigger value="landing">Course Landing Page</TabsTrigger>
                 <TabsTrigger value="settings">Settings</TabsTrigger>
               </TabsList>
+              <TabsContent value="curriculum">
+                <Curriculum />
+              </TabsContent>
+              <TabsContent value="landing">
+                <CourseLandingPage />
+              </TabsContent>{" "}
+              <TabsContent value="settings">
+                <Settings />
+              </TabsContent>
             </Tabs>
           </div>
         </CardContent>
