@@ -13,7 +13,7 @@ const page = () => {
         {/* Render content based on active tab */}
         {tab === "dashboard" && <p>Welcome to the Dashboard</p>}
         {tab === "courses" && <p>Manage your Courses here</p>}
-        {tab === "logout" && <Logout />}
+        {tab === "logout" && <Logout  tab={tab} setTab={setTab} />}
       </div>
     </div>
   );

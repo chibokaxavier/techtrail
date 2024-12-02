@@ -1,16 +1,23 @@
 "use client";
+import { useStoreContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 
-const Logout = () => {
+const Logout = ({
+  tab,
+  setTab,
+}: {
+  tab: string;
+  setTab: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const router = useRouter();
-const  {}=useStore
+  const { setAuth, setToken } = useStoreContext();
   const handleConfirm = () => {
-    console.log("User logged out");
-    router.push("/auth"); // Redirect to login or home page after logout
+    setAuth({ authenticate: false, user: null });
+    setToken(null);
+    localStorage.removeItem("token");
   };
-
   const handleCancel = () => {
-    router.push("/"); // Redirect to homepage or dashboard if the user cancels
+    setTab("dashboard"); // Redirect to homepage or dashboard if the user cancels
   };
 
   return (
