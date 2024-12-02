@@ -20,13 +20,17 @@ import {
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
 import { DeleteIcon, Edit } from "lucide-react";
+import Link from "next/link";
 
 const InstructorCourses = () => {
   return (
     <Card className="">
       <CardHeader className="flex justify-between flex-row items-center">
         <CardTitle className="text-3xl font-extrabold ">All Courses</CardTitle>
-        <Button className="p-6">Create new course</Button>
+        <Link href={"/instructor/add-new-course"}>
+          {" "}
+          <Button className="p-6">Create new course</Button>
+        </Link>
       </CardHeader>
 
       <CardContent className="">

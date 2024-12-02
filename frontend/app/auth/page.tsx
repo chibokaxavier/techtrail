@@ -14,12 +14,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import axiosInstance from "@/api/axiosInstance";
 import { useStoreContext } from "@/context/authContext";
-import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import { ProgressSpinner } from "primereact/progressspinner";
 
 const page = () => {
   const toast = useRef<Toast>(null);
