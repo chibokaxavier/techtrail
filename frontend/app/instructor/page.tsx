@@ -1,14 +1,11 @@
-'use client'
-import ProtectedRoute from "@/components/ProtectedRoute";
-import { useStoreContext } from "@/context/authContext";
+import Sidebar from "@/components/Sidebar";
 import React from "react";
 
 const page = () => {
-  const { auth } = useStoreContext();
   return (
-  
-      <div>page</div>
-   
+    <div className="flex bg-gray-100">
+      <Sidebar />
+    </div>
   );
 };
 

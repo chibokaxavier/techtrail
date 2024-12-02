@@ -85,10 +85,10 @@ const page = () => {
     try {
       const res = await axiosInstance.post("/api/v1/login", formData);
       if (res.data.success) {
+        showSuccess(res.data.message);
         localStorage.setItem("token", res.data.token);
         setAuth({ authenticate: true, user: res.data.validUser });
         setToken(res.data.token);
-        showSuccess(res.data.message);
         setLoading(false);
         setFormData({
           email: "",
