@@ -30,3 +30,5 @@ export const courseCategories = [
   { id: "software-engineering", label: "Software Engineering" },
 ];
 
+
+

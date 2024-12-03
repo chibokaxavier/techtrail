@@ -8,7 +8,7 @@ const Sidebar = ({ tab, setTab }: { tab: string; setTab: React.Dispatch<React.Se
       <div
         onClick={() => setTab("dashboard")}
         className={`${
-          tab === "dashboard" ? "bg-gray-100" : ""
+          tab === "dashboard" ? "bg-gray-300" : ""
         } border-b-2 border-r-2 border-t-2 h-[50px] w-[250px] pl-[52px] border-black/10 flex gap-4 justify-start items-center cursor-pointer`}
       >
         <BarChart className="text-sm" />
@@ -17,7 +17,7 @@ const Sidebar = ({ tab, setTab }: { tab: string; setTab: React.Dispatch<React.Se
       <div
         onClick={() => setTab("courses")}
         className={`${
-          tab === "courses" ? "bg-gray-100" : ""
+          tab === "courses" ? "bg-gray-300" : ""
         } border-b-2 border-r-2 border-t-2 h-[50px] w-[250px] border-black/10 flex gap-4 justify-start pl-[52px] items-center cursor-pointer`}
       >
         <BookCheckIcon className="text-3xl" />
@@ -26,7 +26,7 @@ const Sidebar = ({ tab, setTab }: { tab: string; setTab: React.Dispatch<React.Se
       <div
         onClick={() => setTab("logout")}
         className={`${
-          tab === "logout" ? "bg-red-100" : ""
+          tab === "logout" ? "bg-red-300" : ""
         } border-b-2 border-r-2 border-t-2 h-[50px] w-[250px] border-black/10 flex gap-4 justify-start pl-[52px] items-center cursor-pointer`}
       >
         <LogOut className="text-3xl" />
