@@ -100,10 +100,14 @@ const CourseLandingPage = () => {
       <div className="mt-3 space-y-1">
         <Label htmlFor="objectives">objectives</Label>
         <Textarea name="title" placeholder="Enter course description" />
-      </div>{" "}<div className="mt-3 space-y-1">
-        <Label htmlFor="objectives">Welcome Message</Label>
-        <Textarea name="welcomeMessage" placeholder="Welcome messagefor the students" />
       </div>{" "}
+      <div className="mt-3 space-y-1">
+        <Label htmlFor="objectives">Welcome Message</Label>
+        <Textarea
+          name="welcomeMessage"
+          placeholder="Welcome messagefor the students"
+        />
+      </div>
     </div>
   );
 };

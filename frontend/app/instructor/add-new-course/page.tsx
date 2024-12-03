@@ -21,7 +21,7 @@ const page = () => {
             <Tabs>
               <TabsList>
                 <TabsTrigger value="curriculum">Curiculum</TabsTrigger>
-                <TabsTrigger value="landing">Course Landing Page</TabsTrigger>
+                <TabsTrigger value="landing">Course landing page</TabsTrigger>
                 <TabsTrigger value="settings">Settings</TabsTrigger>
               </TabsList>
               <TabsContent value="curriculum">
