@@ -29,6 +29,18 @@ interface StoreContextType {
   auth: Auth | null;
   setAuth: React.Dispatch<React.SetStateAction<Auth>>;
   loading: boolean;
+  formData: {
+    title: string;
+    category: string;
+    level: string;
+    language: string;
+    subtitle: string;
+    description: string;
+    price: string;
+    objectives: string;
+    welcomeMessage: string;
+  };
+  setFormData: any;
 }
 
 export const AuthContext = createContext<StoreContextType | null>(null);
@@ -64,6 +76,17 @@ export default function AuthProvider({ children }: ProviderProps) {
       setLoading(false); // Set loading to false after auth check is complete
     }
   };
+  const [formData, setFormData] = useState({
+    title: "",
+    category: "",
+    level: "",
+    language: "",
+    subtitle: "",
+    description: "",
+    price: "",
+    objectives: "",
+    welcomeMessage: "",
+  });
 
   useEffect(() => {
     checkAuth();
@@ -73,6 +96,8 @@ export default function AuthProvider({ children }: ProviderProps) {
     token,
     setToken,
     auth,
+    formData,
+    setFormData,
     setAuth,
     loading,
   };

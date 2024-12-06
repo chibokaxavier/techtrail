@@ -11,7 +11,7 @@ const Settings = () => {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-3">
-          <Label>Upload course label</Label>
+          <Label>Upload course image</Label>
           <Input type="file" accept="image/*"  className="cursor-pointer"/>
         </div>
       </CardContent>

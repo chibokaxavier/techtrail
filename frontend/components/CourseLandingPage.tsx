@@ -1,4 +1,5 @@
-import React from "react";
+'use client'
+import React, { useContext, useState } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import {
@@ -16,99 +17,174 @@ import {
   languageOptions,
 } from "@/config/utils";
 import { Textarea } from "./ui/textarea";
+import { useStoreContext } from "@/context/authContext";
 
 const CourseLandingPage = () => {
+  const { formData, setFormData } = useStoreContext();
+
+  // Handle input changes
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev: any) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle select changes
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev: any) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle form submission
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("Submitted Form Data:", formData);
+
+    // Add submission logic (e.g., API call) here
+  };
+
+  console.log(formData)
+
   return (
-    <div>
-      Course Landing Page
-      <div className="mt-5 space-y-1">
+    <form onSubmit={handleSubmit} className="p-5 space-y-5">
+      <h1 className="text-2xl font-bold">Course Landing Page</h1>
+
+      {/* Title */}
+      <div className="space-y-1">
         <Label htmlFor="title">Title</Label>
-        <Input name="title" placeholder="Enter course title" />
+        <Input
+          name="title"
+          placeholder="Enter course title"
+          value={formData.title}
+          onChange={handleChange}
+        />
       </div>
-      <div className="mt-3 space-y-1">
-        <Label htmlFor="title">Category</Label>
-        <Select>
-          <SelectTrigger className="">
+
+      {/* Category */}
+      <div className="space-y-1">
+        <Label htmlFor="category">Category</Label>
+        <Select
+          onValueChange={(value) => handleSelectChange("category", value)}
+        >
+          <SelectTrigger>
             <SelectValue placeholder="Select a Category" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {/* <SelectLabel>Fruits</SelectLabel> */}
-              {courseCategories.map((category) => {
-                return (
-                  <SelectItem value={category.id} key={category.id}>
-                    {category.label}
-                  </SelectItem>
-                );
-              })}
+              {courseCategories.map((category) => (
+                <SelectItem value={category.id} key={category.id}>
+                  {category.label}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
       </div>
-      <div className="mt-3 space-y-1">
+
+      {/* Level */}
+      <div className="space-y-1">
         <Label htmlFor="level">Level</Label>
-        <Select>
-          <SelectTrigger className="">
-            <SelectValue placeholder="Select a level" />
+        <Select onValueChange={(value) => handleSelectChange("level", value)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select a Level" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {/* <SelectLabel>Fruits</SelectLabel> */}
-              {courseLevelOptions.map((category) => {
-                return (
-                  <SelectItem value={category.id} key={category.id}>
-                    {category.label}
-                  </SelectItem>
-                );
-              })}
+              {courseLevelOptions.map((level) => (
+                <SelectItem value={level.id} key={level.id}>
+                  {level.label}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
-      </div>{" "}
-      <div className="mt-3 space-y-1">
+      </div>
+
+      {/* Language */}
+      <div className="space-y-1">
         <Label htmlFor="language">Primary Language</Label>
-        <Select>
-          <SelectTrigger className="">
+        <Select
+          onValueChange={(value) => handleSelectChange("language", value)}
+        >
+          <SelectTrigger>
             <SelectValue placeholder="Select a Language" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {/* <SelectLabel>Fruits</SelectLabel> */}
-              {languageOptions.map((category) => {
-                return (
-                  <SelectItem value={category.id} key={category.id}>
-                    {category.label}
-                  </SelectItem>
-                );
-              })}
+              {languageOptions.map((language) => (
+                <SelectItem value={language.id} key={language.id}>
+                  {language.label}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
       </div>
-      <div className="mt-3 space-y-1">
-        <Label htmlFor="title">Subtitle</Label>
-        <Input name="title" placeholder="Enter course subtitle" />
-      </div>
-      <div className="mt-3 space-y-1">
-        <Label htmlFor="description">Description</Label>
-        <Textarea name="title" placeholder="Enter course description" />
-      </div>{" "}
-      <div className="mt-3 space-y-1">
-        <Label htmlFor="price">Price</Label>
-        <Input type="number" name="title" placeholder="Enter course pricing" />
-      </div>
-      <div className="mt-3 space-y-1">
-        <Label htmlFor="objectives">objectives</Label>
-        <Textarea name="title" placeholder="Enter course description" />
-      </div>{" "}
-      <div className="mt-3 space-y-1">
-        <Label htmlFor="objectives">Welcome Message</Label>
-        <Textarea
-          name="welcomeMessage"
-          placeholder="Welcome messagefor the students"
+
+      {/* Subtitle */}
+      <div className="space-y-1">
+        <Label htmlFor="subtitle">Subtitle</Label>
+        <Input
+          name="subtitle"
+          placeholder="Enter course subtitle"
+          value={formData.subtitle}
+          onChange={handleChange}
         />
       </div>
-    </div>
+
+      {/* Description */}
+      <div className="space-y-1">
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          name="description"
+          placeholder="Enter course description"
+          value={formData.description}
+          onChange={handleChange}
+        />
+      </div>
+
+      {/* Price */}
+      <div className="space-y-1">
+        <Label htmlFor="price">Price</Label>
+        <Input
+          type="number"
+          name="price"
+          placeholder="Enter course price"
+          value={formData.price}
+          onChange={handleChange}
+        />
+      </div>
+
+      {/* Objectives */}
+      <div className="space-y-1">
+        <Label htmlFor="objectives">Objectives</Label>
+        <Textarea
+          name="objectives"
+          placeholder="Enter course objectives"
+          value={formData.objectives}
+          onChange={handleChange}
+        />
+      </div>
+
+      {/* Welcome Message */}
+      <div className="space-y-1">
+        <Label htmlFor="welcomeMessage">Welcome Message</Label>
+        <Textarea
+          name="welcomeMessage"
+          placeholder="Enter a welcome message for the students"
+          value={formData.welcomeMessage}
+          onChange={handleChange}
+        />
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+      >
+        Save Course
+      </button>
+    </form>
   );
 };
 
