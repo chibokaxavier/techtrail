@@ -5,6 +5,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Switch } from "./ui/switch";
+import axios from "axios";
 
 const Curriculum = () => {
   const [curriculumFormData, setCurriculumFormData] = useState([
@@ -15,6 +16,7 @@ const Curriculum = () => {
       public_id: "",
     },
   ]);
+  const [mediaUploadProgress, setMediaUploadProgress] = useState(false);
 
   // Function to handle changes in individual inputs
   const handleInputChange = (index: number, field: any, value: any) => {
@@ -23,6 +25,37 @@ const Curriculum = () => {
         i === index ? { ...lecture, [field]: value } : lecture
       )
     );
+  };
+
+  const handleUpload = async (videoFormData: any, index: number) => {
+    try {
+      setMediaUploadProgress(true);
+
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/media/upload",
+        videoFormData
+      );
+
+      if (res.data.success) {
+        // Update the specific lecture's videoUrl and public_id
+        console.log(res.data);
+        setCurriculumFormData((prev) =>
+          prev.map((lecture, i) =>
+            i === index
+              ? {
+                  ...lecture,
+                  videoUrl: res.data.data.url,
+                  public_id: res.data.data.public_id,
+                }
+              : lecture
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error uploading video:", error);
+    } finally {
+      setMediaUploadProgress(false);
+    }
   };
 
   // Function to add a new lecture form
@@ -43,7 +76,7 @@ const Curriculum = () => {
     setCurriculumFormData((prev) => prev.filter((_, i) => i !== index));
   };
 
-  console.log(curriculumFormData)
+  console.log(curriculumFormData);
 
   return (
     <Card>
@@ -92,11 +125,27 @@ const Curriculum = () => {
                   onChange={(e) => {
                     const file = e.target.files?.[0]; // Safely access the file
                     if (file) {
-                      handleInputChange(index, "videoUrl", file);
+                      const videoFormData = new FormData();
+                      videoFormData.append("file", file);
+                      handleUpload(videoFormData, index);
+                      // handleInputChange(index, "videoUrl", file);
+                    } else {
+                      setCurriculumFormData((prev) =>
+                        prev.map((lecture, i) =>
+                          i === index
+                            ? {
+                                ...lecture,
+                                videoUrl: "",
+                                public_id: "",
+                              }
+                            : lecture
+                        )
+                      );
                     }
                   }}
                   className="mb-4 cursor-pointer"
                 />
+                {mediaUploadProgress ? <p>Uploading</p> : ""}
               </div>
             </div>
           ))}

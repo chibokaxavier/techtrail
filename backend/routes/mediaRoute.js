@@ -8,7 +8,7 @@ import {
 const mediaRouter = express.Router();
 const upload = multer({ dest: "uploads/" });
 
-mediaRouter.post("/upload", upload.single("file"), async (res, req) => {
+mediaRouter.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const result = await uploadMediaToCloudinary(req.file.path);
     res.status(200).json({
@@ -18,12 +18,12 @@ mediaRouter.post("/upload", upload.single("file"), async (res, req) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Error uplaoding file",
+      message: error,
     });
   }
 });
 
-mediaRouter.delete("/delete/:id", async (res, req) => {
+mediaRouter.delete("/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
