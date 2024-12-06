@@ -86,6 +86,7 @@ export default function AuthProvider({ children }: ProviderProps) {
     price: "",
     objectives: "",
     welcomeMessage: "",
+    image: "",
   });
 
   useEffect(() => {
