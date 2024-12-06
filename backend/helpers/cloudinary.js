@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
+import fs from "fs";
 dotenv.config();
 
 cloudinary.config({
@@ -12,6 +13,9 @@ const uploadMediaToCloudinary = async (filePath) => {
     const result = await cloudinary.uploader.upload(filePath, {
       resource_type: "auto",
     });
+    fs.unlink(filePath, (err) => {
+      if (err) console.error("Failed to delete local file:", err);
+    });
     return result;
   } catch (error) {
     console.log(error);
@@ -21,6 +25,7 @@ const uploadMediaToCloudinary = async (filePath) => {
 
 const deleteMediaFromCloudinary = async (publicId) => {
   try {
+    await cloudinary.uploader.destroy(publicId);
   } catch (error) {
     console.log(error);
     throw new Error("failed to delete from cloudinary");

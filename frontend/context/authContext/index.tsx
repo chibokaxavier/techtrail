@@ -39,6 +39,7 @@ interface StoreContextType {
     price: string;
     objectives: string;
     welcomeMessage: string;
+    image: string;
   };
   setFormData: any;
 }
