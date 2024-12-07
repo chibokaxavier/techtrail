@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import { Switch } from "./ui/switch";
 import axios from "axios";
 import MediaProgressBar from "./MediaProgressBar";
+import VideoPlayer from "./VideoPlayer";
 
 const Curriculum = () => {
   const [curriculumFormData, setCurriculumFormData] = useState([
@@ -138,32 +139,40 @@ const Curriculum = () => {
                 </Button>
               </div>
               <div className="mt-4">
-                <Input
-                  type="file"
-                  accept="video/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0]; // Safely access the file
-                    if (file) {
-                      const videoFormData = new FormData();
-                      videoFormData.append("file", file);
-                      handleUpload(videoFormData, index, setProgress);
-                      // handleInputChange(index, "videoUrl", file);
-                    } else {
-                      setCurriculumFormData((prev) =>
-                        prev.map((lecture, i) =>
-                          i === index
-                            ? {
-                                ...lecture,
-                                videoUrl: "",
-                                public_id: "",
-                              }
-                            : lecture
-                        )
-                      );
-                    }
-                  }}
-                  className="mb-4 cursor-pointer"
-                />
+                {curriculum.videoUrl ? (
+                  <div className="flex gap-3 ">
+                    <VideoPlayer url={curriculum.videoUrl} width="450px" height="200px" />
+                    <Button>Replace video</Button>{" "}
+                    <Button className="bg-red-700">Delete lecture</Button>
+                  </div>
+                ) : (
+                  <Input
+                    type="file"
+                    accept="video/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]; // Safely access the file
+                      if (file) {
+                        const videoFormData = new FormData();
+                        videoFormData.append("file", file);
+                        handleUpload(videoFormData, index, setProgress);
+                        // handleInputChange(index, "videoUrl", file);
+                      } else {
+                        setCurriculumFormData((prev) =>
+                          prev.map((lecture, i) =>
+                            i === index
+                              ? {
+                                  ...lecture,
+                                  videoUrl: "",
+                                  public_id: "",
+                                }
+                              : lecture
+                          )
+                        );
+                      }
+                    }}
+                    className="mb-4 cursor-pointer"
+                  />
+                )}
               </div>
             </div>
           ))}
