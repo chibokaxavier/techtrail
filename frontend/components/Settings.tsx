@@ -5,45 +5,69 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import axios from "axios";
 import { useStoreContext } from "@/context/authContext";
+import MediaProgressBar from "./MediaProgressBar";
 
 const Settings = () => {
   const [mediaUploadProgress, setMediaUploadProgress] = useState(false);
+  const [progress, setProgress] = useState(0); // Upload progress
   const { formData, setFormData } = useStoreContext();
 
-  const handleUpload = async (imageFormData: any) => {
+  const handleUpload = async (
+    imageFormData: FormData,
+    onProgressCallback: (progress: number) => void
+  ) => {
     try {
+      // Show media upload progress state
       setMediaUploadProgress(true);
 
+      // Perform the upload
       const res = await axios.post(
         "http://localhost:4000/api/v1/media/upload",
-        imageFormData
+        imageFormData,
+        {
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              onProgressCallback(percentCompleted); // Notify progress callback
+            }
+          },
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure proper content type
+          },
+        }
       );
 
+      // Handle response
       if (res.data.success) {
-        // Update the specific lecture's videoUrl and public_id
-        console.log(res.data);
+        console.log("Upload Successful:", res.data);
+
+        // Update form data with uploaded image URL
         setFormData((prev: any) => ({
           ...prev,
-          image: res.data.data.url,
+          image: res.data.data.url, // Set image URL
         }));
       }
     } catch (error) {
-      console.error("Error uploading video:", error);
+      console.error("Error uploading image:", error);
     } finally {
+      // Reset media upload progress state
       setMediaUploadProgress(false);
     }
   };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Course settings</CardTitle>
+        <CardTitle>Course Settings</CardTitle>
       </CardHeader>
       <CardContent>
         {formData?.image ? (
-          <img src={formData?.image} />
+          <img src={formData?.image} alt="Uploaded course image" />
         ) : (
           <div className="flex flex-col gap-3">
-            <Label>Upload course image</Label>
+            <Label>Upload Course Image</Label>
             <Input
               type="file"
               accept="image/*"
@@ -53,7 +77,9 @@ const Settings = () => {
                 if (file) {
                   const imageFormData = new FormData();
                   imageFormData.append("file", file);
-                  handleUpload(imageFormData);
+
+                  // Start the upload and update progress
+                  handleUpload(imageFormData, setProgress);
                 } else {
                   setFormData((prev: any) => ({
                     ...prev,
@@ -64,6 +90,12 @@ const Settings = () => {
             />
           </div>
         )}
+
+        {/* Include the MediaProgressBar */}
+        <MediaProgressBar
+          isMediaUploading={mediaUploadProgress}
+          progress={progress}
+        />
       </CardContent>
     </Card>
   );

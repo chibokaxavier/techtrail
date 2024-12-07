@@ -41,7 +41,10 @@ interface StoreContextType {
     welcomeMessage: string;
     image: string;
   };
+
   setFormData: any;
+  mediaUploadProgressPercentage: number;
+  setMediaUploadProgressPercentage: any;
 }
 
 export const AuthContext = createContext<StoreContextType | null>(null);
@@ -56,7 +59,8 @@ export default function AuthProvider({ children }: ProviderProps) {
   const [auth, setAuth] = useState<Auth>({ authenticate: false, user: null });
   const [loading, setLoading] = useState(true); // New loading state
   const router = useRouter();
-
+  const [mediaUploadProgressPercentage, setMediaUploadProgressPercentage] =
+    useState(0);
   const checkAuth = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/v1/checkStatus", {
@@ -98,6 +102,8 @@ export default function AuthProvider({ children }: ProviderProps) {
     token,
     setToken,
     auth,
+    mediaUploadProgressPercentage,
+    setMediaUploadProgressPercentage,
     formData,
     setFormData,
     setAuth,

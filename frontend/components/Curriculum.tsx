@@ -6,6 +6,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Switch } from "./ui/switch";
 import axios from "axios";
+import MediaProgressBar from "./MediaProgressBar";
 
 const Curriculum = () => {
   const [curriculumFormData, setCurriculumFormData] = useState([
@@ -17,6 +18,7 @@ const Curriculum = () => {
     },
   ]);
   const [mediaUploadProgress, setMediaUploadProgress] = useState(false);
+  const [progress, setProgress] = useState(0); // Upload progress
 
   // Function to handle changes in individual inputs
   const handleInputChange = (index: number, field: any, value: any) => {
@@ -27,13 +29,30 @@ const Curriculum = () => {
     );
   };
 
-  const handleUpload = async (videoFormData: any, index: number) => {
+  const handleUpload = async (
+    videoFormData: any,
+    index: number,
+    onProgressCallback: (progress: number) => void
+  ) => {
     try {
       setMediaUploadProgress(true);
 
       const res = await axios.post(
         "http://localhost:4000/api/v1/media/upload",
-        videoFormData
+        videoFormData,
+        {
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              onProgressCallback(percentCompleted); // Notify progress callback
+            }
+          },
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure proper content type
+          },
+        }
       );
 
       if (res.data.success) {
@@ -127,7 +146,7 @@ const Curriculum = () => {
                     if (file) {
                       const videoFormData = new FormData();
                       videoFormData.append("file", file);
-                      handleUpload(videoFormData, index);
+                      handleUpload(videoFormData, index, setProgress);
                       // handleInputChange(index, "videoUrl", file);
                     } else {
                       setCurriculumFormData((prev) =>
@@ -145,11 +164,15 @@ const Curriculum = () => {
                   }}
                   className="mb-4 cursor-pointer"
                 />
-                {mediaUploadProgress ? <p>Uploading</p> : ""}
               </div>
             </div>
           ))}
         </div>
+        {/* Include the MediaProgressBar */}
+        <MediaProgressBar
+          isMediaUploading={mediaUploadProgress}
+          progress={progress}
+        />
       </CardContent>
     </Card>
   );
