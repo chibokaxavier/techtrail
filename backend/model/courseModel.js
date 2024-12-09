@@ -1,5 +1,12 @@
 import mongoose from "mongoose";
 
+const LectureSchema = new mongoose.Schema({
+  title: String,
+  videoUrl: String,
+  preview: Boolean,
+  public_id: String,
+});
+
 const CourseSchema = new mongoose.Schema({
   instructorId: String,
   instructorName: String,
@@ -21,6 +28,7 @@ const CourseSchema = new mongoose.Schema({
       StudentEmail: String,
     },
   ],
+  curriculum: [LectureSchema],
 });
 
 const Course = mongoose.model("Course", CourseSchema);
