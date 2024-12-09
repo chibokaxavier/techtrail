@@ -77,6 +77,30 @@ const Curriculum = () => {
       setMediaUploadProgress(false);
     }
   };
+  const deleteVideo = async (id: string, index: number) => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:4000/api/v1/media/delete/${id}`
+      );
+      if (res.data.success) {
+        setCurriculumFormData((prev) =>
+          prev.map((lecture, i) =>
+            i === index
+              ? {
+                  ...lecture,
+                  videoUrl: "",
+                  public_id: "",
+                }
+              : lecture
+          )
+        );
+      } else {
+        console.log(res.data)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // Function to add a new lecture form
   const handleNewLecture = () => {
@@ -168,7 +192,11 @@ const Curriculum = () => {
                       width="450px"
                       height="200px"
                     />
-                    <Button>Replace video</Button>{" "}
+                    <Button
+                      onClick={() => deleteVideo(curriculum.public_id, index)}
+                    >
+                      Replace video
+                    </Button>{" "}
                     <Button
                       className="bg-red-700"
                       onClick={() => handleRemoveLecture(index)}
