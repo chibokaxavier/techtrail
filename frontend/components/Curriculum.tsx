@@ -96,6 +96,23 @@ const Curriculum = () => {
     setCurriculumFormData((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const isCurriculumValid = (curriculumFormData: any) => {
+    if (!Array.isArray(curriculumFormData)) {
+      return false; // Ensure the input is an array
+    }
+
+    return curriculumFormData.every((item) => {
+      return (
+        item &&
+        typeof item === "object" &&
+        typeof item.title === "string" &&
+        typeof item.videoUrl === "string" &&
+        item.title.trim() !== "" &&
+        item.videoUrl.trim() !== ""
+      );
+    });
+  };
+
   console.log(curriculumFormData);
 
   return (
@@ -104,7 +121,12 @@ const Curriculum = () => {
         <CardTitle>Create course curriculum</CardTitle>
       </CardHeader>
       <CardContent>
-        <Button onClick={handleNewLecture}>Add lecture</Button>
+        <Button
+          onClick={handleNewLecture}
+          disabled={!isCurriculumValid(curriculumFormData)}
+        >
+          Add lecture
+        </Button>
         <div className="mt-4 space-y-4">
           {curriculumFormData.map((curriculum, index) => (
             <div className="border p-5 rounded-md" key={index}>
@@ -141,9 +163,18 @@ const Curriculum = () => {
               <div className="mt-4">
                 {curriculum.videoUrl ? (
                   <div className="flex gap-3 ">
-                    <VideoPlayer url={curriculum.videoUrl} width="450px" height="200px" />
+                    <VideoPlayer
+                      url={curriculum.videoUrl}
+                      width="450px"
+                      height="200px"
+                    />
                     <Button>Replace video</Button>{" "}
-                    <Button className="bg-red-700">Delete lecture</Button>
+                    <Button
+                      className="bg-red-700"
+                      onClick={() => handleRemoveLecture(index)}
+                    >
+                      Delete lecture
+                    </Button>
                   </div>
                 ) : (
                   <Input
