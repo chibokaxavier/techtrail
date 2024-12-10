@@ -21,7 +21,8 @@ const page = () => {
         typeof item.freePreview === "boolean" &&
         item.public_id.trim() !== ""
       );
-    });
+    }) && curriculumFormData.some((item) => item.freePreview === true);
+    
 
     // Validate formData
     const isLandingPageValid =
