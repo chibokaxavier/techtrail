@@ -7,10 +7,20 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStoreContext } from "@/context/authContext";
 import axios from "axios";
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
+import { Toast } from "primereact/toast";
+import { useRouter } from "next/navigation";
 
 const page = () => {
-  const { curriculumFormData, formData, auth } = useStoreContext();
+  const {
+    curriculumFormData,
+    formData,
+    setCurriculumFormData,
+    setFormData,
+    auth,
+  } = useStoreContext();
+  const router = useRouter();
+  const toast = useRef<Toast>(null);
   const isFormValid = useMemo(() => {
     // Validate curriculumFormData
     const isCurriculumValid =
@@ -40,6 +50,22 @@ const page = () => {
 
     return isCurriculumValid && isLandingPageValid;
   }, [curriculumFormData, formData]);
+  const showSuccess = (message: any) => {
+    toast.current?.show({
+      severity: "success",
+      summary: "Success",
+      detail: message,
+      life: 3000,
+    });
+  };
+  const showError = (message: any) => {
+    toast.current?.show({
+      severity: "error",
+      summary: "Success",
+      detail: message,
+      life: 3000,
+    });
+  };
 
   const handleCreateCourse = async () => {
     const finalFormData = {
@@ -51,17 +77,58 @@ const page = () => {
       curriculum: curriculumFormData,
       isPublished: true,
     };
-    const res = await axios.post(
-      "http://localhost:4000/api/v1/course/add",
-      finalFormData
-    );
-    if (res.data.success) {
-      console.log(res.data);
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/course/add",
+        finalFormData
+      );
+      if (res.data.success) {
+        showSuccess(res.data.message);
+        setFormData({
+          title: "",
+          category: "",
+          level: "",
+          language: "",
+          subtitle: "",
+          description: "",
+          price: "",
+          objectives: "",
+          welcomeMessage: "",
+          image: "",
+        });
+        setCurriculumFormData([
+          {
+            title: "",
+            videoUrl: "",
+            freePreview: false,
+            public_id: "",
+          },
+        ]);
+        router.back();
+        console.log(res.data);
+      } else {
+        showError(res.data.message);
+      }
+    } catch (error: unknown) {
+      console.error("Error occurred:", error);
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.data) {
+          console.log(
+            "Error response from server:",
+            error.response.data.message
+          );
+          showError(error.response.data.message);
+        }
+      } else {
+        console.log("Unknown error occurred");
+        showError("An unexpected error occurred.");
+      }
     }
   };
 
   return (
     <div className="mx-auto container p-4 ">
+      <Toast ref={toast} position="bottom-right" />
       <div className="flex  justify-between">
         <h1 className="text-3xl font-extrabold mb-5">Create a new course</h1>
         <Button

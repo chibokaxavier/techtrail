@@ -13,7 +13,7 @@ const addNewCourse = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(e);
+    console.log(error);
     res.status(500).json({ success: false, message: "Some Error occured" });
   }
 };
@@ -22,7 +22,7 @@ const getAllCourses = async (req, res) => {
     const courseList = await Course.find({});
     res.status(200).json({ success: true, data: courseList });
   } catch (error) {
-    console.log(e);
+    console.log(error);
     res.status(500).json({ success: false, message: "Some Error occured" });
   }
 };
@@ -38,7 +38,7 @@ const getCourseDetailsById = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(e);
+    console.log(error);
     res.status(500).json({ success: false, message: "Some Error occured" });
   }
 };
@@ -64,7 +64,7 @@ const updateCourseById = async (req, res) => {
       message: "Course updated succesfully",
     });
   } catch (error) {
-    console.log(e);
+    console.log(error);
     res.status(500).json({ success: false, message: "Some Error occured" });
   }
 };

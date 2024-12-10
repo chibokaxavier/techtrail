@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -21,8 +21,22 @@ import {
 import { Button } from "./ui/button";
 import { DeleteIcon, Edit } from "lucide-react";
 import Link from "next/link";
+import axios from "axios";
 
 const InstructorCourses = () => {
+  const [courseList, setCourseList] = useState([]);
+
+  const fetchCourses = async () => {
+    const res = await axios.get("http://localhost:4000/api/v1/course/get");
+    if (res.data.success) {
+      console.log(res.data.data);
+      setCourseList(res.data.data);
+    }
+  };
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
   return (
     <Card className="">
       <CardHeader className="flex justify-between flex-row items-center">
@@ -36,7 +50,7 @@ const InstructorCourses = () => {
       <CardContent className="">
         {" "}
         <Table>
-          <TableCaption>A list of your recent invoices.</TableCaption>
+          <TableCaption>A list of your courses</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Course</TableHead>
