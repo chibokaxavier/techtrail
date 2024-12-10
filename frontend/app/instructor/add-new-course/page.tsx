@@ -6,23 +6,24 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStoreContext } from "@/context/authContext";
+import axios from "axios";
 import React, { useMemo } from "react";
 
 const page = () => {
-  const { curriculumFormData, formData } = useStoreContext();
+  const { curriculumFormData, formData, auth } = useStoreContext();
   const isFormValid = useMemo(() => {
     // Validate curriculumFormData
-    const isCurriculumValid = curriculumFormData.every((item) => {
-      return (
-        item &&
-        typeof item === "object" &&
-        item.title.trim() !== "" &&
-        item.videoUrl.trim() !== "" &&
-        typeof item.freePreview === "boolean" &&
-        item.public_id.trim() !== ""
-      );
-    }) && curriculumFormData.some((item) => item.freePreview === true);
-    
+    const isCurriculumValid =
+      curriculumFormData.every((item) => {
+        return (
+          item &&
+          typeof item === "object" &&
+          item.title.trim() !== "" &&
+          item.videoUrl.trim() !== "" &&
+          typeof item.freePreview === "boolean" &&
+          item.public_id.trim() !== ""
+        );
+      }) && curriculumFormData.some((item) => item.freePreview === true);
 
     // Validate formData
     const isLandingPageValid =
@@ -40,6 +41,25 @@ const page = () => {
     return isCurriculumValid && isLandingPageValid;
   }, [curriculumFormData, formData]);
 
+  const handleCreateCourse = async () => {
+    const finalFormData = {
+      instructorId: auth?.user?._id,
+      instructorName: auth?.user?.userName,
+      date: new Date(),
+      ...formData,
+      students: [],
+      curriculum: curriculumFormData,
+      isPublished: true,
+    };
+    const res = await axios.post(
+      "http://localhost:4000/api/v1/course/add",
+      finalFormData
+    );
+    if (res.data.success) {
+      console.log(res.data);
+    }
+  };
+
   return (
     <div className="mx-auto container p-4 ">
       <div className="flex  justify-between">
@@ -47,6 +67,7 @@ const page = () => {
         <Button
           disabled={!isFormValid}
           className="text-sm tracking-wider font-bold px-8"
+          onClick={handleCreateCourse}
         >
           SUBMIT
         </Button>

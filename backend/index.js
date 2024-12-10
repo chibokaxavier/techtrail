@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRouter from "./routes/userRoute.js";
 import mediaRouter from "./routes/mediaRoute.js";
+import courseRouter from "./routes/courseRoute.js";
 dotenv.config();
 
 const app = express();
@@ -27,5 +28,6 @@ app.use(express.json());
 app.use(cors(corsOption));
 app.use("/api/v1", userRouter);
 app.use("/api/v1/media", mediaRouter);
+app.use("/api/v1/course", courseRouter);
 
 connectDb();

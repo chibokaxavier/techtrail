@@ -42,7 +42,7 @@ const loginUser = async (req, res) => {
         email: user.email,
       },
       process.env.JWT_SECRET, 
-      { expiresIn: "365d" }
+      { expiresIn: "24h" }
     );
     
     const { password: pass, ...validUser } = user._doc;
