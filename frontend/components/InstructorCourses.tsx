@@ -23,6 +23,36 @@ import { DeleteIcon, Edit } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
 
+interface CourseProps {
+  instructorId: string;
+  instructorName: string;
+  date: string;
+  title: string;
+  category: string;
+  level: string;
+  primaryLanguage: string;
+  subtitle: string;
+  image: string;
+  description: string;
+  welcomeMessage: string;
+  price: string;
+  objectives: string;
+  students: [
+    {
+      studentId: string;
+      studentName: string;
+      StudentEmail: string;
+    }
+  ];
+  curriculum: {
+    title: string;
+    videoUrl: string;
+    preview: boolean;
+    public_id: string;
+  }[];
+  isPublished: boolean;
+}
+
 const InstructorCourses = () => {
   const [courseList, setCourseList] = useState([]);
 
@@ -60,21 +90,25 @@ const InstructorCourses = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">
-                React Js full course 2025
-              </TableCell>
-              <TableCell>100</TableCell>
-              <TableCell> $5000</TableCell>
-              <TableCell className="text-right">
-                <Button variant="ghost" size="sm">
-                  <Edit />
-                </Button>{" "}
-                <Button variant="destructive" size="sm">
-                  <DeleteIcon />
-                </Button>
-              </TableCell>
-            </TableRow>
+            {courseList && courseList.length > 0
+              ? courseList.map((course: CourseProps) => (
+                  <TableRow>
+                    <TableCell className="font-medium">
+                      {course?.title}
+                    </TableCell>
+                    <TableCell>{course?.students?.length}</TableCell>
+                    <TableCell> ${course?.price}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="sm">
+                        <Edit />
+                      </Button>{" "}
+                      <Button variant="destructive" size="sm">
+                        <DeleteIcon />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              : ""}
           </TableBody>
           <TableFooter>
             <TableRow>
