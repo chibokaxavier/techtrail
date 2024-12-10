@@ -41,8 +41,14 @@ interface StoreContextType {
     welcomeMessage: string;
     image: string;
   };
-
   setFormData: any;
+  curriculumFormData: {
+    title: string;
+    videoUrl: string;
+    freePreview: boolean;
+    public_id: string;
+  }[];
+  setCurriculumFormData: any;
   mediaUploadProgressPercentage: number;
   setMediaUploadProgressPercentage: any;
 }
@@ -93,6 +99,14 @@ export default function AuthProvider({ children }: ProviderProps) {
     welcomeMessage: "",
     image: "",
   });
+  const [curriculumFormData, setCurriculumFormData] = useState([
+    {
+      title: "",
+      videoUrl: "",
+      freePreview: false,
+      public_id: "",
+    },
+  ]);
 
   useEffect(() => {
     checkAuth();
@@ -106,6 +120,8 @@ export default function AuthProvider({ children }: ProviderProps) {
     setMediaUploadProgressPercentage,
     formData,
     setFormData,
+    curriculumFormData,
+    setCurriculumFormData,
     setAuth,
     loading,
   };

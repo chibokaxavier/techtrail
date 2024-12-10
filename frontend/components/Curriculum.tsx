@@ -8,23 +8,25 @@ import { Switch } from "./ui/switch";
 import axios from "axios";
 import MediaProgressBar from "./MediaProgressBar";
 import VideoPlayer from "./VideoPlayer";
+import { useStoreContext } from "@/context/authContext";
 
 const Curriculum = () => {
-  const [curriculumFormData, setCurriculumFormData] = useState([
-    {
-      title: "",
-      videoUrl: "",
-      freePreview: false,
-      public_id: "",
-    },
-  ]);
+  // const [curriculumFormData, setCurriculumFormData] = useState([
+  //   {
+  //     title: "",
+  //     videoUrl: "",
+  //     freePreview: false,
+  //     public_id: "",
+  //   },
+  // ]);
+  const { curriculumFormData, setCurriculumFormData } = useStoreContext();
   const [mediaUploadProgress, setMediaUploadProgress] = useState(false);
   const [progress, setProgress] = useState(0); // Upload progress
 
   // Function to handle changes in individual inputs
   const handleInputChange = (index: number, field: any, value: any) => {
-    setCurriculumFormData((prev) =>
-      prev.map((lecture, i) =>
+    setCurriculumFormData((prev: any) =>
+      prev.map((lecture: any, i: number) =>
         i === index ? { ...lecture, [field]: value } : lecture
       )
     );
@@ -59,8 +61,8 @@ const Curriculum = () => {
       if (res.data.success) {
         // Update the specific lecture's videoUrl and public_id
         console.log(res.data);
-        setCurriculumFormData((prev) =>
-          prev.map((lecture, i) =>
+        setCurriculumFormData((prev: any) =>
+          prev.map((lecture: any, i: number) =>
             i === index
               ? {
                   ...lecture,
@@ -83,8 +85,8 @@ const Curriculum = () => {
         `http://localhost:4000/api/v1/media/delete/${id}`
       );
       if (res.data.success) {
-        setCurriculumFormData((prev) =>
-          prev.map((lecture, i) =>
+        setCurriculumFormData((prev: any) =>
+          prev.map((lecture: any, i: number) =>
             i === index
               ? {
                   ...lecture,
@@ -95,7 +97,7 @@ const Curriculum = () => {
           )
         );
       } else {
-        console.log(res.data)
+        console.log(res.data);
       }
     } catch (error) {
       console.log(error);
@@ -117,7 +119,9 @@ const Curriculum = () => {
 
   // Function to remove a lecture form
   const handleRemoveLecture = (index: number) => {
-    setCurriculumFormData((prev) => prev.filter((_, i) => i !== index));
+    setCurriculumFormData((prev: any) =>
+      prev.filter((_: any, i: any) => i !== index)
+    );
   };
 
   const isCurriculumValid = (curriculumFormData: any) => {
@@ -216,8 +220,8 @@ const Curriculum = () => {
                         handleUpload(videoFormData, index, setProgress);
                         // handleInputChange(index, "videoUrl", file);
                       } else {
-                        setCurriculumFormData((prev) =>
-                          prev.map((lecture, i) =>
+                        setCurriculumFormData((prev: any) =>
+                          prev.map((lecture: any, i: number) =>
                             i === index
                               ? {
                                   ...lecture,
