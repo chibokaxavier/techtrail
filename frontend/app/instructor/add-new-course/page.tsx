@@ -106,8 +106,7 @@ const page = () => {
             public_id: "",
           },
         ]);
-        router.back();
-        console.log(res.data);
+        // router.back();
       } else {
         showError(res.data.message);
       }
@@ -130,7 +129,7 @@ const page = () => {
 
   return (
     <div className="mx-auto container p-4 ">
-      <Toast ref={toast} position="bottom-right" />
+      <Toast ref={toast}  />
       <div className="flex  justify-between">
         <h1 className="text-3xl font-extrabold mb-5">Create a new course</h1>
         <Button
@@ -144,8 +143,8 @@ const page = () => {
       <Card>
         <CardContent>
           <div className="container mx-auto p-4">
-            <Tabs>
-              <TabsList>
+            <Tabs defaultValue="curriculum">
+              <TabsList defaultValue='curriculum'>
                 <TabsTrigger value="curriculum">Curiculum</TabsTrigger>
                 <TabsTrigger value="landing">Course landing page</TabsTrigger>
                 <TabsTrigger value="settings">Settings</TabsTrigger>

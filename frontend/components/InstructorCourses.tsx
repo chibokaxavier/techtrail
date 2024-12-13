@@ -22,6 +22,7 @@ import { Button } from "./ui/button";
 import { DeleteIcon, Edit } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
+import { useStoreContext } from "@/context/authContext";
 
 interface CourseProps {
   _id: string;
@@ -56,6 +57,39 @@ interface CourseProps {
 
 const InstructorCourses = () => {
   const [courseList, setCourseList] = useState([]);
+  const {
+    curriculumFormData,
+    formData,
+    setCurriculumFormData,
+    setFormData,
+    auth,
+    currentEditedCourseId,
+    setCurrentEditedCourseId,
+  } = useStoreContext();
+
+  const resetForm = () => {
+    setCurrentEditedCourseId(null);
+    setCurriculumFormData([
+      {
+        title: "",
+        videoUrl: "",
+        freePreview: false,
+        public_id: "",
+      },
+    ]);
+    setFormData({
+      title: "",
+      category: "",
+      level: "",
+      language: "",
+      subtitle: "",
+      description: "",
+      price: "",
+      objectives: "",
+      welcomeMessage: "",
+      image: "",
+    });
+  };
 
   const fetchCourses = async () => {
     const res = await axios.get("http://localhost:4000/api/v1/course/get");
@@ -74,7 +108,12 @@ const InstructorCourses = () => {
         <CardTitle className="text-3xl font-extrabold ">All Courses</CardTitle>
         <Link href={"/instructor/add-new-course"}>
           {" "}
-          <Button className="p-6">Create new course</Button>
+          <Button
+            className="p-6"
+            onClick={resetForm}
+          >
+            Create new course
+          </Button>
         </Link>
       </CardHeader>
 

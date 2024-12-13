@@ -5,7 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import React, { useState } from "react";
 
 const page = () => {
-  const [tab, setTab] = useState<string>("dashboard");
+  const [tab, setTab] = useState<string>("courses");
   return (
     <div className="flex bg-gray-100">
       {/* Pass tab state and setter to Sidebar */}

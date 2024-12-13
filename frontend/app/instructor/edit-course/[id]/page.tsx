@@ -87,33 +87,33 @@ const page = ({ params }: { params: { id: string } }) => {
       isPublished: true,
     };
     try {
-      const res = await axios.post(
-        "http://localhost:4000/api/v1/course/add",
+      const res = await axios.put(
+        `http://localhost:4000/api/v1/course/update/${currentEditedCourseId}`,
         finalFormData
       );
       if (res.data.success) {
         showSuccess(res.data.message);
-        setFormData({
-          title: "",
-          category: "",
-          level: "",
-          language: "",
-          subtitle: "",
-          description: "",
-          price: "",
-          objectives: "",
-          welcomeMessage: "",
-          image: "",
-        });
-        setCurriculumFormData([
-          {
-            title: "",
-            videoUrl: "",
-            freePreview: false,
-            public_id: "",
-          },
-        ]);
-        router.back();
+        // setFormData({
+        //   title: "",
+        //   category: "",
+        //   level: "",
+        //   language: "",
+        //   subtitle: "",
+        //   description: "",
+        //   price: "",
+        //   objectives: "",
+        //   welcomeMessage: "",
+        //   image: "",
+        // });
+        // setCurriculumFormData([
+        //   {
+        //     title: "",
+        //     videoUrl: "",
+        //     freePreview: false,
+        //     public_id: "",
+        //   },
+        // ]);
+        // router.back();
         console.log(res.data);
       } else {
         showError(res.data.message);
@@ -205,19 +205,19 @@ const page = ({ params }: { params: { id: string } }) => {
     <div className="mx-auto container p-4 ">
       <Toast ref={toast} position="bottom-right" />
       <div className="flex  justify-between">
-        <h1 className="text-3xl font-extrabold mb-5">Create a new course</h1>
+        <h1 className="text-3xl font-extrabold mb-5">Edit course</h1>
         <Button
           disabled={!isFormValid}
           className="text-sm tracking-wider font-bold px-8"
           onClick={handleCreateCourse}
         >
-          SUBMIT
+          Update
         </Button>
       </div>
       <Card>
         <CardContent>
           <div className="container mx-auto p-4">
-            <Tabs>
+            <Tabs defaultValue="curriculum">
               <TabsList>
                 <TabsTrigger value="curriculum">Curiculum</TabsTrigger>
                 <TabsTrigger value="landing">Course landing page</TabsTrigger>
