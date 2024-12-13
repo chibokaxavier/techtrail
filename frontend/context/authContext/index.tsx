@@ -10,6 +10,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { StringDecoder } from "string_decoder";
 
 interface ProviderProps {
   children: ReactNode;
@@ -51,6 +52,8 @@ interface StoreContextType {
   setCurriculumFormData: any;
   mediaUploadProgressPercentage: number;
   setMediaUploadProgressPercentage: any;
+  currentEditedCourseId: null | string;
+  setCurrentEditedCourseId: Dispatch<SetStateAction<string | null>>;
 }
 
 export const AuthContext = createContext<StoreContextType | null>(null);
@@ -67,6 +70,9 @@ export default function AuthProvider({ children }: ProviderProps) {
   const router = useRouter();
   const [mediaUploadProgressPercentage, setMediaUploadProgressPercentage] =
     useState(0);
+  const [currentEditedCourseId, setCurrentEditedCourseId] = useState<
+    null | string
+  >(null);
   const checkAuth = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/v1/checkStatus", {
@@ -115,6 +121,8 @@ export default function AuthProvider({ children }: ProviderProps) {
   const contextValue: StoreContextType = {
     token,
     setToken,
+    currentEditedCourseId,
+    setCurrentEditedCourseId,
     auth,
     mediaUploadProgressPercentage,
     setMediaUploadProgressPercentage,

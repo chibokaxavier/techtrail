@@ -7,11 +7,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStoreContext } from "@/context/authContext";
 import axios from "axios";
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const page = ({ params }: { params: { id: string } }) => {
   const {
     curriculumFormData,
     formData,
@@ -127,6 +127,39 @@ const page = () => {
       }
     }
   };
+
+  const fetchCurrentCourse = async (id: string) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:4000/api/v1/course/get/details/${id}`
+      );
+      if (res.data.success) {
+        console.log(res.data);
+      }
+    } catch (error: unknown) {
+        console.error("Error occurred:", error);
+        if (axios.isAxiosError(error)) {
+          if (error.response && error.response.data) {
+            console.log(
+              "Error response from server:",
+              error.response.data.message
+            );
+            showError(error.response.data.message);
+          }
+        } else {
+          console.log("Unknown error occurred");
+          showError("An unexpected error occurred.");
+        }
+      }
+  };
+
+  useEffect(() => {
+    if (currentEditedCourseId) fetchCurrentCourse(currentEditedCourseId);
+  }, [currentEditedCourseId]);
+
+  useEffect(() => {
+    if (params) setCurrentEditedCourseId(params.id);
+  }, [params]);
 
   return (
     <div className="mx-auto container p-4 ">

@@ -24,6 +24,7 @@ import Link from "next/link";
 import axios from "axios";
 
 interface CourseProps {
+  _id: string;
   instructorId: string;
   instructorName: string;
   date: string;
@@ -91,17 +92,20 @@ const InstructorCourses = () => {
           </TableHeader>
           <TableBody>
             {courseList && courseList.length > 0
-              ? courseList.map((course: CourseProps) => (
-                  <TableRow>
+              ? courseList.map((course: CourseProps, index: number) => (
+                  <TableRow key={index}>
                     <TableCell className="font-medium">
                       {course?.title}
                     </TableCell>
                     <TableCell>{course?.students?.length}</TableCell>
                     <TableCell> ${course?.price}</TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm">
-                        <Edit />
-                      </Button>{" "}
+                      <Link href={`instructor/edit-course/${course._id}`}>
+                        <Button variant="ghost" size="sm">
+                          <Edit />
+                        </Button>{" "}
+                      </Link>
+
                       <Button variant="destructive" size="sm">
                         <DeleteIcon />
                       </Button>
