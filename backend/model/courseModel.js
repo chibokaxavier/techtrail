@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const LectureSchema = new mongoose.Schema({
   title: String,
   videoUrl: String,
-  preview: Boolean,
+  freePreview: Boolean,
   public_id: String,
 });
 
@@ -14,7 +14,7 @@ const CourseSchema = new mongoose.Schema({
   title: String,
   category: String,
   level: String,
-  primaryLanguage: String,
+  language: String,
   subtitle: String,
   image: String,
   description: String,

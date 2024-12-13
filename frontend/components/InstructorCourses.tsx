@@ -31,7 +31,7 @@ interface CourseProps {
   title: string;
   category: string;
   level: string;
-  primaryLanguage: string;
+  language: string;
   subtitle: string;
   image: string;
   description: string;

@@ -67,6 +67,7 @@ const CourseLandingPage = () => {
         <div className="space-y-1">
           <Label htmlFor="category">Category</Label>
           <Select
+          defaultValue={formData.category}
             onValueChange={(value) => handleSelectChange("category", value)}
           >
             <SelectTrigger>
@@ -87,7 +88,7 @@ const CourseLandingPage = () => {
         {/* Level */}
         <div className="space-y-1">
           <Label htmlFor="level">Level</Label>
-          <Select onValueChange={(value) => handleSelectChange("level", value)}>
+          <Select  defaultValue={formData.level} onValueChange={(value) => handleSelectChange("level", value)}>
             <SelectTrigger>
               <SelectValue placeholder="Select a Level" />
             </SelectTrigger>
@@ -107,6 +108,7 @@ const CourseLandingPage = () => {
         <div className="space-y-1">
           <Label htmlFor="language">Primary Language</Label>
           <Select
+           defaultValue={formData.language}
             onValueChange={(value) => handleSelectChange("language", value)}
           >
             <SelectTrigger>

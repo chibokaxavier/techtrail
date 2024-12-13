@@ -11,6 +11,13 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
 
+interface CurriculumFormData {
+  title: string;
+  videoUrl: string;
+  freePreview: boolean;
+  public_id: string;
+}
+
 const page = ({ params }: { params: { id: string } }) => {
   const {
     curriculumFormData,
@@ -135,22 +142,55 @@ const page = ({ params }: { params: { id: string } }) => {
       );
       if (res.data.success) {
         console.log(res.data);
+        const {
+          title,
+          category,
+          level,
+          subtitle,
+          language,
+          image,
+          description,
+          welcomeMessage,
+          price,
+          objectives,
+          curriculum,
+        } = res.data.data;
+        setFormData({
+          title: title || "",
+          category: category || "",
+          level: level || "",
+          language: language || "", // Assuming language is missing in the provided data
+          subtitle: subtitle || "",
+          description: description || "",
+          price: price || "",
+          objectives: objectives || "",
+          welcomeMessage: welcomeMessage || "",
+          image: image || "",
+        });
+        setCurriculumFormData(
+          (curriculum || []).map((item: CurriculumFormData) => ({
+            title: item.title || "",
+            videoUrl: item.videoUrl || "",
+            freePreview: item.freePreview || false, // Assuming default value if not provided
+            public_id: item.public_id || "",
+          }))
+        );
       }
     } catch (error: unknown) {
-        console.error("Error occurred:", error);
-        if (axios.isAxiosError(error)) {
-          if (error.response && error.response.data) {
-            console.log(
-              "Error response from server:",
-              error.response.data.message
-            );
-            showError(error.response.data.message);
-          }
-        } else {
-          console.log("Unknown error occurred");
-          showError("An unexpected error occurred.");
+      console.error("Error occurred:", error);
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.data) {
+          console.log(
+            "Error response from server:",
+            error.response.data.message
+          );
+          showError(error.response.data.message);
         }
+      } else {
+        console.log("Unknown error occurred");
+        showError("An unexpected error occurred.");
       }
+    }
   };
 
   useEffect(() => {
