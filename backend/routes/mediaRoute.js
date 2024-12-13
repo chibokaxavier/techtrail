@@ -45,4 +45,27 @@ mediaRouter.delete("/delete/:id", async (req, res) => {
   }
 });
 
+mediaRouter.post(
+  "/bulk-upload",
+  upload.array("files", 10),
+  async (req, res) => {
+    try {
+      const uplaodPromises = req.files.map((fileItem) =>
+        uploadMediaToCloudinary(fileItem.path)
+      );
+      const results = await Promise.all(uplaodPromises);
+      res.status(200).json({
+        success: true,
+        data: results,
+      });
+    } catch (event) {
+      console.log(event);
+      res.status(500).json({
+        success: false,
+        message: "Error in uplaoding files",
+      });
+    }
+  }
+);
+
 export default mediaRouter;
