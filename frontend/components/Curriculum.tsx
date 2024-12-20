@@ -15,6 +15,7 @@ const Curriculum = () => {
   const { curriculumFormData, setCurriculumFormData } = useStoreContext();
   const [mediaUploadProgress, setMediaUploadProgress] = useState(false);
   const [progress, setProgress] = useState(0); // Upload progress
+  const [generalIndex, setGeneralIndex] = useState(null);
 
   // Function to handle changes in individual inputs
   const handleInputChange = (index: number, field: any, value: any) => {
@@ -112,7 +113,8 @@ const Curriculum = () => {
   };
 
   // Function to remove a lecture form
-  const handleRemoveLecture = (index: number) => {
+  const handleRemoveLecture = (index: number, id: string) => {
+    deleteVideo(id, index);
     setCurriculumFormData((prev: any) =>
       prev.filter((_: any, i: any) => i !== index)
     );
@@ -145,7 +147,7 @@ const Curriculum = () => {
   ) => {
     try {
       setMediaUploadProgress(true);
-  
+
       const res = await axios.post(
         "http://localhost:4000/api/v1/media/bulk-upload",
         bulkFormData,
@@ -163,19 +165,41 @@ const Curriculum = () => {
           },
         }
       );
-  
+
       if (res.data.success) {
-        // Assuming `res.data.data` is an array of uploaded files with `url` and `public_id`
-        const newLectures = res.data.data.map((file: any) => ({
-          title: "", // Default title for a new lecture
+        // Create new lectures from bulk-uploaded data
+        const newLectures = res.data.data.map((file: any, index: number) => ({
+          title: ``, // Default title for the lecture
           videoUrl: file.url, // URL from the upload response
           public_id: file.public_id, // Public ID from the upload response
           freePreview: false, // Default free preview to false
         }));
-  
-        // Update the curriculum with new lectures
-        setCurriculumFormData((prev: any) => [...prev, ...newLectures]);
-        console.log("New lectures added:", newLectures);
+
+        setCurriculumFormData((prev: any) => {
+          // Check for empty lectures in the current curriculum
+          let emptyLectureIndex = prev.findIndex(
+            (lecture: any) => !lecture.title.trim() && !lecture.videoUrl.trim() // Empty title and videoUrl
+          );
+
+          const updatedLectures = [...prev];
+
+          // Replace empty lectures with bulk-uploaded lectures
+          newLectures.forEach((newLecture: any) => {
+            if (emptyLectureIndex !== -1) {
+              updatedLectures[emptyLectureIndex] = newLecture;
+              emptyLectureIndex = updatedLectures.findIndex(
+                (lecture: any) =>
+                  !lecture.title.trim() && !lecture.videoUrl.trim()
+              ); // Find the next empty lecture
+            } else {
+              updatedLectures.push(newLecture); // Add to the curriculum if no empty lectures remain
+            }
+          });
+
+          return updatedLectures;
+        });
+
+        console.log("Bulk upload completed. Updated lectures:", newLectures);
       }
     } catch (error) {
       console.error("Error uploading videos:", error);
@@ -183,7 +207,6 @@ const Curriculum = () => {
       setMediaUploadProgress(false);
     }
   };
-  
 
   return (
     <Card>
@@ -248,7 +271,9 @@ const Curriculum = () => {
                 </div>
                 <Button
                   variant="destructive"
-                  onClick={() => handleRemoveLecture(index)}
+                  onClick={() =>
+                    handleRemoveLecture(index, curriculum.public_id)
+                  }
                 >
                   Remove
                 </Button>
@@ -268,7 +293,9 @@ const Curriculum = () => {
                     </Button>{" "}
                     <Button
                       className="bg-red-700"
-                      onClick={() => handleRemoveLecture(index)}
+                      onClick={() =>
+                        handleRemoveLecture(index, curriculum.public_id)
+                      }
                     >
                       Delete lecture
                     </Button>

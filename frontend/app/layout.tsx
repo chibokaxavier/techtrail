@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Sorts_Mill_Goudy } from "next/font/google";
 import "./globals.css";
 import AuthProvider, { useStoreContext } from "@/context/authContext";
@@ -6,6 +5,7 @@ import Header from "@/components/Header";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { PrimeReactProvider } from "primereact/api";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { Metadata } from "next";
 
 const jetBrainsMono = Sorts_Mill_Goudy({
   subsets: ["latin"],
@@ -13,19 +13,8 @@ const jetBrainsMono = Sorts_Mill_Goudy({
   variable: "--font-Sorts_Mill_Goudy",
 });
 
- export const metadata: Metadata = {
+export const metadata: Metadata = {
   title: "TechTrail",
-  openGraph: {
-    title: "TechTrail",
-    images: [
-      {
-        url: "/avatar.jpg", // Path to your image in the public directory
-        alt: "TechTrail Logo", // Alternate text for accessibility
-        width: 1200, // Recommended width for Open Graph images
-        height: 630, // Recommended height for Open Graph images
-      },
-    ],
-  },
 };
 
 export default function RootLayout({
@@ -33,7 +22,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
- 
   return (
     <html lang="en">
       <head>
@@ -48,7 +36,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <PrimeReactProvider>
-            <ProtectedRoute >
+            <ProtectedRoute>
               <Header />
               {children}
             </ProtectedRoute>

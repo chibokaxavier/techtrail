@@ -31,7 +31,7 @@ mediaRouter.delete("/delete/:id", async (req, res) => {
         success: false,
         message: "Asset id is required",
       });
-    }
+    } 
     await deleteMediaFromCloudinary(id);
     res.status(200).json({
       success: true,
