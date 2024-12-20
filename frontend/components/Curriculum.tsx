@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
@@ -9,16 +9,9 @@ import axios from "axios";
 import MediaProgressBar from "./MediaProgressBar";
 import VideoPlayer from "./VideoPlayer";
 import { useStoreContext } from "@/context/authContext";
+import { Upload } from "lucide-react";
 
 const Curriculum = () => {
-  // const [curriculumFormData, setCurriculumFormData] = useState([
-  //   {
-  //     title: "",
-  //     videoUrl: "",
-  //     freePreview: false,
-  //     public_id: "",
-  //   },
-  // ]);
   const { curriculumFormData, setCurriculumFormData } = useStoreContext();
   const [mediaUploadProgress, setMediaUploadProgress] = useState(false);
   const [progress, setProgress] = useState(0); // Upload progress
@@ -79,6 +72,7 @@ const Curriculum = () => {
       setMediaUploadProgress(false);
     }
   };
+
   const deleteVideo = async (id: string, index: number) => {
     try {
       const res = await axios.delete(
@@ -141,12 +135,83 @@ const Curriculum = () => {
     });
   };
 
-  console.log(curriculumFormData);
+  const bulkUplaodInputRef = useRef<any>();
+  const handleBulkUploadOpen = () => {
+    bulkUplaodInputRef.current.click();
+  };
+  const handleMediaBulkUpload = async (
+    bulkFormData: any,
+    onProgressCallback: (progress: number) => void
+  ) => {
+    try {
+      setMediaUploadProgress(true);
+  
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/media/bulk-upload",
+        bulkFormData,
+        {
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              onProgressCallback(percentCompleted); // Notify progress callback
+            }
+          },
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure proper content type
+          },
+        }
+      );
+  
+      if (res.data.success) {
+        // Assuming `res.data.data` is an array of uploaded files with `url` and `public_id`
+        const newLectures = res.data.data.map((file: any) => ({
+          title: "", // Default title for a new lecture
+          videoUrl: file.url, // URL from the upload response
+          public_id: file.public_id, // Public ID from the upload response
+          freePreview: false, // Default free preview to false
+        }));
+  
+        // Update the curriculum with new lectures
+        setCurriculumFormData((prev: any) => [...prev, ...newLectures]);
+        console.log("New lectures added:", newLectures);
+      }
+    } catch (error) {
+      console.error("Error uploading videos:", error);
+    } finally {
+      setMediaUploadProgress(false);
+    }
+  };
+  
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row justify-between">
         <CardTitle>Create course curriculum</CardTitle>
+        <div>
+          <Input
+            type="file"
+            ref={bulkUplaodInputRef}
+            accept="video/*"
+            multiple
+            className="hidden"
+            id="bulk-media-upload"
+            onChange={(e) => {
+              const files = e.target.files ? Array.from(e.target.files) : [];
+              if (files.length > 0) {
+                const bulkFormData = new FormData();
+                files.forEach((fileItem) =>
+                  bulkFormData.append("files", fileItem)
+                );
+                handleMediaBulkUpload(bulkFormData, setProgress);
+              }
+            }}
+          />
+          <Button variant="outline" onClick={handleBulkUploadOpen}>
+            <Upload className="w-4 h-5 mr-2" /> Bulk upload
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <Button
