@@ -1,8 +1,17 @@
 "use client";
-import { GraduationCap, MoonIcon, SunIcon } from "lucide-react";
+import {
+  BookDown,
+  GraduationCap,
+  LaptopMinimal,
+  MoonIcon,
+  NotebookPen,
+  SunIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
+import { Button } from "./ui/button";
+import { useStoreContext } from "@/context/authContext";
 
 const Header = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -11,6 +20,12 @@ const Header = () => {
     document.documentElement.classList.toggle("dark", !isDarkMode);
   };
   const pathname = usePathname();
+  const { setAuth, setToken } = useStoreContext();
+  const handleConfirm = () => {
+    setAuth({ authenticate: false, user: null });
+    setToken(null);
+    localStorage.removeItem("token");
+  };
 
   // Define paths where the Header should be excluded
   const excludedPaths = "/instructor";
@@ -23,11 +38,23 @@ const Header = () => {
     return null;
   }
   return (
-    <header className="px-4 lg:px-6 h-14 flex items-center border-b">
+    <header className=" flex items-center justify-between ">
       <Link href={"/"} className="flex items-center justify-center">
-        <GraduationCap className="mr-5 size-10 " />{" "}
+        <LaptopMinimal className="mr-5 size-10 " />{" "}
         <span className="text-2xl font-extrabold">TechTrail</span>
       </Link>
+
+      <div className="">
+        <Button className="rounded-md">Explore Courses</Button>
+      </div>
+
+      <div className="flex gap-5">
+        <Button className="flex gap-2">
+          <p>My Courses</p> <NotebookPen />
+        </Button>
+        <Button onClick={handleConfirm}>Sign Out</Button>
+      </div>
+
       {/* <button
         onClick={toggleTheme}
         className=""

@@ -1,4 +1,4 @@
-import { Sorts_Mill_Goudy } from "next/font/google";
+import { Text_Me_One } from "next/font/google";
 import "./globals.css";
 import AuthProvider, { useStoreContext } from "@/context/authContext";
 import Header from "@/components/Header";
@@ -7,10 +7,10 @@ import { PrimeReactProvider } from "primereact/api";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Metadata } from "next";
 
-const jetBrainsMono = Sorts_Mill_Goudy({
+const jetBrainsMono = Text_Me_One({
   subsets: ["latin"],
   weight: ["400"],
-  variable: "--font-Sorts_Mill_Goudy",
+  variable: "--font-Text_Me_One",
 });
 
 export const metadata: Metadata = {
