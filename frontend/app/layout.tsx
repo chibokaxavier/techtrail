@@ -6,6 +6,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { PrimeReactProvider } from "primereact/api";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Metadata } from "next";
+import StudentProvider from "@/context/studentContext";
 
 const jetBrainsMono = Text_Me_One({
   subsets: ["latin"],
@@ -35,12 +36,14 @@ export default function RootLayout({
         className={` ${jetBrainsMono.variable} ${jetBrainsMono.variable} antialiased`}
       >
         <AuthProvider>
-          <PrimeReactProvider>
-            <ProtectedRoute>
-              <Header />
-              {children}
-            </ProtectedRoute>
-          </PrimeReactProvider>
+          <StudentProvider>
+            <PrimeReactProvider>
+              <ProtectedRoute>
+                <Header />
+                {children}
+              </ProtectedRoute>
+            </PrimeReactProvider>
+          </StudentProvider>
         </AuthProvider>
       </body>
     </html>
