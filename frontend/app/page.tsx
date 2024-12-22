@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { courseCategories } from "@/config/utils";
 import { useStudentContext } from "@/context/studentContext";
@@ -5,7 +6,7 @@ import Image from "next/image";
 
 export default function Home() {
   const { setStudentCourseList, studentCourseList } = useStudentContext();
-  
+
   return (
     <div className="min-h-screen bg-white ">
       <section className="flex flex-col lg:flex-row items-center justify-between py-8 px-4 lg:px-8 ">
