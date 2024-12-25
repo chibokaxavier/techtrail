@@ -128,7 +128,7 @@ const page = () => {
   };
 
   return (
-    <div className="mx-auto container p-4 ">
+    <div className="  p-4  max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">
       <Toast ref={toast}  />
       <div className="flex  justify-between">
         <h1 className="text-3xl font-extrabold mb-5">Create a new course</h1>

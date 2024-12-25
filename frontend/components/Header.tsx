@@ -38,14 +38,16 @@ const Header = () => {
     return null;
   }
   return (
-    <header className=" flex items-center justify-between ">
+    <header className=" flex items-center justify-between max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8 ">
       <Link href={"/"} className="flex items-center justify-center">
         <LaptopMinimal className="mr-5 size-10 " />{" "}
         <span className="text-2xl font-extrabold">TechTrail</span>
       </Link>
 
       <div className="">
-        <Button className="rounded-md">Explore Courses</Button>
+        <Link href='/courses'>
+          <Button className="rounded-md">Explore Courses</Button>
+        </Link>
       </div>
 
       <div className="flex gap-5">

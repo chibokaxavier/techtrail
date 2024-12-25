@@ -21,8 +21,8 @@ export default function Home() {
     fetchStudentCourses();
   }, []);
   return (
-    <div className="min-h-screen bg-white ">
-      <section className="flex flex-col lg:flex-row items-center justify-between py-8 px-4 lg:px-8 ">
+    <div className="min-h-screen bg-white  max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8 ">
+      <section className="flex flex-col lg:flex-row items-center justify-between py-8  ">
         <div className="lg:w-1/2 lg:pr-12">
           <h1 className="text-5xl font-bold mb-4">Unlock Your Potential</h1>
           <p className="text-xl">
@@ -50,7 +50,7 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <section className="py-12 px-4 lg:px-8">
+      <section className="py-12 ">
         <h2 className="text-2xl font-bold mb-6">Featured Courses</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-6">
           {studentCourseList && studentCourseList.length > 0

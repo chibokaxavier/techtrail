@@ -7,7 +7,7 @@ const page = () => {
   const { auth } = useStoreContext();
   return (
    
-      <div>page</div>
+      <div className="max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">page</div>
    
   );
 };
