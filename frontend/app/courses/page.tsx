@@ -21,8 +21,8 @@ import { ArrowUpDownIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 const page = () => {
-  const handleCheckedChange = (key: any, id: any) => {};
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState("price-lowtohigh");
+  const [filters, setFilters] = useState({});
   const { setStudentCourseList, studentCourseList } = useStudentContext();
 
   const fetchStudentCourses = async () => {
@@ -36,6 +36,35 @@ const page = () => {
   useEffect(() => {
     fetchStudentCourses();
   }, []);
+  const handleCheckedChange = (sectionId: any, option: any) => {
+    // Create a copy of the filters
+    let cpyFilters = { ...filters };
+  
+    // Check if the section already exists in the filters
+    if (!cpyFilters[sectionId]) {
+      // Initialize as an array with the selected option
+      cpyFilters[sectionId] = [option.id];
+    } else {
+      // Check if the option already exists in the section
+      const indexOfCurrentOption = cpyFilters[sectionId].indexOf(option.id);
+  
+      if (indexOfCurrentOption === -1) {
+        // Add the option if it doesn't exist
+        cpyFilters[sectionId].push(option.id);
+      } else {
+        // Remove the option if it already exists
+        cpyFilters[sectionId].splice(indexOfCurrentOption, 1);
+      }
+    }
+  
+    // Update the state and session storage
+    setFilters(cpyFilters);
+    sessionStorage.setItem('filters', JSON.stringify(cpyFilters));
+  
+    console.log("Updated filters:", cpyFilters);
+  };
+  
+
   return (
     <div className="max-w-screen-xl mx-auto px-4  sm:px-6 lg:px-8 py-4">
       <h1 className="text-3xl font-bold mb-4">All Courses</h1>
@@ -56,9 +85,9 @@ const page = () => {
                         key={option.id}
                       >
                         <Checkbox
-                          checked={false}
+                          // checked={false}
                           onCheckedChange={() =>
-                            handleCheckedChange(typedKeyItem, option.id)
+                            handleCheckedChange(typedKeyItem, option)
                           }
                         />
                         {option.label}
