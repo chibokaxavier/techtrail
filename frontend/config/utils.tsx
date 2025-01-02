@@ -1,4 +1,9 @@
-export const languageOptions = [
+export type FilterOption = {
+  id: string;
+  label: string;
+};
+
+export const languageOptions: FilterOption[] = [
   { id: "english", label: "English" },
   { id: "spanish", label: "Spanish" },
   { id: "french", label: "French" },
@@ -11,13 +16,13 @@ export const languageOptions = [
   { id: "russian", label: "Russian" },
 ];
 
-export const courseLevelOptions = [
+export const courseLevelOptions: FilterOption[] = [
   { id: "beginner", label: "Beginner" },
   { id: "intermediate", label: "Intermediate" },
   { id: "advanced", label: "Advanced" },
 ];
 
-export const courseCategories = [
+export const courseCategories: FilterOption[] = [
   { id: "web-development", label: "Web Development" },
   { id: "backend-development", label: "Backend Development" },
   { id: "data-science", label: "Data Science" },
@@ -30,15 +35,21 @@ export const courseCategories = [
   { id: "software-engineering", label: "Software Engineering" },
 ];
 
-export const sortOptions = [
+export const sortOptions: FilterOption[] = [
   { id: "price-lowtohigh", label: "Price: Low to High" },
   { id: "price-hightolow", label: "Price: High to Low" },
   { id: "title-atoz", label: "Title: A to Z" },
   { id: "title-ztoa", label: "Title: Z to A" },
 ];
-
+// 
 export const filterOptions = {
   category: courseCategories,
   level: courseLevelOptions,
   primaryLanguage: languageOptions,
+};
+
+export type FilterSections = keyof typeof filterOptions; // "category" | "level" | "primaryLanguage"
+
+export type Filters = {
+  [key in FilterSections]?: string[]; // Each section ID maps to an array of selected option IDs.
 };

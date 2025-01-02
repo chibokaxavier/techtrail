@@ -14,15 +14,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
-import { filterOptions, sortOptions } from "@/config/utils";
+import {
+  FilterOption,
+  filterOptions,
+  Filters,
+  FilterSections,
+  sortOptions,
+} from "@/config/utils";
 import { useStudentContext } from "@/context/studentContext";
 import axios from "axios";
 import { ArrowUpDownIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 const page = () => {
-  const [sort, setSort] = useState("price-lowtohigh");
-  const [filters, setFilters] = useState({});
+  // const [sort, setSort] = useState("price-lowtohigh");
+  const [filters, setFilters] = useState<Filters>({});
+  const [sort, setSort] = useState<FilterOption["id"]>("price-lowtohigh");
   const { setStudentCourseList, studentCourseList } = useStudentContext();
 
   const fetchStudentCourses = async () => {
@@ -36,34 +43,36 @@ const page = () => {
   useEffect(() => {
     fetchStudentCourses();
   }, []);
-  const handleCheckedChange = (sectionId: any, option: any) => {
+  const handleCheckedChange = (
+    sectionId: FilterSections,
+    option: FilterOption
+  ) => {
     // Create a copy of the filters
-    let cpyFilters = { ...filters };
-  
+    let cpyFilters: Filters = { ...filters };
+
     // Check if the section already exists in the filters
     if (!cpyFilters[sectionId]) {
       // Initialize as an array with the selected option
       cpyFilters[sectionId] = [option.id];
     } else {
       // Check if the option already exists in the section
-      const indexOfCurrentOption = cpyFilters[sectionId].indexOf(option.id);
-  
+      const indexOfCurrentOption = cpyFilters[sectionId]?.indexOf(option.id);
+
       if (indexOfCurrentOption === -1) {
         // Add the option if it doesn't exist
-        cpyFilters[sectionId].push(option.id);
+        cpyFilters[sectionId]!.push(option.id);
       } else {
         // Remove the option if it already exists
-        cpyFilters[sectionId].splice(indexOfCurrentOption, 1);
+        cpyFilters[sectionId]!.splice(indexOfCurrentOption, 1);
       }
     }
-  
+
     // Update the state and session storage
     setFilters(cpyFilters);
-    sessionStorage.setItem('filters', JSON.stringify(cpyFilters));
-  
+    sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
+
     console.log("Updated filters:", cpyFilters);
   };
-  
 
   return (
     <div className="max-w-screen-xl mx-auto px-4  sm:px-6 lg:px-8 py-4">
