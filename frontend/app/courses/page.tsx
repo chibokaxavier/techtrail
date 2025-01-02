@@ -4,13 +4,9 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
@@ -24,13 +20,15 @@ import {
 import { useStudentContext } from "@/context/studentContext";
 import axios from "axios";
 import { ArrowUpDownIcon } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const page = () => {
-  // const [sort, setSort] = useState("price-lowtohigh");
   const [filters, setFilters] = useState<Filters>({});
   const [sort, setSort] = useState<FilterOption["id"]>("price-lowtohigh");
   const { setStudentCourseList, studentCourseList } = useStudentContext();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const fetchStudentCourses = async () => {
     try {
@@ -38,50 +36,90 @@ const page = () => {
       if (res.data.success) {
         setStudentCourseList(res.data.data);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
-  useEffect(() => {
-    fetchStudentCourses();
-  }, []);
+
+  // Helper function to update query string
+  const updateQueryParams = (newFilters: Filters, ) => {
+    const queryParams = new URLSearchParams(searchParams as any);
+
+    // Add/Update filters
+    Object.entries(newFilters).forEach(([section, values]) => {
+      if (values.length > 0) {
+        queryParams.set(section, values.join(","));
+      } else {
+        queryParams.delete(section);
+      }
+    });
+
+    // Update sort option
+    // queryParams.set("sort", sortBy);
+
+    // Push the updated URL
+    router.push(`?${queryParams.toString()}`, { scroll: false });
+  };
+
   const handleCheckedChange = (
     sectionId: FilterSections,
     option: FilterOption
   ) => {
-    // Create a copy of the filters
-    let cpyFilters: Filters = { ...filters };
+    const updatedFilters: Filters = { ...filters };
 
-    // Check if the section already exists in the filters
-    if (!cpyFilters[sectionId]) {
-      // Initialize as an array with the selected option
-      cpyFilters[sectionId] = [option.id];
+    if (!updatedFilters[sectionId]) {
+      updatedFilters[sectionId] = [option.id];
     } else {
-      // Check if the option already exists in the section
-      const indexOfCurrentOption = cpyFilters[sectionId]?.indexOf(option.id);
-
-      if (indexOfCurrentOption === -1) {
-        // Add the option if it doesn't exist
-        cpyFilters[sectionId]!.push(option.id);
+      const index = updatedFilters[sectionId]?.indexOf(option.id);
+      if (index === -1) {
+        updatedFilters[sectionId]!.push(option.id);
       } else {
-        // Remove the option if it already exists
-        cpyFilters[sectionId]!.splice(indexOfCurrentOption, 1);
+        updatedFilters[sectionId]!.splice(index, 1);
       }
     }
 
-    // Update the state and session storage
-    setFilters(cpyFilters);
-    sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
-
-    console.log("Updated filters:", cpyFilters);
+    setFilters(updatedFilters);
+    updateQueryParams(updatedFilters);
   };
 
+  // const handleSortChange = (value: string) => {
+  //   setSort(value);
+  //   updateQueryParams(filters, value);
+  // };
+
+  useEffect(() => {
+    fetchStudentCourses();
+  }, []);
+
+  useEffect(() => {
+    const params: Filters = {};
+
+    // Populate filters from URL
+    Object.keys(filterOptions).forEach((key) => {
+      const value = searchParams.get(key);
+      if (value) {
+        params[key as FilterSections] = value.split(",");
+      }
+    });
+
+    // Set initial state from URL
+    setFilters(params);
+
+    // Set sort from URL
+    const sortValue = searchParams.get("sort");
+    if (sortValue) {
+      setSort(sortValue);
+    }
+  }, [searchParams]);
+
   return (
-    <div className="max-w-screen-xl mx-auto px-4  sm:px-6 lg:px-8 py-4">
+    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       <h1 className="text-3xl font-bold mb-4">All Courses</h1>
       <div className="flex flex-col md:flex-row gap-4">
         <aside className="w-full md:w-64 space-y-4">
           <div className="p-4 space-y-4">
             {Object.keys(filterOptions).map((keyItem) => {
-              const typedKeyItem = keyItem as keyof typeof filterOptions; // Type assertion
+              const typedKeyItem = keyItem as keyof typeof filterOptions;
               return (
                 <div className="p-4 space-y-4" key={typedKeyItem}>
                   <h3 className="font-bold mb-3">
@@ -94,7 +132,9 @@ const page = () => {
                         key={option.id}
                       >
                         <Checkbox
-                          // checked={false}
+                          checked={
+                            filters[typedKeyItem]?.includes(option.id) || false
+                          }
                           onCheckedChange={() =>
                             handleCheckedChange(typedKeyItem, option)
                           }
@@ -120,7 +160,7 @@ const page = () => {
               <DropdownMenuContent className="absolute z-50 mt-2 w-48 bg-white shadow-lg border rounded-md">
                 <DropdownMenuRadioGroup
                   value={sort}
-                  onValueChange={(value) => setSort(value)}
+                  // onValueChange={handleSortChange}
                 >
                   {sortOptions.map((sortItem: any) => (
                     <DropdownMenuRadioItem
