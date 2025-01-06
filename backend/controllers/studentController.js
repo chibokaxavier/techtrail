@@ -2,7 +2,42 @@ import Course from "../model/courseModel.js";
 
 const getAllStudentCourses = async (req, res) => {
   try {
-    const courseList = await Course.find({});
+    const {
+      category = [],
+      level = [],
+      language = [],
+      sortBy = "price-lowtohigh",
+    } = req.query;
+    let filter = {};
+    if (category.length) {
+      filter.category = { $in: category.split(",") };
+    }
+    if (level.length) {
+      filter.level = { $in: level.split(",") };
+    }
+    if (language.length) {
+      filter.language = { $in: language.split(",") };
+    }
+    let sortParams = {};
+    switch (sortBy) {
+      case "price-lowtohigh":
+        sortParams.price = 1;
+        break;
+      case "price-hightolow":
+        sortParams.price = -1;
+        break;
+      case "title-atoz":
+        sortParams.title = 1;
+        break;
+      case "title-ztoa":
+        sortParams.title = -1;
+        break;
+
+      default:
+        sortParams.pricing = 1;
+        break;
+    }
+    const courseList = await Course.find(filter).sort(sortParams);
     if (courseList.length === 0) {
       return res
         .status(404)

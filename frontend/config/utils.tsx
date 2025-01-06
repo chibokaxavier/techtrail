@@ -45,7 +45,7 @@ export const sortOptions: FilterOption[] = [
 export const filterOptions = {
   category: courseCategories,
   level: courseLevelOptions,
-  primaryLanguage: languageOptions,
+  language: languageOptions,
 };
 
 export type FilterSections = keyof typeof filterOptions; // "category" | "level" | "primaryLanguage"

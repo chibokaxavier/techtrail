@@ -30,9 +30,15 @@ const page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const fetchStudentCourses = async () => {
+  const fetchStudentCourses = async (filters: any, sort: any) => {
+    const query = new URLSearchParams({
+      ...filters,
+      sortBy: sort,
+    });
     try {
-      const res = await axios.get("http://localhost:4000/api/v1/student/get");
+      const res = await axios.get(
+        `http://localhost:4000/api/v1/student/get?${query}`
+      );
       if (res.data.success) {
         setStudentCourseList(res.data.data);
       }
@@ -42,7 +48,7 @@ const page = () => {
   };
 
   // Helper function to update query string
-  const updateQueryParams = (newFilters: Filters, ) => {
+  const updateQueryParams = (newFilters: Filters, sortBy: any) => {
     const queryParams = new URLSearchParams(searchParams as any);
 
     // Add/Update filters
@@ -55,7 +61,7 @@ const page = () => {
     });
 
     // Update sort option
-    // queryParams.set("sort", sortBy);
+     queryParams.set("sort", sortBy);
 
     // Push the updated URL
     router.push(`?${queryParams.toString()}`, { scroll: false });
@@ -79,17 +85,19 @@ const page = () => {
     }
 
     setFilters(updatedFilters);
-    updateQueryParams(updatedFilters);
+    updateQueryParams(updatedFilters, sort);
   };
 
-  // const handleSortChange = (value: string) => {
-  //   setSort(value);
-  //   updateQueryParams(filters, value);
-  // };
+  const handleSortChange = (value: string) => {
+    setSort(value);
+    updateQueryParams(filters, value);
+  };
 
   useEffect(() => {
-    fetchStudentCourses();
-  }, []);
+     if (filters !== null && sort !== null) {
+      fetchStudentCourses(filters, sort);
+     }
+  }, [filters, sort]);
 
   useEffect(() => {
     const params: Filters = {};
@@ -160,7 +168,7 @@ const page = () => {
               <DropdownMenuContent className="absolute z-50 mt-2 w-48 bg-white shadow-lg border rounded-md">
                 <DropdownMenuRadioGroup
                   value={sort}
-                  // onValueChange={handleSortChange}
+                  onValueChange={handleSortChange}
                 >
                   {sortOptions.map((sortItem: any) => (
                     <DropdownMenuRadioItem
