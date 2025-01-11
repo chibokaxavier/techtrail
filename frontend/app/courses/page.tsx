@@ -61,7 +61,7 @@ const page = () => {
     });
 
     // Update sort option
-     queryParams.set("sort", sortBy);
+    queryParams.set("sort", sortBy);
 
     // Push the updated URL
     router.push(`?${queryParams.toString()}`, { scroll: false });
@@ -85,6 +85,7 @@ const page = () => {
     }
 
     setFilters(updatedFilters);
+    sessionStorage.setItem("filters", JSON.stringify(updatedFilters));
     updateQueryParams(updatedFilters, sort);
   };
 
@@ -94,9 +95,27 @@ const page = () => {
   };
 
   useEffect(() => {
-     if (filters !== null && sort !== null) {
+    setSort("price-lowtohigh");
+    const storedFilters = sessionStorage.getItem("filters");
+    if (storedFilters) {
+      const parsedFilters = JSON.parse(storedFilters);
+      console.log("Stored filters from sessionStorage:", parsedFilters);
+      setFilters(parsedFilters); // Update state
+      updateQueryParams(parsedFilters, sort);
+    } else {
+      console.log("No filters found in sessionStorage.");
+      setFilters({}); // Fallback to an empty object
+    }
+  }, []);
+  useEffect(() => {
+    // Sync filters with sessionStorage whenever they change
+    sessionStorage.setItem("filters", JSON.stringify(filters));
+  }, [filters]);
+
+  useEffect(() => {
+    if (Object.keys(filters).length > 0 && sort) {
       fetchStudentCourses(filters, sort);
-     }
+    }
   }, [filters, sort]);
 
   useEffect(() => {
@@ -119,6 +138,8 @@ const page = () => {
       setSort(sortValue);
     }
   }, [searchParams]);
+
+  console.log(filters);
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
