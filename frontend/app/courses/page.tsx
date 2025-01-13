@@ -24,13 +24,32 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const page = () => {
-  const [filters, setFilters] = useState<Filters>({});
-  const [sort, setSort] = useState<FilterOption["id"]>("price-lowtohigh");
-  const { setStudentCourseList, studentCourseList } = useStudentContext();
-  const router = useRouter();
+  // const [filters, setFilters] = useState<Filters>({});
+  // const [sort, setSort] = useState<FilterOption["id"]>("price-lowtohigh");
   const searchParams = useSearchParams();
+  const initialSort = "price-lowtohigh";
+  const initialFilters: Filters = {};
+  Object.keys(filterOptions).forEach((key) => {
+    const value = searchParams.get(key);
+    if (value) {
+      initialFilters[key as FilterSections] = value.split(",");
+    }
+  });
+
+  const [filters, setFilters] = useState<Filters>(initialFilters);
+  const [sort, setSort] = useState<FilterOption["id"]>(
+    searchParams.get("sort") || initialSort
+  );
+  const {
+    setStudentCourseList,
+    studentCourseList,
+    loadingState,
+    setLoadingState,
+  } = useStudentContext();
+  const router = useRouter();
 
   const fetchStudentCourses = async (filters: any, sort: any) => {
+    console.log("ran");
     const query = new URLSearchParams({
       ...filters,
       sortBy: sort,
@@ -39,10 +58,13 @@ const page = () => {
       const res = await axios.get(
         `http://localhost:4000/api/v1/student/get?${query}`
       );
+      console.log(res.data);
       if (res.data.success) {
         setStudentCourseList(res.data.data);
       }
     } catch (error) {
+      setStudentCourseList([]);
+      console.log(studentCourseList);
       console.error(error);
     }
   };
@@ -87,6 +109,10 @@ const page = () => {
     setFilters(updatedFilters);
     sessionStorage.setItem("filters", JSON.stringify(updatedFilters));
     updateQueryParams(updatedFilters, sort);
+    if (Object.keys(filters).length > 0 && sort) {
+      console.log(filters, sort);
+      fetchStudentCourses(filters, sort);
+    }
   };
 
   const handleSortChange = (value: string) => {
@@ -95,17 +121,13 @@ const page = () => {
   };
 
   useEffect(() => {
-    setSort("price-lowtohigh");
     const storedFilters = sessionStorage.getItem("filters");
     if (storedFilters) {
       const parsedFilters = JSON.parse(storedFilters);
-      console.log("Stored filters from sessionStorage:", parsedFilters);
-      setFilters(parsedFilters); // Update state
-      updateQueryParams(parsedFilters, sort);
-    } else {
-      console.log("No filters found in sessionStorage.");
-      setFilters({}); // Fallback to an empty object
+      setFilters(parsedFilters);
     }
+
+    setLoadingState(false); // Initialization complete
   }, []);
   useEffect(() => {
     // Sync filters with sessionStorage whenever they change
@@ -113,10 +135,10 @@ const page = () => {
   }, [filters]);
 
   useEffect(() => {
-    if (Object.keys(filters).length > 0 && sort) {
+    if (!loadingState) {
       fetchStudentCourses(filters, sort);
     }
-  }, [filters, sort]);
+  }, [filters, sort, loadingState]);
 
   useEffect(() => {
     const params: Filters = {};
@@ -139,7 +161,7 @@ const page = () => {
     }
   }, [searchParams]);
 
-  console.log(filters);
+  // console.log(filters);
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -207,40 +229,42 @@ const page = () => {
             </span>
           </div>
           <div className="space-y-4">
-            {studentCourseList && studentCourseList.length > 0
-              ? studentCourseList.map((course: any, i: number) => (
-                  <Card className="cursor-pointer" key={course.id}>
-                    <CardContent className="flex gap-4 p-4">
-                      <div className="w-48 h-32 flex-shrink-0">
-                        <img
-                          src={course.image}
-                          alt="course-image"
-                          className="size-full object-cover"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-xl mb-2">
-                          {course.title}
-                        </CardTitle>
-                        <p className="text-sm text-gray-600 mb-1">
-                          Created by{" "}
-                          <span className="font-bold">
-                            {course?.instructorName}
-                          </span>
-                        </p>
-                        <p className="text-18 text-gray-600 mt-3 mb-2">
-                          {`${course?.curriculum?.length} ${
-                            course?.curriculum?.length <= 1
-                              ? "Lecture"
-                              : "Lectures"
-                          } - ${course?.level.toUpperCase()} Level`}
-                        </p>
-                        <p className="font-bold text-lg">${course?.price}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              : "No courses found"}
+            {studentCourseList && studentCourseList.length > 0 ? (
+              studentCourseList.map((course: any, i: number) => (
+                <Card className="cursor-pointer" key={course.id}>
+                  <CardContent className="flex gap-4 p-4">
+                    <div className="w-48 h-32 flex-shrink-0">
+                      <img
+                        src={course.image}
+                        alt="course-image"
+                        className="size-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-xl mb-2">
+                        {course.title}
+                      </CardTitle>
+                      <p className="text-sm text-gray-600 mb-1">
+                        Created by{" "}
+                        <span className="font-bold">
+                          {course?.instructorName}
+                        </span>
+                      </p>
+                      <p className="text-18 text-gray-600 mt-3 mb-2">
+                        {`${course?.curriculum?.length} ${
+                          course?.curriculum?.length <= 1
+                            ? "Lecture"
+                            : "Lectures"
+                        } - ${course?.level.toUpperCase()} Level`}
+                      </p>
+                      <p className="font-bold text-lg">${course?.price}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <h1 className="font-extrabold text-4xl">No courses found</h1>
+            )}
           </div>
         </main>
       </div>
