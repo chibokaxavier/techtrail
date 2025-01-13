@@ -26,6 +26,7 @@ import React, { useEffect, useState } from "react";
 const page = () => {
   // const [filters, setFilters] = useState<Filters>({});
   // const [sort, setSort] = useState<FilterOption["id"]>("price-lowtohigh");
+  const [courseLoading, setCourseLoading] = useState(false);
   const searchParams = useSearchParams();
   const initialSort = "price-lowtohigh";
   const initialFilters: Filters = {};
@@ -49,7 +50,7 @@ const page = () => {
   const router = useRouter();
 
   const fetchStudentCourses = async (filters: any, sort: any) => {
-    console.log("ran");
+    setCourseLoading(true);
     const query = new URLSearchParams({
       ...filters,
       sortBy: sort,
@@ -61,10 +62,12 @@ const page = () => {
       console.log(res.data);
       if (res.data.success) {
         setStudentCourseList(res.data.data);
+        setCourseLoading(false);
       }
     } catch (error) {
       setStudentCourseList([]);
       console.log(studentCourseList);
+       setCourseLoading(false);
       console.error(error);
     }
   };
@@ -262,6 +265,14 @@ const page = () => {
                   </CardContent>
                 </Card>
               ))
+            ) : courseLoading ? (
+              <>
+                <div className=" h-40 bg-gray-100 animate-pulse duration-900 rounded"></div>
+                <div className=" h-40 bg-gray-100 animate-pulse duration-900 rounded"></div>
+                <div className=" h-40 bg-gray-100 animate-pulse duration-900 rounded"></div>
+                <div className=" h-40 bg-gray-100 animate-pulse duration-900 rounded"></div>
+                <div className=" h-40 bg-gray-100 animate-pulse duration-900 rounded"></div>
+              </>
             ) : (
               <h1 className="font-extrabold text-4xl">No courses found</h1>
             )}

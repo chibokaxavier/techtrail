@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }: Protect) => {
   const { auth, loading } = useStoreContext();
 
   useEffect(() => {
-    console.log(auth);
+    // console.log(auth);
     if (!loading) {
       if (!auth?.authenticate && !pathName.includes("/auth")) {
         router.push("/auth");
