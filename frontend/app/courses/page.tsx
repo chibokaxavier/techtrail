@@ -20,6 +20,7 @@ import {
 import { useStudentContext } from "@/context/studentContext";
 import axios from "axios";
 import { ArrowUpDownIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -67,7 +68,7 @@ const page = () => {
     } catch (error) {
       setStudentCourseList([]);
       console.log(studentCourseList);
-       setCourseLoading(false);
+      setCourseLoading(false);
       console.error(error);
     }
   };
@@ -234,36 +235,38 @@ const page = () => {
           <div className="space-y-4">
             {studentCourseList && studentCourseList.length > 0 ? (
               studentCourseList.map((course: any, i: number) => (
-                <Card className="cursor-pointer" key={course.id}>
-                  <CardContent className="flex gap-4 p-4">
-                    <div className="w-48 h-32 flex-shrink-0">
-                      <img
-                        src={course.image}
-                        alt="course-image"
-                        className="size-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-xl mb-2">
-                        {course.title}
-                      </CardTitle>
-                      <p className="text-sm text-gray-600 mb-1">
-                        Created by{" "}
-                        <span className="font-bold">
-                          {course?.instructorName}
-                        </span>
-                      </p>
-                      <p className="text-18 text-gray-600 mt-3 mb-2">
-                        {`${course?.curriculum?.length} ${
-                          course?.curriculum?.length <= 1
-                            ? "Lecture"
-                            : "Lectures"
-                        } - ${course?.level.toUpperCase()} Level`}
-                      </p>
-                      <p className="font-bold text-lg">${course?.price}</p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <Link href={`/courses/${course._id}`}>
+                  <Card className="cursor-pointer" key={course.id}>
+                    <CardContent className="flex gap-4 p-4">
+                      <div className="w-48 h-32 flex-shrink-0">
+                        <img
+                          src={course.image}
+                          alt="course-image"
+                          className="size-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <CardTitle className="text-xl mb-2">
+                          {course.title}
+                        </CardTitle>
+                        <p className="text-sm text-gray-600 mb-1">
+                          Created by{" "}
+                          <span className="font-bold">
+                            {course?.instructorName}
+                          </span>
+                        </p>
+                        <p className="text-18 text-gray-600 mt-3 mb-2">
+                          {`${course?.curriculum?.length} ${
+                            course?.curriculum?.length <= 1
+                              ? "Lecture"
+                              : "Lectures"
+                          } - ${course?.level.toUpperCase()} Level`}
+                        </p>
+                        <p className="font-bold text-lg">${course?.price}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))
             ) : courseLoading ? (
               <>
