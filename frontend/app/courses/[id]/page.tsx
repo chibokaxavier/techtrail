@@ -1,5 +1,6 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import VideoPlayer from "@/components/VideoPlayer";
 import axios from "axios";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -84,6 +85,11 @@ const page = ({ params }: { params: { id: number } }) => {
       </div>
     );
   }
+
+  const freePreviewItem = courseDetail?.curriculum?.find(
+    (item: any) => item.freePreview
+  );
+  console.log(freePreviewItem);
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       <div className="bg-gray-600 text-white p-8 rounded-t-lg ">
@@ -145,6 +151,23 @@ const page = ({ params }: { params: { id: number } }) => {
             </CardContent>
           </Card>
         </main>
+        <aside className="w-full md:w-[500px]">
+          <Card className="sticky top-4">
+            <CardContent className="p-6">
+              <div className="aspect-video mb-4 rounded-lg flex items-center justify-center">
+                {freePreviewItem ? (
+                  <VideoPlayer 
+                    width="100%"
+                    height="100%"
+                    url={freePreviewItem.videoUrl}
+                  />
+                ) : (
+                  <p>No preview available</p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </aside>
       </div>
     </div>
   );
