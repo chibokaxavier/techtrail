@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import VideoPlayer from "@/components/VideoPlayer";
 import axios from "axios";
@@ -6,7 +7,7 @@ import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
 const page = ({ params }: { params: { id: number } }) => {
   const [courseDetail, setCourseDetail] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const fetchCourseDetails = async () => {
     setLoading(true);
     try {
@@ -16,14 +17,14 @@ const page = ({ params }: { params: { id: number } }) => {
 
       if (res.data.success) {
         setCourseDetail(res.data.data);
-        setLoading(false);
+         setLoading(false);
       } else {
         setCourseDetail(null);
-        setLoading(false);
+         setLoading(false);
       }
     } catch (error) {
       setCourseDetail(null);
-      setLoading(true);
+       setLoading(false);
     }
   };
 
@@ -33,54 +34,50 @@ const page = ({ params }: { params: { id: number } }) => {
 
   if (loading) {
     return (
-      <div className="animate-pulse max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4 ">
-        {/* Header Skeleton */}
-        <div className="h-64 bg-gray-300 w-full"></div>
+      <div className="animate-pulse max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        {/* Header Section Skeleton */}
+        <div className="bg-gray-300 h-36 rounded-t-lg mb-4"></div>
+       
 
-        {/* Body Skeleton */}
-        <div className="p-6 space-y-6">
-          {/* Title */}
-          <div className="h-8 bg-gray-300 rounded w-3/4"></div>
-
-          {/* Text Block */}
-          <div className="space-y-2">
-            <div className="h-4 bg-gray-300 rounded w-full"></div>
-            <div className="h-4 bg-gray-300 rounded w-5/6"></div>
-            <div className="h-4 bg-gray-300 rounded w-2/3"></div>
-          </div>
-
-          {/* Instructor */}
-          <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-gray-300 rounded-full"></div>
-            <div className="flex-1 space-y-2">
-              <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-              <div className="h-4 bg-gray-300 rounded w-1/3"></div>
+        {/* Main Content Skeleton */}
+        <div className="flex flex-col md:flex-row gap-8 mt-8">
+          {/* Main Section */}
+          <main className="flex-grow space-y-6">
+            {/* What You Will Learn Skeleton */}
+            <div className="bg-gray-200 rounded-lg p-4 space-y-4">
+              <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+              
             </div>
-          </div>
 
-          {/* Course Info */}
-          <div className="flex flex-wrap gap-4">
-            {Array(3)
-              .fill("")
-              .map((_, index) => (
-                <div
-                  key={index}
-                  className="flex-1 p-4 bg-gray-200 rounded-lg h-20"
-                ></div>
-              ))}
-          </div>
+            {/* Course Curriculum Skeleton */}
+            <div className="bg-gray-200 rounded-lg p-4 space-y-4">
+             
+              <ul className="space-y-2">
+                {Array(4)
+                  .fill("")
+                  .map((_, index) => (
+                    <li
+                      key={index}
+                      className="flex items-center bg-gray-300 rounded-lg h-12 px-4"
+                    ></li>
+                  ))}
+              </ul>
+            </div>
+          </main>
 
-          {/* Curriculum Skeleton */}
-          <div className="space-y-2">
-            {Array(3)
-              .fill("")
-              .map((_, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between bg-gray-200 p-4 rounded-lg shadow-sm h-12"
-                ></div>
-              ))}
-          </div>
+          {/* Sidebar Skeleton */}
+          <aside className="w-full md:w-[500px] space-y-4">
+            <div className="bg-gray-200 rounded-lg p-6">
+              {/* Video Placeholder */}
+              <div className="aspect-video bg-gray-300 rounded-lg mb-4"></div>
+
+              {/* Price Placeholder */}
+              <div className="h-8 bg-gray-300 rounded w-1/4 mb-4"></div>
+
+              {/* Button Placeholder */}
+              <div className="h-10 bg-gray-300 rounded w-full"></div>
+            </div>
+          </aside>
         </div>
       </div>
     );
@@ -156,15 +153,21 @@ const page = ({ params }: { params: { id: number } }) => {
             <CardContent className="p-6">
               <div className="aspect-video mb-4 rounded-lg flex items-center justify-center">
                 {freePreviewItem ? (
-                  <VideoPlayer 
-                    width="100%"
-                    height="100%"
+                  <VideoPlayer
+                    width="450px"
+                    height="200px"
                     url={freePreviewItem.videoUrl}
                   />
                 ) : (
                   <p>No preview available</p>
                 )}
               </div>
+              <div className="mb-4">
+                <span className="text-3xl font-bold">
+                  ${courseDetail?.price}
+                </span>
+              </div>
+              <Button className="w-full">Buy Now</Button>
             </CardContent>
           </Card>
         </aside>
