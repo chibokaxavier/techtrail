@@ -10,40 +10,38 @@ const url = "http://localhost:3000/";
 
 const placeOrder = async (req, res) => {
   try {
+    const { courseId, title, price, instructorName, email, userName, image } =
+      req.body;
     const user = await User.findById(req.userId);
     const newOrder = new Order({
       userId: req.userId,
-      coursePrice: req.body.price,
-      userEmail: req.body.email,
-      userName: req.body.userName,
-      courseTitle: req.body.title,
-      courseImage: req.body.image,
-      courseId: req.body.courseId,
+      coursePrice: price,
+      userEmail: email,
+      userName: userName,
+      courseTitle: title,
+      courseImage: image,
+      courseId: courseId,
     });
     await newOrder.save();
     await Student.findByIdAndUpdate(req.userId, {
-        
-    } );
-    const line_items = req.body.items.map((item) => ({
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: item.name,
+      $push: {
+        courses: {
+          courseId,
+          title,
+          instructorName,
+          courseImage,
         },
-        unit_amount: item.price * 100,
       },
-      quantity: item.quantity,
-    }));
-    line_items.push({
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: "Delivery Charges",
-        },
-        unit_amount: 2 * 100,
-      },
-      quantity: 1,
     });
+    const line_items = {
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: title,
+        },
+        unit_amount: price * 100,
+      },
+    };
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
