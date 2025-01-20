@@ -10,7 +10,7 @@ import authMiddleware from "../middleware/auth.js";
 
 const orderRouter = express.Router();
 orderRouter.post("/place", authMiddleware, placeOrder);
-// orderRouter.post("/verify", verifyOrder);
+orderRouter.post("/verify", verifyOrder);
 // orderRouter.get("/get", authMiddleware, fetchOrders);
 // orderRouter.get("/list", listOrders);
 // orderRouter.post("/status", updateStatus);

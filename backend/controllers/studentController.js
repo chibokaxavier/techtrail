@@ -1,4 +1,5 @@
 import Course from "../model/courseModel.js";
+import Student from "../model/studentModel.js";
 
 const getAllStudentCourses = async (req, res) => {
   try {
@@ -52,22 +53,67 @@ const getAllStudentCourses = async (req, res) => {
   }
 };
 
+// const getStudentCoursesDetails = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const courseDetails = await Course.findById(id);
+
+//     if (!courseDetails) {
+//       return res
+//         .status(404)
+//         .json({ success: false, message: "Course not found", data: null });
+//     }
+//     res
+//       .status(200)
+//       .json({ success: true, message: "Course found", data: courseDetails });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ success: false, message: "Some Error occured" });
+//   }
+// };
+
 const getStudentCoursesDetails = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params; // Extract courseId from params
+    const { userId } = req; // Currently logged-in user's ID
+
+    // Fetch course details from the Course model
     const courseDetails = await Course.findById(id);
+
+    // Check if course exists in the database
     if (!courseDetails) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Course not found", data: null });
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+        data: null,
+      });
     }
-    res
-      .status(200)
-      .json({ success: true, message: "Course found", data: courseDetails });
+
+    // Check if the course exists in the logged-in user's courses array
+    const student = await Student.findOne({
+      userId: userId,
+      "courses.courseId": id,
+    });
+
+    if (!student) {
+      return res.status(403).json({
+        success: false,
+        message: "You do not have access to this course",
+        data: courseDetails,
+        paid: false,
+      });
+    }
+
+    // If both checks pass, return the course details
+    res.status(200).json({
+      success: true,
+      message: "Course found",
+      data: courseDetails,
+      paid: true,
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: "Some Error occured" });
+    console.error(error);
+    res.status(500).json({ success: false, message: "An error occurred" });
   }
 };
-
 export { getAllStudentCourses, getStudentCoursesDetails };
