@@ -10,38 +10,83 @@ const url = "http://localhost:3000/";
 
 const placeOrder = async (req, res) => {
   try {
-    const { courseId, title, price, instructorName, email, userName, image } =
-      req.body;
-    const user = await User.findById(req.userId);
+    const {
+      courseId,
+      title,
+      price,
+      instructorName,
+      userId,
+      email,
+      userName,
+      image,
+    } = req.body;
+    const user = await User.findById(userId);
+    // console.log(user);
     const newOrder = new Order({
-      userId: req.userId,
+      userId: userId,
       coursePrice: price,
       userEmail: email,
-      userName: userName,
+      instructorName: userName,
       courseTitle: title,
       courseImage: image,
       courseId: courseId,
     });
+
     await newOrder.save();
-    await Student.findByIdAndUpdate(req.userId, {
-      $push: {
-        courses: {
-          courseId,
-          title,
-          instructorName,
-          courseImage,
+
+    // const studentChecker = await Student.findOne({userId});
+    // if (studentChecker) {
+    //   await Student.findByIdAndUpdate(userId, {
+    //     $push: {
+    //       courses: {
+    //         courseId,
+    //         title,
+    //         instructorName,
+    //         image,
+    //       },
+    //     },
+    //   });
+    // } else {
+    //   const newOrderStudent = new Student({
+    //     userId: userId, // Assuming req.userId is set correctly
+    //     courses: [
+    //       {
+    //         courseId,
+    //         title,
+    //         instructorName,
+    //         image,
+    //       },
+    //     ],
+    //   });
+    //   await newOrderStudent.save();
+    // }
+    await Student.findOneAndUpdate(
+      { userId },
+      {
+        $push: {
+          courses: {
+            courseId,
+            title,
+            instructorName,
+            image,
+          },
         },
       },
-    });
-    const line_items = {
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: title,
+      { upsert: true, new: true }
+    );
+
+    const line_items = [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: title,
+          },
+          unit_amount: price * 100,
         },
-        unit_amount: price * 100,
+        quantity: 1, // Make sure to include quantity
       },
-    };
+    ];
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -59,20 +104,20 @@ const placeOrder = async (req, res) => {
   }
 };
 
-
 const verifyOrder = async (req, res) => {
-    const { orderId, success } = req.body;
-    try {
-      if (success) {
-        await orderModel.findByIdAndUpdate(orderId, { payment: true });
-        res.status(200).json({ success: true, message: "Payment successful" });
-      } else {
-        await orderModel.findByIdAndDelete(orderId);
-        res.status(200).json({ success: false, message: "Payment failed" });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ success: false, message: "Error" });
+  const { orderId, success } = req.body;
+  try {
+    if (success) {
+      await Order.findByIdAndUpdate(orderId, { payment: true });
+      res.status(200).json({ success: true, message: "Payment successful" });
+    } else {
+      await orderModel.findByIdAndDelete(orderId);
+      res.status(200).json({ success: false, message: "Payment failed" });
     }
-  };
-  
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Error" });
+  }
+};
+
+export { placeOrder, verifyOrder };

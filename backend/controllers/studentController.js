@@ -75,7 +75,8 @@ const getAllStudentCourses = async (req, res) => {
 const getStudentCoursesDetails = async (req, res) => {
   try {
     const { id } = req.params; // Extract courseId from params
-    const { userId } = req; // Currently logged-in user's ID
+    const { userId } = req.body; // Currently logged-in user's ID
+    console.log(id);
 
     // Fetch course details from the Course model
     const courseDetails = await Course.findById(id);
@@ -96,8 +97,8 @@ const getStudentCoursesDetails = async (req, res) => {
     });
 
     if (!student) {
-      return res.status(403).json({
-        success: false,
+      return res.status(200).json({
+        success: true,
         message: "You do not have access to this course",
         data: courseDetails,
         paid: false,

@@ -2,29 +2,68 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import VideoPlayer from "@/components/VideoPlayer";
+import { useStoreContext } from "@/context/authContext";
 import axios from "axios";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
+import { ProgressSpinner } from "primereact/progressspinner";
 import React, { useEffect, useState } from "react";
 const page = ({ params }: { params: { id: number } }) => {
   const [courseDetail, setCourseDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const { auth } = useStoreContext();
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const userId = auth?.user?._id;
   const fetchCourseDetails = async () => {
     setLoading(true);
+    console.log(userId);
     try {
-      const res = await axios.get(
-        `http://localhost:4000/api/v1/student/get/detail/${params.id}`
+      const res = await axios.post(
+        `http://localhost:4000/api/v1/student/get/detail/${params.id}`,
+        { userId: userId }
       );
 
       if (res.data.success) {
         setCourseDetail(res.data.data);
-         setLoading(false);
+        console.log(res.data.data);
+        setLoading(false);
       } else {
         setCourseDetail(null);
-         setLoading(false);
+        setLoading(false);
       }
     } catch (error) {
       setCourseDetail(null);
-       setLoading(false);
+      setLoading(false);
+    }
+  };
+
+  const placeOrder = async () => {
+    console.log(auth?.user?.email);
+
+    setPaymentLoading(true);
+    const orderData = {
+      courseId: params.id,
+      userId: auth?.user?._id,
+      title: courseDetail.title,
+      price: courseDetail.price,
+      instructorName: courseDetail.instructorName,
+      email: auth?.user?.email,
+      image: courseDetail.image,
+    };
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/order/place",
+        orderData
+      );
+      if (res.data.session.url) {
+        setPaymentLoading(false);
+        window.location.href = res.data.session.url;
+      }
+      if (res.data.success) {
+        // localStorage.removeItem("cartItems");
+        setPaymentLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -37,7 +76,6 @@ const page = ({ params }: { params: { id: number } }) => {
       <div className="animate-pulse max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         {/* Header Section Skeleton */}
         <div className="bg-gray-300 h-36 rounded-t-lg mb-4"></div>
-       
 
         {/* Main Content Skeleton */}
         <div className="flex flex-col md:flex-row gap-8 mt-8">
@@ -46,12 +84,10 @@ const page = ({ params }: { params: { id: number } }) => {
             {/* What You Will Learn Skeleton */}
             <div className="bg-gray-200 rounded-lg p-4 space-y-4">
               <div className="h-6 bg-gray-300 rounded w-1/2"></div>
-              
             </div>
 
             {/* Course Curriculum Skeleton */}
             <div className="bg-gray-200 rounded-lg p-4 space-y-4">
-             
               <ul className="space-y-2">
                 {Array(4)
                   .fill("")
@@ -86,7 +122,7 @@ const page = ({ params }: { params: { id: number } }) => {
   const freePreviewItem = courseDetail?.curriculum?.find(
     (item: any) => item.freePreview
   );
-  console.log(freePreviewItem);
+
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       <div className="bg-gray-600 text-white p-8 rounded-t-lg ">
@@ -116,7 +152,7 @@ const page = ({ params }: { params: { id: number } }) => {
                 {courseDetail?.objectives
                   .split(",")
                   .map((objective: any, i: number) => (
-                    <li className="flex items-start">
+                    <li className="flex items-start" key={i}>
                       <CheckCircle className="mr-2 h-5 w-5 text-green-500 flex-shrink" />
                       <span>{objective}</span>
                     </li>
@@ -129,22 +165,25 @@ const page = ({ params }: { params: { id: number } }) => {
               <CardTitle>Course Curriculum</CardTitle>
             </CardHeader>
             <CardContent>
-              {courseDetail?.curriculum?.map((curriculumItem: any) => (
-                <li
-                  className={`${
-                    courseDetail?.freePreview
-                      ? "cursor-pointer"
-                      : "cursor-not-allowed"
-                  } flex items-center mb-4`}
-                >
-                  {curriculumItem?.freePreview ? (
-                    <PlayCircle className="mr-2 size-4" />
-                  ) : (
-                    <Lock className="mr-2 size-4" />
-                  )}{" "}
-                  <span>{curriculumItem?.title}</span>
-                </li>
-              ))}
+              {courseDetail?.curriculum?.map(
+                (curriculumItem: any, i: number) => (
+                  <li
+                    key={i}
+                    className={`${
+                      courseDetail?.freePreview
+                        ? "cursor-pointer"
+                        : "cursor-not-allowed"
+                    } flex items-center mb-4`}
+                  >
+                    {curriculumItem?.freePreview ? (
+                      <PlayCircle className="mr-2 size-4" />
+                    ) : (
+                      <Lock className="mr-2 size-4" />
+                    )}{" "}
+                    <span>{curriculumItem?.title}</span>
+                  </li>
+                )
+              )}
             </CardContent>
           </Card>
         </main>
@@ -167,7 +206,13 @@ const page = ({ params }: { params: { id: number } }) => {
                   ${courseDetail?.price}
                 </span>
               </div>
-              <Button className="w-full">Buy Now</Button>
+              <Button
+                className="w-full"
+                disabled={loading}
+                onClick={placeOrder}
+              >
+                {loading ? <ProgressSpinner /> : "  Buy Now"}
+              </Button>
             </CardContent>
           </Card>
         </aside>
