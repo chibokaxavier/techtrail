@@ -4,7 +4,7 @@ const OrderSchema = new mongoose.Schema({
   userId: String,
   userEmail: String,
   userName: String,
-  status: String,
+  status: { type: String, default: "Payment initiated" },
   coursePrice: Number,
   courseTitle: String,
   courseImage: String,
