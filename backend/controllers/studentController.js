@@ -94,6 +94,7 @@ const getStudentCoursesDetails = async (req, res) => {
     const student = await Student.findOne({
       userId: userId,
       "courses.courseId": id,
+      "courses.paid": true,
     });
 
     if (!student) {

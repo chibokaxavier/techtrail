@@ -20,6 +20,8 @@ interface StoreContextType {
   setStudentCourseList: Dispatch<SetStateAction<[]>>;
   loadingState: boolean;
   setLoadingState: Dispatch<SetStateAction<boolean>>;
+  globalParamId: number | null;
+  setGlobalParamId: Dispatch<SetStateAction<number | null>>;
 }
 
 export const StudentContext = createContext<StoreContextType | null>(null);
@@ -27,9 +29,12 @@ export const StudentContext = createContext<StoreContextType | null>(null);
 export default function StudentProvider({ children }: ProviderProps) {
   const [studentCourseList, setStudentCourseList] = useState<any>([]);
   const [loadingState, setLoadingState] = useState(true);
+  const [globalParamId, setGlobalParamId] = useState<number | null>(null);
   const contextValue: StoreContextType = {
     setStudentCourseList,
     loadingState,
+    globalParamId,
+    setGlobalParamId,
     setLoadingState,
     studentCourseList,
   };

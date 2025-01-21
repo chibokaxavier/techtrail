@@ -27,6 +27,8 @@ import React, { useEffect, useState } from "react";
 const page = () => {
   // const [filters, setFilters] = useState<Filters>({});
   // const [sort, setSort] = useState<FilterOption["id"]>("price-lowtohigh");
+  const { setGlobalParamId, globalParamId } = useStudentContext();
+  
   const [courseLoading, setCourseLoading] = useState(false);
   const searchParams = useSearchParams();
   const initialSort = "price-lowtohigh";
@@ -130,8 +132,8 @@ const page = () => {
       const parsedFilters = JSON.parse(storedFilters);
       setFilters(parsedFilters);
     }
-
     setLoadingState(false); // Initialization complete
+    console.log(globalParamId);
   }, []);
   useEffect(() => {
     // Sync filters with sessionStorage whenever they change
@@ -165,7 +167,7 @@ const page = () => {
     }
   }, [searchParams]);
 
-  // console.log(filters);
+   console.log(globalParamId);
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

@@ -10,7 +10,7 @@ const OrderSchema = new mongoose.Schema({
   courseImage: String,
   courseId: String,
   date: { type: Date, default: Date.now() },
-  payment: Boolean,
+  payment: { type: Boolean, default: false },
 });
 
 const Order = mongoose.model("order", OrderSchema);

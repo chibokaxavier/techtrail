@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useEffect } from "react";
 
 export default function Home() {
-  const { setStudentCourseList, studentCourseList } = useStudentContext();
+  const { setStudentCourseList, studentCourseList,globalParamId } = useStudentContext();
 
   const fetchStudentCourses = async () => {
     try {
@@ -20,6 +20,7 @@ export default function Home() {
   useEffect(() => {
     fetchStudentCourses();
   }, []);
+  console.log(globalParamId);
   return (
     <div className="min-h-screen bg-white  max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8 ">
       <section className="flex flex-col lg:flex-row items-center justify-between py-8  ">

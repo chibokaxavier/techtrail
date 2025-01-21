@@ -9,6 +9,7 @@ const StudentSchema = new mongoose.Schema({
       instructorName: String,
       dateOfPurchase: { type: Date, default: Date.now() },
       image: String,
+      paid: { type: Boolean, default: false },
     },
   ],
 });

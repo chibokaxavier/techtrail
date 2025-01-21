@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import VideoPlayer from "@/components/VideoPlayer";
 import { useStoreContext } from "@/context/authContext";
+import { useStudentContext } from "@/context/studentContext";
 import axios from "axios";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -11,11 +12,14 @@ const page = ({ params }: { params: { id: number } }) => {
   const [courseDetail, setCourseDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const { auth } = useStoreContext();
+  const { setGlobalParamId, globalParamId } = useStudentContext();
   const [paymentLoading, setPaymentLoading] = useState(false);
   const userId = auth?.user?._id;
+  console.log(params.id);
+  setGlobalParamId(params.id);
+  console.log(globalParamId);
   const fetchCourseDetails = async () => {
     setLoading(true);
-    console.log(userId);
     try {
       const res = await axios.post(
         `http://localhost:4000/api/v1/student/get/detail/${params.id}`,
@@ -24,7 +28,6 @@ const page = ({ params }: { params: { id: number } }) => {
 
       if (res.data.success) {
         setCourseDetail(res.data.data);
-        console.log(res.data.data);
         setLoading(false);
       } else {
         setCourseDetail(null);
@@ -54,8 +57,10 @@ const page = ({ params }: { params: { id: number } }) => {
         "http://localhost:4000/api/v1/order/place",
         orderData
       );
+      console.log(res.data);
       if (res.data.session.url) {
         setPaymentLoading(false);
+
         window.location.href = res.data.session.url;
       }
       if (res.data.success) {

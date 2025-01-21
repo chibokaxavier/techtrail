@@ -1,4 +1,6 @@
 "use client";
+import { useStoreContext } from "@/context/authContext";
+import { useStudentContext } from "@/context/studentContext";
 import axios from "axios";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -7,23 +9,37 @@ import { FaCheckCircle } from "react-icons/fa";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const orderId = params.id;
- 
-  const url = "http://localhost:3000";
+
+  const url = "http://localhost:4000";
   const pathname = usePathname();
   const router = useRouter();
+  const { token } = useStoreContext();
+  const { setGlobalParamId, globalParamId } = useStudentContext();
 
   useEffect(() => {
     const verifyOrder = async () => {
-      const res = await axios.post(url + "/api/v1/order/verify", {
-        orderId,
-        success: true,
-      });
-      if (res.data.success) {
-        router.push("/courses");
+      console.log(globalParamId)
+      try {
+        const res = await axios.post(
+          url + "/api/v1/order/verify",
+          {
+            orderId,
+            success: true,
+            courseId: globalParamId,
+          },
+          {
+            headers: { token },
+          }
+        );
+        if (res.data.success) {
+          // router.push("/courses");
+        }
+      } catch (error) {
+        console.log(error);
       }
     };
+
     if (pathname.includes("/checkout-success")) {
-     
       verifyOrder();
     }
   }, []);

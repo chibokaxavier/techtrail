@@ -74,7 +74,6 @@ const placeOrder = async (req, res) => {
       },
       { upsert: true, new: true }
     );
-
     const line_items = [
       {
         price_data: {
@@ -97,7 +96,7 @@ const placeOrder = async (req, res) => {
       customer_email: user.email,
     });
 
-    res.json({ success: true, message: "Successfully paid", session });
+    res.json({ success: true, message: "Payment in progress", session });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: "Error" });
@@ -105,10 +104,22 @@ const placeOrder = async (req, res) => {
 };
 
 const verifyOrder = async (req, res) => {
-  const { orderId, success } = req.body;
+  const { orderId, success, courseId } = req.body;
+  const userId = req.userId;
+  console.log(courseId);
+  console.log(orderId);
   try {
     if (success) {
       await Order.findByIdAndUpdate(orderId, { payment: true });
+      await Student.findOneAndUpdate(
+        { userId, "courses.courseId": courseId }, // Match userId and specific courseId
+        {
+          $set: {
+            "courses.$.paid": true, // Update the `paid` field for the matched course
+          },
+        },
+        { new: true } // Return the updated document
+      );
       res.status(200).json({ success: true, message: "Payment successful" });
     } else {
       await orderModel.findByIdAndDelete(orderId);
@@ -116,7 +127,7 @@ const verifyOrder = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Error" });
+    res.status(500).json({ success: false, message: error });
   }
 };
 
