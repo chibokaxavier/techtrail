@@ -105,30 +105,46 @@ const placeOrder = async (req, res) => {
 
 const verifyOrder = async (req, res) => {
   const { orderId, success, courseId } = req.body;
-  const userId = req.userId;
-  console.log(courseId);
-  console.log(orderId);
+  const user = req.user;
+  const userId = req.userId; // Assuming you have middleware to set `req.userId`
+
+  console.log("Course ID:", courseId);
+  console.log("User ID:", userId);
+  console.log(user)
+
   try {
     if (success) {
+      // Mark the order as paid
       await Order.findByIdAndUpdate(orderId, { payment: true });
-      await Student.findOneAndUpdate(
-        { userId, "courses.courseId": courseId }, // Match userId and specific courseId
+
+      // Update the `paid` field for the course in the `courses` array
+      const updatedStudent = await Student.findOneAndUpdate(
+        { userId, "courses.courseId": courseId }, // Match userId and courseId
         {
-          $set: {
-            "courses.$.paid": true, // Update the `paid` field for the matched course
-          },
+          $set: { "courses.$.paid": true }, // Update the `paid` field for the specific course
         },
         { new: true } // Return the updated document
       );
+
+      if (!updatedStudent) {
+        // If no match is found, handle the case
+        return res.status(404).json({
+          success: false,
+          message: "Student or course not found",
+        });
+      }
+
       res.status(200).json({ success: true, message: "Payment successful" });
     } else {
-      await orderModel.findByIdAndDelete(orderId);
+      // If payment failed, delete the order
+      await Order.findByIdAndDelete(orderId);
       res.status(200).json({ success: false, message: "Payment failed" });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: error });
+    console.error("Error in verifyOrder:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
 
 export { placeOrder, verifyOrder };

@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
 
 const StudentSchema = new mongoose.Schema({
-  userId: String,
+  userId: { type: String, required: true, unique: true },
   courses: [
     {
-      courseId: String,
+      courseId: { type: String, required: true },
       title: String,
       instructorName: String,
-      dateOfPurchase: { type: Date, default: Date.now() },
       image: String,
       paid: { type: Boolean, default: false },
     },
   ],
 });
+
 
 const Student = mongoose.model("student", StudentSchema);
 export default Student;

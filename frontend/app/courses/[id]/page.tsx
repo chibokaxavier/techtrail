@@ -15,9 +15,7 @@ const page = ({ params }: { params: { id: number } }) => {
   const { setGlobalParamId, globalParamId } = useStudentContext();
   const [paymentLoading, setPaymentLoading] = useState(false);
   const userId = auth?.user?._id;
-  console.log(params.id);
-  setGlobalParamId(params.id);
-  console.log(globalParamId);
+
   const fetchCourseDetails = async () => {
     setLoading(true);
     try {
@@ -74,6 +72,10 @@ const page = ({ params }: { params: { id: number } }) => {
 
   useEffect(() => {
     fetchCourseDetails();
+    localStorage.setItem("globalParamId", params.id.toString());
+    console.log(params.id);
+    setGlobalParamId(params.id.toString());
+    console.log(globalParamId);
   }, []);
 
   if (loading) {
