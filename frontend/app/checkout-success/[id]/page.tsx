@@ -18,7 +18,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const verifyOrder = async () => {
-      console.log(globalParamId)
+      console.log(globalParamId);
       try {
         const res = await axios.post(
           url + "/api/v1/order/verify",
@@ -55,9 +55,9 @@ const Page = ({ params }: { params: { id: string } }) => {
           Thank you for your purchase. Your payment was successfully processed.
         </p>
 
-        <Link href="/">
+        <Link href={`/courses/${globalParamId}`}>
           <button className="w-full px-6 py-3 text-white bg-green-500 rounded-md shadow-lg hover:bg-green-600 transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50">
-            Continue Shopping
+            Continue Learning
           </button>
         </Link>
       </div>

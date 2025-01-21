@@ -14,6 +14,7 @@ const page = ({ params }: { params: { id: number } }) => {
   const { auth } = useStoreContext();
   const { setGlobalParamId, globalParamId } = useStudentContext();
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const [paid, setPaid] = useState(false);
   const userId = auth?.user?._id;
 
   const fetchCourseDetails = async () => {
@@ -27,6 +28,10 @@ const page = ({ params }: { params: { id: number } }) => {
       if (res.data.success) {
         setCourseDetail(res.data.data);
         setLoading(false);
+        if (res.data.paid) {
+          setPaid(true);
+          console.log(paid, "paid");
+        }
       } else {
         setCourseDetail(null);
         setLoading(false);
@@ -177,12 +182,14 @@ const page = ({ params }: { params: { id: number } }) => {
                   <li
                     key={i}
                     className={`${
-                      courseDetail?.freePreview
+                      curriculumItem?.freePreview || paid
                         ? "cursor-pointer"
                         : "cursor-not-allowed"
                     } flex items-center mb-4`}
                   >
                     {curriculumItem?.freePreview ? (
+                      <PlayCircle className="mr-2 size-4" />
+                    ) : paid ? (
                       <PlayCircle className="mr-2 size-4" />
                     ) : (
                       <Lock className="mr-2 size-4" />
@@ -208,18 +215,23 @@ const page = ({ params }: { params: { id: number } }) => {
                   <p>No preview available</p>
                 )}
               </div>
-              <div className="mb-4">
-                <span className="text-3xl font-bold">
-                  ${courseDetail?.price}
-                </span>
-              </div>
-              <Button
-                className="w-full"
-                disabled={loading}
-                onClick={placeOrder}
-              >
-                {loading ? <ProgressSpinner /> : "  Buy Now"}
-              </Button>
+
+              {!paid && (
+                <>
+                  <div className="mb-4">
+                    <span className="text-3xl font-bold">
+                      ${courseDetail?.price}
+                    </span>
+                  </div>
+                  <Button
+                    className="w-full"
+                    disabled={loading}
+                    onClick={placeOrder}
+                  >
+                    {loading ? <ProgressSpinner /> : "  Buy Now"}
+                  </Button>
+                </>
+              )}
             </CardContent>
           </Card>
         </aside>
