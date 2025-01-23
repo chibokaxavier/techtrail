@@ -5,6 +5,7 @@ import {
   LaptopMinimal,
   MoonIcon,
   NotebookPen,
+  Search,
   SunIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -12,6 +13,7 @@ import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { useStoreContext } from "@/context/authContext";
+import { Input } from "./ui/input";
 
 const Header = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -43,14 +45,22 @@ const Header = () => {
         <LaptopMinimal className="mr-5 size-10 " />{" "}
         <span className="text-2xl font-extrabold">TechTrail</span>
       </Link>
-
-      <div className="">
-        <Link href='/courses'>
-          <Button className="rounded-md">Explore Courses</Button>
-        </Link>
+      <div className="relative">
+        <Input
+          className="h-10 w-[564px] rounded-3xl px-4 border-black "
+          placeholder="What do you wnat to learn ? "
+        />
+        <div className="absolute  p-4 bg-blue-300 rounded-3xl h-7 justify-center items-center flex top-1 right-3">
+          <Search className="h-4" />
+        </div>
       </div>
 
       <div className="flex gap-5">
+        <div className="">
+          <Link href="/courses">
+            <Button className="rounded-md">Explore Courses</Button>
+          </Link>
+        </div>
         <Button className="flex gap-2">
           <p>My Courses</p> <NotebookPen />
         </Button>

@@ -7,6 +7,7 @@ import { PrimeReactProvider } from "primereact/api";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Metadata } from "next";
 import StudentProvider from "@/context/studentContext";
+import Footer from "@/components/Footer";
 
 const jetBrainsMono = Text_Me_One({
   subsets: ["latin"],
@@ -41,6 +42,7 @@ export default function RootLayout({
               <ProtectedRoute>
                 <Header />
                 {children}
+                <Footer/>
               </ProtectedRoute>
             </PrimeReactProvider>
           </StudentProvider>
