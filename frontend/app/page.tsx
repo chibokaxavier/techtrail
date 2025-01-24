@@ -4,6 +4,7 @@ import { courseCategories } from "@/config/utils";
 import { useStudentContext } from "@/context/studentContext";
 import axios from "axios";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Home() {
@@ -56,7 +57,8 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-6">
           {studentCourseList && studentCourseList.length > 0
             ? studentCourseList.map((course: any, i: number) => (
-                <div
+              <Link href={`/courses/${course._id}`}>
+               <div
                   className="border rounded-lg overflow-hidden shadow cursor-pointer"
                   key={i}
                 >
@@ -75,6 +77,8 @@ export default function Home() {
                     <p className="font-bold text-[16px]">${course?.price}</p>
                   </div>
                 </div>
+              </Link>
+               
               ))
             : "No courses found"}
         </div>

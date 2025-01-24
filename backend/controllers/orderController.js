@@ -108,9 +108,6 @@ const verifyOrder = async (req, res) => {
   const user = req.user;
   const userId = req.userId; // Assuming you have middleware to set `req.userId`
 
-  console.log("Course ID:", courseId);
-  console.log("User ID:", userId);
-  console.log(user)
 
   try {
     if (success) {

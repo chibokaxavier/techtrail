@@ -8,6 +8,7 @@ import axios from "axios";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import { ProgressSpinner } from "primereact/progressspinner";
 import React, { useEffect, useState } from "react";
+import { FaVideo } from "react-icons/fa";
 const page = ({ params }: { params: { id: number } }) => {
   const [courseDetail, setCourseDetail] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -16,6 +17,8 @@ const page = ({ params }: { params: { id: number } }) => {
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paid, setPaid] = useState(false);
   const userId = auth?.user?._id;
+  const [mainVid, setMainVid] = useState("");
+  const [mainTitle, setMainTitle] = useState("");
 
   const fetchCourseDetails = async () => {
     setLoading(true);
@@ -74,6 +77,9 @@ const page = ({ params }: { params: { id: number } }) => {
       console.log(error);
     }
   };
+  const freePreviewItem = courseDetail?.curriculum?.find(
+    (item: any) => item.freePreview
+  );
 
   useEffect(() => {
     fetchCourseDetails();
@@ -82,6 +88,12 @@ const page = ({ params }: { params: { id: number } }) => {
     setGlobalParamId(params.id.toString());
     console.log(globalParamId);
   }, []);
+
+  useEffect(() => {
+    if (freePreviewItem) {
+      setMainVid(freePreviewItem.videoUrl);
+    }
+  }, [freePreviewItem]);
 
   if (loading) {
     return (
@@ -131,17 +143,13 @@ const page = ({ params }: { params: { id: number } }) => {
     );
   }
 
-  const freePreviewItem = courseDetail?.curriculum?.find(
-    (item: any) => item.freePreview
-  );
-
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div className="bg-gray-600 text-white p-8 rounded-t-lg ">
+      <div className="bg-blue-300 text-black p-8 rounded-t-lg ">
         <h1 className="text-3xl font-bold mb-4">{courseDetail?.title}</h1>
         <p className="text-xl mb-4">{courseDetail?.subtitle}</p>
         <div className="flex items-center space-x-4 mt-2 text-sm">
-          <span>Created by {courseDetail?.instructorName}</span>
+          <span> By {courseDetail?.instructorName}</span>
           <span>Created on {courseDetail?.date.split("T")[0]}</span>
           <span className="flex items-center capitalize">
             {" "}
@@ -150,6 +158,10 @@ const page = ({ params }: { params: { id: number } }) => {
           <span>
             {courseDetail?.students.length}{" "}
             {courseDetail?.students.length <= 1 ? "Student" : "Students"}{" "}
+          </span>
+          <span className="flex justify-center gap-1 items-center">
+            <FaVideo /> {courseDetail?.curriculum?.length}{" "}
+            {courseDetail?.curriculum?.length <= 1 ? "Video" : "Videos"}
           </span>
         </div>
       </div>
@@ -181,6 +193,10 @@ const page = ({ params }: { params: { id: number } }) => {
                 (curriculumItem: any, i: number) => (
                   <li
                     key={i}
+                    onClick={() => {
+                      setMainVid(curriculumItem?.videoUrl);
+                      setMainTitle(curriculumItem?.title);
+                    }}
                     className={`${
                       curriculumItem?.freePreview || paid
                         ? "cursor-pointer"
@@ -188,13 +204,39 @@ const page = ({ params }: { params: { id: number } }) => {
                     } flex items-center mb-4`}
                   >
                     {curriculumItem?.freePreview ? (
-                      <PlayCircle className="mr-2 size-4" />
+                      <PlayCircle
+                        className={`${
+                          mainTitle === curriculumItem?.title
+                            ? "text-blue-600"
+                            : ""
+                        } mr-2 size-4 hover:scale-150 transition-all duration-300 ease-in-out`}
+                      />
                     ) : paid ? (
-                      <PlayCircle className="mr-2 size-4" />
+                      <PlayCircle
+                        className={`${
+                          mainTitle === curriculumItem?.title
+                            ? "text-blue-600"
+                            : ""
+                        } mr-2 size-4 hover:scale-150 transition-all duration-300 ease-in-out`}
+                      />
                     ) : (
-                      <Lock className="mr-2 size-4" />
+                      <Lock
+                        className={`${
+                          mainTitle === curriculumItem?.title
+                            ? "text-blue-600"
+                            : ""
+                        } mr-2 size-4 hover:scale-150 transition-all duration-300 ease-in-out`}
+                      />
                     )}{" "}
-                    <span>{curriculumItem?.title}</span>
+                    <span
+                      className={`${
+                        mainTitle === curriculumItem?.title
+                          ? "text-blue-600"
+                          : ""
+                      }`}
+                    >
+                      {curriculumItem?.title}
+                    </span>
                   </li>
                 )
               )}
@@ -206,17 +248,13 @@ const page = ({ params }: { params: { id: number } }) => {
             <CardContent className="p-6">
               <div className="aspect-video mb-4 rounded-lg flex items-center justify-center">
                 {freePreviewItem ? (
-                  <VideoPlayer
-                    width="450px"
-                    height="200px"
-                    url={freePreviewItem.videoUrl}
-                  />
+                  <VideoPlayer width="450px" height="200px" url={mainVid} />
                 ) : (
                   <p>No preview available</p>
                 )}
               </div>
 
-              {!paid && (
+              {!paid ? (
                 <>
                   <div className="mb-4">
                     <span className="text-3xl font-bold">
@@ -225,12 +263,14 @@ const page = ({ params }: { params: { id: number } }) => {
                   </div>
                   <Button
                     className="w-full"
-                    disabled={loading}
+                    disabled={paymentLoading}
                     onClick={placeOrder}
                   >
-                    {loading ? <ProgressSpinner /> : "  Buy Now"}
+                    {paymentLoading ? <ProgressSpinner /> : "  Buy Now"}
                   </Button>
                 </>
+              ) : (
+                <span>{mainTitle}</span>
               )}
             </CardContent>
           </Card>

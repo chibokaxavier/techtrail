@@ -76,7 +76,7 @@ const getStudentCoursesDetails = async (req, res) => {
   try {
     const { id } = req.params; // Extract courseId from params
     const { userId } = req.body; // Currently logged-in user's ID
-    console.log(id);
+  
 
     // Fetch course details from the Course model
     const courseDetails = await Course.findById(id);
