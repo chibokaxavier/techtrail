@@ -1,8 +1,10 @@
 "use client";
 import {
+  BarChart,
   BookDown,
   GraduationCap,
   LaptopMinimal,
+  Menu,
   MoonIcon,
   NotebookPen,
   Search,
@@ -14,9 +16,12 @@ import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { useStoreContext } from "@/context/authContext";
 import { Input } from "./ui/input";
+import { Sidebar } from "primereact/sidebar";
+import MobileNav from "./MobileNav";
 
 const Header = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [visible, setVisible] = useState(false);
   const toggleTheme = () => {
     setIsDarkMode((prev) => !prev);
     document.documentElement.classList.toggle("dark", !isDarkMode);
@@ -39,37 +44,48 @@ const Header = () => {
   if (isHeaderExcluded) {
     return null;
   }
-  return (
-    <header className=" flex items-center justify-between max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8 ">
-      <Link href={"/"} className="flex items-center justify-center">
-        <LaptopMinimal className="mr-5 size-10 " />{" "}
-        <span className="text-2xl font-extrabold">TechTrail</span>
-      </Link>
-      <div className="relative">
-        <Input
-          className="h-10 w-[564px] rounded-3xl px-4 border-black "
-          placeholder="What do you wnat to learn ? "
-        />
-        <div className="absolute  p-4 bg-blue-300 rounded-3xl h-7 justify-center items-center flex top-1 right-3">
-          <Search className="h-4" />
-        </div>
-      </div>
 
-      <div className="flex gap-5">
-        <div className="">
-          <Link href="/courses">
-            <Button className="rounded-md">Explore Courses</Button>
-          </Link>
-        </div>
-        <Link href="/my-courses">
-          <Button className="flex gap-2">
-            <p>My Courses</p> <NotebookPen />
-          </Button>
+  return (
+    <header className="  py-4 px-4 flex  justify-between  items-center">
+      <Link href={"/"} className="flex items-center justify-center">
+        <LaptopMinimal className="mr-5 size-8 " />{" "}
+        <span className="text2xl font-extrabold">TechTrail</span>
+      </Link>
+      <div className="lg:flex items-center justify-between hidden  max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">
+        <Link href={"/"} className="flex items-center justify-center">
+          <LaptopMinimal className="mr-5 size-10 " />{" "}
+          <span className="text-2xl font-extrabold">TechTrail</span>
         </Link>
 
-        <Button onClick={handleConfirm}>Sign Out</Button>
+        <div className="relative">
+          <Input
+            className="h-10 w-[564px] lg:block hidden rounded-3xl px-4 border-black "
+            placeholder="What do you wnat to learn ? "
+          />
+          <div className="lg:absolute hidden   p-4 bg-blue-300 rounded-3xl h-7 justify-center items-center lg:flex top-1 right-3">
+            <Search className="h-4" />
+          </div>
+        </div>
+
+        <div className="flex gap-5">
+          <div className="">
+            <Link href="/courses">
+              <Button className="rounded-md">Explore Courses</Button>
+            </Link>
+          </div>
+          <Link href="/my-courses">
+            <Button className="flex gap-2">
+              <p>My Courses</p> <NotebookPen />
+            </Button>
+          </Link>
+
+          <Button onClick={handleConfirm}>Sign Out</Button>
+        </div>
       </div>
 
+      <div className="xl:hidden ml-3">
+        <MobileNav />
+      </div>
       {/* <button
         onClick={toggleTheme}
         className=""
