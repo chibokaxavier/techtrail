@@ -30,13 +30,23 @@ const getAllCourses = async (req, res) => {
 
 const getPaidCourses = async (req, res) => {
   const userId = req.userId;
-  console.log(userId)
+  console.log(userId);
   try {
-    const student = await Student.findOne({
-      userId: userId,
-      "courses.paid": true,
-    });
-    res.status(200).json({ sucess: true, data: student });
+    const student = await Student.findOne(
+      {
+        userId: userId,
+        "courses.paid": true,
+      },
+      { "courses.courseId": 1, _id: 0 }
+    );
+    if (!student) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No paid courses found" });
+    }
+    const courseIds = student.courses.map((course) => course.courseId);
+    const courses = await Course.find({ _id: { $in: courseIds } });
+    res.status(200).json({ success: true, data: courses });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Some Error occured" });
