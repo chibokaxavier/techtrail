@@ -61,9 +61,12 @@ const Header = () => {
             <Button className="rounded-md">Explore Courses</Button>
           </Link>
         </div>
-        <Button className="flex gap-2">
-          <p>My Courses</p> <NotebookPen />
-        </Button>
+        <Link href="/my-courses">
+          <Button className="flex gap-2">
+            <p>My Courses</p> <NotebookPen />
+          </Button>
+        </Link>
+
         <Button onClick={handleConfirm}>Sign Out</Button>
       </div>
 

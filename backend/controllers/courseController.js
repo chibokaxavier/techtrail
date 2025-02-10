@@ -1,4 +1,5 @@
 import Course from "../model/courseModel.js";
+import Student from "../model/studentModel.js";
 
 const addNewCourse = async (req, res) => {
   try {
@@ -27,6 +28,19 @@ const getAllCourses = async (req, res) => {
   }
 };
 
+const getPaidCourses = async () => {
+  const userId = req.userId;
+  try {
+    const student = await Student.findOne({
+      userId: userId,
+      "courses.paid": true,
+    });
+    res.status(200).json({ sucess: true, data: student });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Some Error occured" });
+  }
+};
 const getCourseDetailsById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -74,4 +88,10 @@ const updateCourseById = async (req, res) => {
   }
 };
 
-export { getAllCourses, updateCourseById, getCourseDetailsById, addNewCourse };
+export {
+  getAllCourses,
+  updateCourseById,
+  getCourseDetailsById,
+  addNewCourse,
+  getPaidCourses,
+};

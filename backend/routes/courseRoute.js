@@ -3,6 +3,7 @@ import {
   addNewCourse,
   getAllCourses,
   getCourseDetailsById,
+  getPaidCourses,
   updateCourseById,
 } from "../controllers/courseController.js";
 
@@ -12,5 +13,6 @@ courseRouter.post("/add", addNewCourse);
 courseRouter.get("/get", getAllCourses);
 courseRouter.get("/get/details/:id", getCourseDetailsById);
 courseRouter.put("/update/:id", updateCourseById);
+courseRouter.get("/getPaidCourses", getPaidCourses);
 
 export default courseRouter;
