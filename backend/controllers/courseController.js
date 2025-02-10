@@ -28,8 +28,9 @@ const getAllCourses = async (req, res) => {
   }
 };
 
-const getPaidCourses = async () => {
+const getPaidCourses = async (req, res) => {
   const userId = req.userId;
+  console.log(userId)
   try {
     const student = await Student.findOne({
       userId: userId,

@@ -1,32 +1,38 @@
-import React from 'react'
+"use client";
+import { useStoreContext } from "@/context/authContext";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const page = () => {
-    const [courseLoading, setCourseLoading] = useState(false);
-     const fetchStudentCourses = async (filters: any, sort: any) => {
-        setCourseLoading(true);
-        const query = new URLSearchParams({
-          ...filters,
-          sortBy: sort,
-        });
-        try {
-          const res = await axios.get(
-            `http://localhost:4000/api/v1/student/get?${query}`
-          );
-          console.log(res.data);
-          if (res.data.success) {
-            setStudentCourseList(res.data.data);
-            setCourseLoading(false);
-          }
-        } catch (error) {
-          setStudentCourseList([]);
-          console.log(studentCourseList);
-          setCourseLoading(false);
-          console.error(error);
+  const [courseLoading, setCourseLoading] = useState(false);
+  const [paidCourses, setPaidCourses] = useState([]);
+  const { token } = useStoreContext();
+  const fetchPaidCourses = async () => {
+    setCourseLoading(true);
+    try {
+      const res = await axios.get(
+        `http://localhost:4000/api/v1/course/getPaidCourses`,
+        {
+          headers: { token },
         }
-      };
-  return (
-    <div>page</div>
-  )
-}
+      );
+      console.log(res.data);
+      if (res.data.success) {
+        setPaidCourses(res.data.data);
+        setCourseLoading(false);
+      }
+    } catch (error) {
+      setPaidCourses([]);
+      console.log(paidCourses);
+      setCourseLoading(false);
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchPaidCourses();
+  }, []);
 
-export default page
+  return <div>page</div>;
+};
+
+export default page;
