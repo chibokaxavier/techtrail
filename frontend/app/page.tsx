@@ -26,7 +26,7 @@ export default function Home() {
     <div className="min-h-screen bg-white  max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8 ">
       <section className="flex flex-col lg:flex-row items-center justify-between py-8  ">
         <div className="lg:w-1/2 lg:pr-12">
-          <h1 className="text-5xl font-bold mb-4">Unlock Your Potential</h1>
+          <h1 className="text-5xl font-bold mb-4 text-center lg:text-start">Unlock Your Potential</h1>
           <p className="text-xl">
             Empower yourself with skills that matter. Begin your journey with us
             now.

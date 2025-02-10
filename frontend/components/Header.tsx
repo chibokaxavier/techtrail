@@ -46,10 +46,11 @@ const Header = () => {
   }
 
   return (
-    <header className="  py-4 px-4 flex  justify-between  items-center">
-      <Link href={"/"} className="flex items-center justify-center">
+    <header className="  fixed top-0 left-0 w-full z-50 bg-white dark:bg-gray-900 ">
+      <div className="  py-4 lg:py-0 lg:px-0 px-4 lg:justify-normal lg:block flex  justify-between items-center">
+      <Link href={"/"} className="flex items-center justify-center lg:hidden">
         <LaptopMinimal className="mr-5 size-8 " />{" "}
-        <span className="text2xl font-extrabold">TechTrail</span>
+        <span className="text-xl font-extrabold">TechTrail</span>
       </Link>
       <div className="lg:flex items-center justify-between hidden  max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">
         <Link href={"/"} className="flex items-center justify-center">
@@ -92,7 +93,9 @@ const Header = () => {
       >
         {isDarkMode ? <SunIcon /> : <MoonIcon />}
       </button> */}
-    </header>
+
+      </div>
+          </header>
   );
 };
 

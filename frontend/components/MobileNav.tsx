@@ -12,35 +12,28 @@ const MobileNav = () => {
       path: "/",
     },
     {
-      name: "Services",
-      path: "/services",
+      name: "Explore Courses",
+      path: "/courses",
     },
     {
-      name: "Work",
-      path: "/work",
-    },
-    {
-      name: "Resume",
-      path: "/resume",
-    },
-    {
-      name: "Contact",
-      path: "/contact",
+      name: "My Courses",
+      path: "/my-courses",
     },
   ];
   const pathName = usePathname();
   const [visible, setVisible] = useState(false);
   return (
     <>
-      <CiMenuFries
-        onClick={() => setVisible(true)}
-        className="text-[25px]"
-      />
-      <Sidebar visible={visible} position="right"  onHide={() => setVisible(false)}>
+      <CiMenuFries onClick={() => setVisible(true)} className="text-[25px]" />
+      <Sidebar
+        visible={visible}
+        position="right"
+        onHide={() => setVisible(false)}
+      >
         <div className="mt-32 mb-40 text-center text-2xl">
           <Link href={"/"}>
             <h1 className="tetx-4xl font-semibold">
-              Delidish<span className="text-accent">.</span>
+              Techtrail<span className="text-accent">.</span>
             </h1>
           </Link>
         </div>
