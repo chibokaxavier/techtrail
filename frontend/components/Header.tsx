@@ -34,10 +34,8 @@ const Header = () => {
     localStorage.removeItem("token");
   };
 
-  // Define paths where the Header should be excluded
   const excludedPaths = "/instructor";
 
-  // Check if the current path is excluded
   const isHeaderExcluded =
     pathname.includes("/instructor") || pathname.includes("/auth");
 
@@ -50,7 +48,7 @@ const Header = () => {
       <div className="  py-4 lg:py-0 lg:px-0 px-4 lg:justify-normal lg:block flex  justify-between items-center">
       <Link href={"/"} className="flex items-center justify-center lg:hidden">
         <LaptopMinimal className="mr-5 size-8 " />{" "}
-        <span className="text-xl font-extrabold">TechTrail</span>
+        <span className="text-xl font-extrabold">TechTrail</span> 
       </Link>
       <div className="lg:flex items-center justify-between hidden  max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">
         <Link href={"/"} className="flex items-center justify-center">
