@@ -7,17 +7,21 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { setStudentCourseList, studentCourseList, globalParamId } =
     useStudentContext();
+  const [filteredCourses, setFilteredCourses] =
+    useState<any>(studentCourseList);
   const currentImage = useCarousel({ totalImages: 3 });
   const fetchStudentCourses = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/v1/student/get");
+      console.log(res.data.data);
       if (res.data.success) {
         setStudentCourseList(res.data.data);
+        setFilteredCourses(res.data.data);
       }
     } catch (error) {}
   };
@@ -134,22 +138,41 @@ export default function Home() {
         </div>
       </motion.div> */}
       </motion.div>
-      
-      <section className="py-8 px-4 lg:px-8 bg-gray-100">
-        <h2 className="text-2xl font-bold mb-6">Course Categories</h2>
-        <div className="grid grid-grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-          {courseCategories.map((category) => (
-            <Button className="" key={category.id}>
-              {category.label}
-            </Button>
-          ))}
-        </div>
-      </section>
-      <section className="py-12 ">
+      <Link href="#feat-courses">
+        <section className="py-8 px-4 lg:px-0 ">
+          <h2 className="text-2xl font-bold mb-6 text-gray-300">
+            Course Categories
+          </h2>
+          <p className="text-gray-300 text-lg my-10">
+            Explore a wide range of courses tailored to boost your skills and
+            knowledge. Whether you're diving into tech, find the perfect course
+            to level up your expertise. Start learning today!
+          </p>
+          <div className="grid grid-grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            {courseCategories.map((category) => (
+              <Button
+                className=""
+                key={category.id}
+                onClick={() =>
+                  setFilteredCourses(
+                    studentCourseList.filter(
+                      (course: any) => course.category === category.id
+                    )
+                  )
+                }
+              >
+                {category.label}
+              </Button>
+            ))}
+          </div>
+        </section>
+      </Link>
+
+      <section className="py-20 text-gray-300 " id="feat-courses">
         <h2 className="text-2xl font-bold mb-6">Featured Courses</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-6">
-          {studentCourseList && studentCourseList.length > 0
-            ? studentCourseList.map((course: any, i: number) => (
+          {filteredCourses && filteredCourses.length > 0
+            ? filteredCourses.map((course: any, i: number) => (
                 <Link href={`/courses/${course._id}`}>
                   <div
                     className="border rounded-lg overflow-hidden shadow cursor-pointer"
