@@ -59,12 +59,140 @@
 @layer base {
   * {
     @apply border-border;
+
+    .landing {
+      @apply lg:w-3/4 mx-auto;
+    }
+    
+    .landing__hero {
+      @apply flex justify-between bg-black/20 items-center mt-12 h-[500px] rounded-lg ;
+    }
+    
+    .landing__hero-content {
+      @apply basis-1/2 px-16 mx-auto;
+    }
+    
+    .landing__title {
+      @apply text-4xl  font-bold mb-4;
+    }
+    
+    .landing__description {
+      @apply text-lg text-gray-400 mb-8;
+    }
+    
+    .landing__cta {
+      @apply w-fit;
+    }
+    
+    .landing__cta-button {
+      @apply  px-4 py-2 rounded-md;
+    }
+    
+    .landing__hero-images {
+      @apply basis-1/2 h-full relative overflow-hidden rounded-r-lg;
+    }
+    
+    .landing__hero-image {
+      @apply object-cover transition-opacity duration-500 opacity-0;
+    }
+    
+    .landing__hero-image--active {
+      @apply opacity-100;
+    }
+    
+    .landing__featured {
+      @apply mx-auto py-12 mt-10;
+    }
+    
+    .landing__featured-title {
+      @apply text-2xl font-semibold mb-4;
+    }
+    
+    .landing__featured-description {
+      @apply  mb-8;
+    }
+    
+    .landing__tags {
+      @apply flex flex-wrap gap-4 mb-8;
+    }
+    
+    .landing__tag {
+      @apply px-3 py-1  rounded-full text-sm;
+    }
+    
+    .landing__courses {
+      @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+    }
+    
+    /* Landing Skeleton */
+    .landing-skeleton {
+      @apply w-3/4;
+    }
+    
+    .landing-skeleton__hero {
+      @apply flex justify-between items-center mt-12 h-[500px] rounded-lg ;
+    }
+    
+    .landing-skeleton__hero-content {
+      @apply basis-1/2 px-16 mx-auto;
+    }
+    
+    .landing-skeleton__title {
+      @apply h-8 w-48 mb-4;
+    }
+    
+    .landing-skeleton__subtitle {
+      @apply h-4 w-96 mb-2;
+    }
+    
+    .landing-skeleton__subtitle-secondary {
+      @apply h-4 w-72 mb-8;
+    }
+    
+    .landing-skeleton__button {
+      @apply w-40 h-10;
+    }
+    
+    .landing-skeleton__hero-image {
+      @apply basis-1/2 h-full rounded-r-lg;
+    }
+    
+    .landing-skeleton__featured {
+      @apply mx-auto py-12 mt-10;
+    }
+    
+    .landing-skeleton__featured-title {
+      @apply h-6 w-48 mb-4;
+    }
+    
+    .landing-skeleton__featured-description {
+      @apply h-4 w-full max-w-2xl mb-8;
+    }
+    
+    .landing-skeleton__tags {
+      @apply flex flex-wrap gap-4 mb-8;
+    }
+    
+    .landing-skeleton__tag {
+      @apply w-24 h-6 rounded-full;
+    }
+    
+    .landing-skeleton__courses {
+      @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+    }
+    
+    .landing-skeleton__course-card {
+      @apply h-[300px] rounded-lg;
+    }
+    
   }
   body {
-    @apply bg-background text-foreground my-5 ;
+    @apply bg-background bg-[#1d1d1d] text-foreground my-5 ;
   }
 }
 
 body {
   font-family: var(--font-Text_Me_One, monospace) !important;
 }
+
+

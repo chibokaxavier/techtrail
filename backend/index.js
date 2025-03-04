@@ -19,7 +19,7 @@ const corsOption = {
 const connectDb = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("mongoose connected to the database");
+    console.log("mongoose connected to the database"); 
     app.listen(port, () => {
       console.log(`listening on ${port}`);
     });
