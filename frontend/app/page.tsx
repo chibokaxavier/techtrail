@@ -10,11 +10,34 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { setStudentCourseList, studentCourseList, globalParamId } =
-    useStudentContext();
-  const [filteredCourses, setFilteredCourses] =
-    useState<any>(studentCourseList);
+  const {
+    setStudentCourseList,
+    studentCourseList,
+    handleSearch,
+    searchQuery,
+    setSearchQuery,
+    filteredCourses,
+    setFilteredCourses,
+    globalParamId,
+  } = useStudentContext();
+
+  // const [searchQuery, setSearchQuery] = useState("");
+
   const currentImage = useCarousel({ totalImages: 3 });
+  // const handleSearch = (query: string) => {
+  //   setSearchQuery(query);
+
+  //   if (!query) {
+  //     setFilteredCourses(studentCourseList);
+  //     return;
+  //   }
+
+  //   const filtered = studentCourseList.filter((course: any) =>
+  //     course.title.toLowerCase().includes(query.toLowerCase())
+  //   );
+
+  //   setFilteredCourses(filtered);
+  // };
   const fetchStudentCourses = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/v1/student/get");
@@ -187,10 +210,13 @@ export default function Home() {
                     />{" "}
                     <div className="p-4 ">
                       <h3 className="mb-2 font-bold">{course?.title}</h3>
+                      <h3>{course?.description}</h3>
                       <p className="text-sm text-gray-700 mb-2">
                         {course?.instructorName}
                       </p>
-                      <p className="font-bold text-[16px]">${course?.price}</p>
+                      <p className="font-extrabold text-[16px]">
+                        ${course?.price}
+                      </p>
                     </div>
                   </div>
                 </Link>

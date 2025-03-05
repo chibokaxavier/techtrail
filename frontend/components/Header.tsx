@@ -19,9 +19,21 @@ import { useStoreContext } from "@/context/authContext";
 import { Input } from "./ui/input";
 import { Sidebar } from "primereact/sidebar";
 import MobileNav from "./MobileNav";
+import { useStudentContext } from "@/context/studentContext";
 
 const Header = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const {
+    setStudentCourseList,
+    studentCourseList,
+    handleSearch,
+    searchQuery,
+    setSearchQuery,
+    filteredCourses,
+    setFilteredCourses,
+    globalParamId,
+  } = useStudentContext();
+
   const [visible, setVisible] = useState(false);
   const toggleTheme = () => {
     setIsDarkMode((prev) => !prev);
@@ -61,6 +73,8 @@ const Header = () => {
             <Input
               className="h-10 w-[294px] lg:block hidden rounded-lg px-4 border-none bg-black/20 "
               placeholder="Search Courses "
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
             />
             <div className="lg:absolute hidden  h-7 justify-center items-center lg:flex top-1 right-3">
               <BookOpen className="h-4" />
@@ -70,7 +84,9 @@ const Header = () => {
           <div className="flex gap-5">
             <div className="">
               <Link href="/courses">
-                <Button className="rounded-md bg-black/20">Explore Courses</Button>
+                <Button className="rounded-md bg-black/20">
+                  Explore Courses
+                </Button>
               </Link>
             </div>
             <Link href="/my-courses">
@@ -79,11 +95,13 @@ const Header = () => {
               </Button>
             </Link>
 
-            <Button onClick={handleConfirm} className="bg-black/20">Sign Out</Button>
+            <Button onClick={handleConfirm} className="bg-black/20">
+              Sign Out
+            </Button>
           </div>
         </div>
 
-        <div className="xl:hidden ml-3 ">
+        <div className="lg:hidden ml-3 ">
           <MobileNav />
         </div>
         {/* <button onClick={toggleTheme} className="">

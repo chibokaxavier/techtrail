@@ -205,9 +205,9 @@ const page = () => {
 
   return (
     // <ProtectedRoute authenticate={auth?.authenticate} user={auth?.user}>
-    <div className="flex flex-col min-h-screen ">
+    <div className="flex flex-col min-h-screen  ">
       <Toast ref={toast} position="bottom-right" />
-      <div className="flex items-center justify-center min-h-screen bg-background">
+      <div className="flex items-center justify-center min-h-screen ">
         <Tabs
           value={activeTab}
           defaultValue="signIn"
