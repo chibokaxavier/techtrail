@@ -57,7 +57,7 @@ const Header = () => {
   }
 
   return (
-    <header className="  fixed top-0 left-0 w-full z-50 dark:bg-gray-900 text-gray-300 ">
+    <header className="  fixed top-0 left-0 w-full z-50 bg-black text-gray-300 ">
       <div className="  py-4 lg:py-0 lg:px-0 px-4 lg:justify-normal lg:block flex  justify-between lg:items-center ">
         <Link href={"/"} className="flex items-center justify-center lg:hidden">
           <LaptopMinimal className="md:mr-5 mr-2 md:size-8 size-6 " />{" "}

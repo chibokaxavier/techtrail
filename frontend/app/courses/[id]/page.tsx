@@ -144,11 +144,11 @@ const page = ({ params }: { params: { id: number } }) => {
   }
 
   return (
-    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div className="bg-blue-300 text-black p-8 rounded-t-lg ">
-        <h1 className="text-3xl font-bold mb-4">{courseDetail?.title}</h1>
-        <p className="text-xl mb-4">{courseDetail?.subtitle}</p>
-        <div className="flex items-center space-x-4 mt-2 text-sm">
+    <div className="max-w-screen-xl mx-auto px-4 sm:px-6 mt-20 lg:px-8 py-4">
+      <div className="bg-black  p-8 rounded-lg ">
+        <h1 className="text-3xl text-white font-bold mb-4">{courseDetail?.title}</h1>
+        <p className="text-xl mb-4 text-white">{courseDetail?.subtitle}</p>
+        <div className="flex lg:flex-row flex-col  lg:items-center lg:space-x-4 text-white mt-2 text-sm">
           <span> By {courseDetail?.instructorName}</span>
           <span>Created on {courseDetail?.date.split("T")[0]}</span>
           <span className="flex items-center capitalize">
@@ -159,7 +159,7 @@ const page = ({ params }: { params: { id: number } }) => {
             {courseDetail?.students.length}{" "}
             {courseDetail?.students.length <= 1 ? "Student" : "Students"}{" "}
           </span>
-          <span className="flex justify-center gap-1 items-center">
+          <span className="flex lg:justify-center gap-1 items-center">
             <FaVideo /> {courseDetail?.curriculum?.length}{" "}
             {courseDetail?.curriculum?.length <= 1 ? "Video" : "Videos"}
           </span>
@@ -167,7 +167,7 @@ const page = ({ params }: { params: { id: number } }) => {
       </div>
       <div className="flex flex-col md:flex-row gap-8 mt-8">
         <main className="flex-grow">
-          <Card className="mb-8">
+          <Card className="mb-8 bg-black text-white border-0">
             <CardHeader>
               <CardTitle>What you will learn in this course</CardTitle>
             </CardHeader>
@@ -184,7 +184,7 @@ const page = ({ params }: { params: { id: number } }) => {
               </ul>
             </CardContent>
           </Card>
-          <Card className="mb-8">
+          <Card className="mb-8 bg-black text-white border-0">
             <CardHeader>
               <CardTitle>Course Curriculum</CardTitle>
             </CardHeader>
@@ -244,7 +244,7 @@ const page = ({ params }: { params: { id: number } }) => {
           </Card>
         </main>
         <aside className="w-full md:w-[500px]">
-          <Card className="sticky top-4">
+          <Card className="sticky top-4 bg-black border-0">
             <CardContent className="p-6">
               <div className="aspect-video mb-4 rounded-lg flex items-center justify-center">
                 {freePreviewItem ? (

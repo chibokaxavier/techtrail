@@ -19,10 +19,10 @@ const Footer = () => {
   }
 
   return (
-    <footer className="flex flex-col  text-gray-400  border-t-[1px] border-gray-200 max-w-screen-xl mx-auto  py-5 sm:px-6 lg:px-8">
+    <footer className="flex flex-col  text-white  border-t-[1px] border-gray-200 max-w-screen-xl mx-auto  py-5 sm:px-6 lg:px-8">
       <div className="flex  xl:flex-row flex-col justify-evenly pt-20 pb-5 px-5 ">
         <div className="pb-20">
-          <p className="text-4xl pb-3 gap-2 text-gray-400  flex items-center justify-self-center8 font-bold">
+          <p className="text-4xl pb-3 gap-2 text-white  flex items-center justify-self-center8 font-bold">
             <span>
               {" "}
               <LaptopMinimal className="mr-5 size-10" />
@@ -38,7 +38,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="grid xl:grid-cols-2 grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-20 pb-10">
-          <div className="text-gray-400">
+          <div className="text-white">
             <p className="mb-6 font-bold text-gray-300 text-2xl capitalize">
               COMPANY
             </p>

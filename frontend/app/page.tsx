@@ -13,31 +13,13 @@ export default function Home() {
   const {
     setStudentCourseList,
     studentCourseList,
-    handleSearch,
-    searchQuery,
-    setSearchQuery,
     filteredCourses,
     setFilteredCourses,
-    globalParamId,
   } = useStudentContext();
 
-  // const [searchQuery, setSearchQuery] = useState("");
 
   const currentImage = useCarousel({ totalImages: 3 });
-  // const handleSearch = (query: string) => {
-  //   setSearchQuery(query);
-
-  //   if (!query) {
-  //     setFilteredCourses(studentCourseList);
-  //     return;
-  //   }
-
-  //   const filtered = studentCourseList.filter((course: any) =>
-  //     course.title.toLowerCase().includes(query.toLowerCase())
-  //   );
-
-  //   setFilteredCourses(filtered);
-  // };
+  
   const fetchStudentCourses = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/v1/student/get");
@@ -54,26 +36,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen   max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8 ">
-      {/* <section className="flex flex-col lg:flex-row items-center justify-between py-8  ">
-        <div className="lg:w-1/2 lg:pr-12">
-          <h1 className="text-2xl md:text-5xl font-bold mb-4 text-center lg:text-start">Unlock Your Potential</h1>
-          <p className="text-xl">
-            Empower yourself with skills that matter. Begin your journey with us
-            now.
-          </p>
-        </div>
-        <div className="lg:w-1/2 mb-8 lg:mb-0">
-          <img
-            src="/programmer.svg"
-            width={600}
-            height={400}
-            className="w-full  h-auto rounded-lg "
-            alt="programmer"
-          />
-        </div>
-      </section> */}
-
-      <motion.div
+          <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -114,52 +77,7 @@ export default function Home() {
             ))}
           </div>
         </motion.div>
-        {/* <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        viewport={{ amount: 0.3, once: true }}
-        className="landing__featured"
-      >
-        <h2 className="landing__featured-title">Featured Courses</h2>
-        <p className="landing__featured-description">
-          From beginner to advanced, in all industries, we have the right
-          courses just for you and preparing your entire journey for learning
-          and making the most.
-        </p>
-
-        <div className="landing__tags">
-          {[
-            "web development",
-            "enterprise IT",
-            "react nextjs",
-            "javascript",
-            "backend development",
-          ].map((tag, index) => (
-            <span key={index} className="landing__tag">
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <div className="landing__courses">
-          {courses &&
-            courses.slice(0, 4).map((course, index) => (
-              <motion.div
-                key={course.courseId}
-                initial={{ y: 50, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                viewport={{ amount: 0.4 }}
-              >
-                <CourseCardSearch
-                  course={course}
-                  onClick={() => handleCourseClick(course.courseId)}
-                />
-              </motion.div>
-            ))}
-        </div>
-      </motion.div> */}
+        
       </motion.div>
       <Link href="#feat-courses">
         <section className="py-8 px-4 lg:px-0 ">
