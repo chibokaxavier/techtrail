@@ -278,7 +278,7 @@ const page = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             <span className="text-sm  font-bold">
-              {studentCourseList?.length} Results
+              {filteredCourses?.length} Results
             </span>
           </div>
           <div className="space-y-4 ">

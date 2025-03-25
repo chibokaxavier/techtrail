@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CiMenuFries } from "react-icons/ci";
 import { Sidebar } from "primereact/sidebar";
 import { useState } from "react";
+import { useStoreContext } from "@/context/authContext";
 
 const MobileNav = () => {
   const links = [
@@ -22,6 +23,12 @@ const MobileNav = () => {
   ];
   const pathName = usePathname();
   const [visible, setVisible] = useState(false);
+  const { setAuth, setToken } = useStoreContext();
+  const handleConfirm = () => {
+    setAuth({ authenticate: false, user: null });
+    setToken(null);
+    localStorage.removeItem("token");
+  };
   return (
     <>
       <CiMenuFries onClick={() => setVisible(true)} className="text-[25px]" />
@@ -45,13 +52,19 @@ const MobileNav = () => {
                 key={index}
                 className={`${
                   link.path === pathName &&
-                  "text-accent border-b-2 border-accent"
+                  "text-gray-400 border-b-2 border-accent"
                 } text-xl capitalize hover:text-accent transition-all `}
               >
                 {link.name}
               </Link>
             );
           })}
+          <p
+            onClick={handleConfirm}
+            className="text-lg text-red-300 px-2 bg-red-500 py-2 rounded-lg"
+          >
+            Sign Out
+          </p>
         </nav>
       </Sidebar>
     </>

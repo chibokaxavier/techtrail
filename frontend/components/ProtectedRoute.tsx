@@ -43,32 +43,42 @@ const ProtectedRoute = ({ children }: Protect) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="w-full max-w-4xl p-8 rounded-lg shadow-lg bg-white">
-          {/* Header Section */}
-          <div className="flex items-center mb-8">
-            {/* Circle Skeleton */}
-            <div className="mr-6">
-              <div className="w-24 h-24 rounded-full bg-gray-200 animate-pulse duration-900"></div>
-            </div>
+      <div className="flex items-center justify-center min-h-screen ">
+        <div className="w-full max-w-5xl p-8 rounded-lg shadow-lg bg-white">
+          {/* Course Header Section */}
+          <div className="flex items-center mb-6">
+            {/* Course Thumbnail Skeleton */}
+            <div className="w-32 h-32 rounded-lg bg-gray-200 animate-pulse"></div>
 
-            {/* Text Skeleton */}
-            <div className="flex-1 space-y-4">
-              <div className="w-72 h-6 bg-gray-200 animate-pulse duration-900 rounded"></div>
-              <div className="w-48 h-6 bg-gray-200 animate-pulse duration-900 rounded"></div>
-              <div className="w-64 h-4 bg-gray-200 animate-pulse duration-900 rounded"></div>
+            {/* Course Title & Instructor */}
+            <div className="ml-6 flex-1 space-y-3">
+              <div className="w-80 h-6 bg-gray-200 animate-pulse rounded"></div>
+              <div className="w-56 h-6 bg-gray-200 animate-pulse rounded"></div>
             </div>
           </div>
 
-          {/* Content Section */}
-          <div className="mb-8">
-            <div className="w-full h-80 bg-gray-200 animate-pulse duration-900 rounded"></div>
+          {/* Video Preview Section */}
+          <div className="w-full h-64 bg-gray-200 animate-pulse rounded mb-6"></div>
+
+          {/* Course Content Section */}
+          <div className="space-y-4 mb-6">
+            <div className="w-full h-6 bg-gray-200 animate-pulse rounded"></div>
+            <div className="w-4/5 h-6 bg-gray-200 animate-pulse rounded"></div>
+            <div className="w-3/4 h-6 bg-gray-200 animate-pulse rounded"></div>
           </div>
 
-          {/* Footer Buttons */}
+          {/* Syllabus Section */}
+          <div className="space-y-4 mb-6">
+            <div className="w-full h-8 bg-gray-300 rounded"></div>
+            <div className="w-full h-6 bg-gray-200 animate-pulse rounded"></div>
+            <div className="w-full h-6 bg-gray-200 animate-pulse rounded"></div>
+            <div className="w-full h-6 bg-gray-200 animate-pulse rounded"></div>
+          </div>
+
+          {/* Action Buttons */}
           <div className="flex justify-between">
-            <div className="w-32 h-12 bg-gray-200 animate-pulse duration-900 rounded"></div>
-            <div className="w-32 h-12 bg-gray-200 animate-pulse duration-900 rounded"></div>
+            <div className="w-36 h-12 bg-gray-200 animate-pulse rounded"></div>
+            <div className="w-36 h-12 bg-gray-200 animate-pulse rounded"></div>
           </div>
         </div>
       </div>

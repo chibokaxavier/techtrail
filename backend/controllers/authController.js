@@ -39,7 +39,7 @@ const loginUser = async (req, res) => {
         _id: user._id,
         userName: user.userName,
         role: user.role,
-        email: user.email,
+        email: user.email, 
       },
       process.env.JWT_SECRET, 
       { expiresIn: "24h" }
@@ -54,6 +54,6 @@ const loginUser = async (req, res) => {
     console.log(error);
     res.status(500).json({ success: false, message: error.message });
   }
-};
+}; 
 
 export { registerUser, loginUser };
