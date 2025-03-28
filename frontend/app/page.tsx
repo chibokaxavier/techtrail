@@ -7,7 +7,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function Home() {
   const {
@@ -17,9 +17,15 @@ export default function Home() {
     setFilteredCourses,
   } = useStudentContext();
 
+  const [shuffledCourses, setShuffledCourses] = useState<any>([]);
 
+  useEffect(() => {
+    setShuffledCourses(
+      [...filteredCourses].sort(() => Math.random() - 0.5).slice(0, 4)
+    );
+  }, [filteredCourses]);
   const currentImage = useCarousel({ totalImages: 3 });
-  
+
   const fetchStudentCourses = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/v1/student/get");
@@ -36,7 +42,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen   max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8 ">
-          <motion.div
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -77,7 +83,6 @@ export default function Home() {
             ))}
           </div>
         </motion.div>
-        
       </motion.div>
       <Link href="#feat-courses">
         <section className="py-8 px-4 lg:px-0 ">
@@ -112,8 +117,8 @@ export default function Home() {
       <section className="py-20 text-gray-300 " id="feat-courses">
         <h2 className="text-2xl font-bold mb-6">Featured Courses</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-6">
-          {filteredCourses && filteredCourses.length > 0
-            ? filteredCourses.map((course: any, i: number) => (
+          {shuffledCourses && shuffledCourses.length > 0
+            ? shuffledCourses.map((course: any, i: number) => (
                 <Link href={`/courses/${course._id}`}>
                   <div
                     className="border rounded-lg overflow-hidden shadow cursor-pointer"

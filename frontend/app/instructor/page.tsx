@@ -7,7 +7,7 @@ import React, { useState } from "react";
 const page = () => {
   const [tab, setTab] = useState<string>("courses");
   return (
-    <div className="flex bg-gray-100 max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">
+    <div className="flex text-white max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">
       {/* Pass tab state and setter to Sidebar */}
       <Sidebar tab={tab} setTab={setTab} />
       <div className="flex-1 p-8">

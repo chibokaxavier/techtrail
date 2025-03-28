@@ -103,7 +103,7 @@ const InstructorCourses = () => {
   }, []);
 
   return (
-    <Card className="">
+    <Card className="bg-black text-white">
       <CardHeader className="flex justify-between flex-row items-center">
         <CardTitle className="text-3xl font-extrabold ">All Courses</CardTitle>
         <Link href={"/instructor/add-new-course"}>

@@ -140,7 +140,7 @@ const page = () => {
           SUBMIT
         </Button>
       </div>
-      <Card>
+      <Card className="bg-black text-white">
         <CardContent>
           <div className="container mx-auto p-4">
             <Tabs defaultValue="curriculum">
