@@ -8,6 +8,8 @@ const getAllStudentCourses = async (req, res) => {
       level = [],
       language = [],
       sortBy = "price-lowtohigh",
+      page = 1, // Default page is 1
+      limit = 5, // Default limit is 5 per page
     } = req.query;
     let filter = {};
     if (category.length) {
@@ -38,15 +40,30 @@ const getAllStudentCourses = async (req, res) => {
         sortParams.pricing = 1;
         break;
     }
-    const courseList = await Course.find(filter).sort(sortParams);
+
+    const pageNumber = parseInt(page, 10) || 1;
+    const limitNumber = parseInt(limit, 10) || 5;
+    const skip = (pageNumber - 1) * limitNumber;
+
+    const courseList = await Course.find(filter)
+      .sort(sortParams)
+      .skip(skip)
+      .limit(limitNumber);
+    // const courseList = await Course.find(filter).sort(sortParams);
+    const totalCourses = await Course.countDocuments(filter); // Get total count
     if (courseList.length === 0) {
       return res
         .status(404)
         .json({ success: false, message: "Courses not found", data: [] });
     }
-    res
-      .status(200)
-      .json({ success: true, message: "Courses found", data: courseList });
+    res.status(200).json({
+      success: true,
+      message: "Courses found",
+      data: courseList,
+      totalPages: Math.ceil(totalCourses / limitNumber), // Calculate total pages
+      currentPage: pageNumber,
+      totalCourses,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Some Error occured" });
@@ -57,7 +74,6 @@ const getStudentCoursesDetails = async (req, res) => {
   try {
     const { id } = req.params; // Extract courseId from params
     const { userId } = req.body; // Currently logged-in user's ID
-  
 
     // Fetch course details from the Course model
     const courseDetails = await Course.findById(id);

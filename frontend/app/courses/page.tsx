@@ -22,6 +22,7 @@ import axios from "axios";
 import { ArrowUpDownIcon, Filter } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Paginator } from "primereact/paginator";
 import { Sidebar } from "primereact/sidebar";
 import React, { useEffect, useState } from "react";
 
@@ -33,6 +34,13 @@ const page = () => {
   const [courseLoading, setCourseLoading] = useState(false);
   const searchParams = useSearchParams();
   const initialSort = "price-lowtohigh";
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const transactionsPerPage = 10;
+  const [first, setFirst] = useState(0);
+  const [rows, setRows] = useState(5);
+  const [totalRecords, setTotalRecords] = useState(0);
+
   const initialFilters: Filters = {};
   Object.keys(filterOptions).forEach((key) => {
     const value = searchParams.get(key);
@@ -48,15 +56,23 @@ const page = () => {
   const {
     setStudentCourseList,
     studentCourseList,
-    setFilteredCourses, filteredCourses,
+    setFilteredCourses,
+    filteredCourses,
     loadingState,
     setLoadingState,
   } = useStudentContext();
   const router = useRouter();
 
-  const fetchStudentCourses = async (filters: any, sort: any) => {
+  const fetchStudentCourses = async (
+    filters: any,
+    sort: any,
+    page = 1,
+    limit = 5
+  ) => {
     setCourseLoading(true);
     const query = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
       ...filters,
       sortBy: sort,
     });
@@ -67,8 +83,9 @@ const page = () => {
       console.log(res.data);
       if (res.data.success) {
         setStudentCourseList(res.data.data);
-        setFilteredCourses(res.data.data)
+        setFilteredCourses(res.data.data);
         setCourseLoading(false);
+        setTotalRecords(res.data.totalCourses);
       }
     } catch (error) {
       setStudentCourseList([]);
@@ -78,6 +95,11 @@ const page = () => {
     }
   };
 
+  const onPageChange = (event: any) => {
+    setFirst(event.first);
+    setCurrentPage(event.page + 1); // PrimeReact uses zero-based index
+    fetchStudentCourses(filters, sort, event.page + 1, rows);
+  };
   // Helper function to update query string
   const updateQueryParams = (newFilters: Filters, sortBy: any) => {
     const queryParams = new URLSearchParams(searchParams as any);
@@ -150,6 +172,9 @@ const page = () => {
   }, [filters, sort, loadingState]);
 
   useEffect(() => {
+    fetchStudentCourses(filters, sort, currentPage, rows);
+  }, [filters, sort, currentPage, rows]);
+  useEffect(() => {
     const params: Filters = {};
 
     // Populate filters from URL
@@ -198,12 +223,13 @@ const page = () => {
                         >
                           <Checkbox
                             checked={
-                              filters[typedKeyItem]?.includes(option.id) || false
+                              filters[typedKeyItem]?.includes(option.id) ||
+                              false
                             }
                             onCheckedChange={() =>
                               handleCheckedChange(typedKeyItem, option)
                             }
-                            className='bg-white'
+                            className="bg-white"
                           />
                           {option.label}
                         </Label>
@@ -238,7 +264,7 @@ const page = () => {
                           onCheckedChange={() =>
                             handleCheckedChange(typedKeyItem, option)
                           }
-                          className='bg-white'
+                          className="bg-white"
                         />
                         {option.label}
                       </Label>
@@ -251,8 +277,11 @@ const page = () => {
         </aside>
         <main className="flex-1">
           <div className="flex justify-end items-center mb-4 gap-5">
-            <button onClick={() => setVisible(true)} className="flex items-center justify-center gap-2 lg:hidden">
-              <Filter />  Filter
+            <button
+              onClick={() => setVisible(true)}
+              className="flex items-center justify-center gap-2 lg:hidden"
+            >
+              <Filter /> Filter
             </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -286,7 +315,10 @@ const page = () => {
               filteredCourses.map((course: any, i: number) => (
                 <Link href={`/courses/${course._id}`}>
                   <div className="bg-black rounded-md">
-                    <Card className="cursor-pointer text-white bg-inherit border-0 my-2" key={course.id} >
+                    <Card
+                      className="cursor-pointer text-white bg-inherit border-0 my-2"
+                      key={course.id}
+                    >
                       <CardContent className="flex gap-4 p-4">
                         <div className="w-48 h-32 flex-shrink-0">
                           <img
@@ -306,17 +338,17 @@ const page = () => {
                             </span>
                           </p>
                           <p className="text-18  mt-3 mb-2">
-                            {`${course?.curriculum?.length} ${course?.curriculum?.length <= 1
-                              ? "Lecture"
-                              : "Lectures"
-                              } - ${course?.level.toUpperCase()} Level`}
+                            {`${course?.curriculum?.length} ${
+                              course?.curriculum?.length <= 1
+                                ? "Lecture"
+                                : "Lectures"
+                            } - ${course?.level.toUpperCase()} Level`}
                           </p>
                           <p className="font-bold text-lg">${course?.price}</p>
                         </div>
                       </CardContent>
                     </Card>
                   </div>
-
                 </Link>
               ))
             ) : courseLoading ? (
@@ -331,6 +363,12 @@ const page = () => {
               <h1 className="font-extrabold text-4xl">No courses found</h1>
             )}
           </div>
+          <Paginator
+            first={first}
+            rows={rows}
+            totalRecords={totalRecords} // Ensure this is updated dynamically
+            onPageChange={onPageChange}
+          />
         </main>
       </div>
     </div>
