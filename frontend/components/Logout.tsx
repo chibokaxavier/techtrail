@@ -1,15 +1,15 @@
 "use client";
 import { useStoreContext } from "@/context/authContext";
-import { useRouter } from "next/navigation";
+
 
 const Logout = ({
-  tab,
+
   setTab,
 }: {
   tab: string;
   setTab: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-  const router = useRouter();
+ 
   const { setAuth, setToken } = useStoreContext();
   const handleConfirm = () => {
     setAuth({ authenticate: false, user: null });

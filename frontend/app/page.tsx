@@ -1,13 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { courseCategories } from "@/config/utils";
-import { useStudentContext } from "@/context/studentContext";
+import { CourseList, useStudentContext } from "@/context/studentContext";
 import { useCarousel } from "@/hooks/useCarousel";
 import axios from "axios";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const {
@@ -17,7 +17,7 @@ export default function Home() {
     setFilteredCourses,
   } = useStudentContext();
 
-  const [shuffledCourses, setShuffledCourses] = useState<any>([]);
+  const [shuffledCourses, setShuffledCourses] = useState<CourseList[]>([]);
 
   useEffect(() => {
     setShuffledCourses(
@@ -34,7 +34,9 @@ export default function Home() {
         setStudentCourseList(res.data.data);
         setFilteredCourses(res.data.data);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   };
   useEffect(() => {
     fetchStudentCourses();
@@ -91,7 +93,7 @@ export default function Home() {
           </h2>
           <p className="text-gray-300 text-lg my-10">
             Explore a wide range of courses tailored to boost your skills and
-            knowledge. Whether you're diving into tech, find the perfect course
+            knowledge. Whether you are diving into tech, find the perfect course
             to level up your expertise. Start learning today!
           </p>
           <div className="grid grid-grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
@@ -102,7 +104,7 @@ export default function Home() {
                 onClick={() =>
                   setFilteredCourses(
                     studentCourseList.filter(
-                      (course: any) => course.category === category.id
+                      (course: CourseList) => course.category === category.id
                     )
                   )
                 }
@@ -118,8 +120,8 @@ export default function Home() {
         <h2 className="text-2xl font-bold mb-6">Featured Courses</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-6">
           {shuffledCourses && shuffledCourses.length > 0
-            ? shuffledCourses.map((course: any, i: number) => (
-                <Link href={`/courses/${course._id}`}>
+            ? shuffledCourses.map((course: CourseList, i: number) => (
+                <Link href={`/courses/${course._id}`} key={i}>
                   <div
                     className="border rounded-lg overflow-hidden shadow cursor-pointer"
                     key={i}

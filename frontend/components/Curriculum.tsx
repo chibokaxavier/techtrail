@@ -8,26 +8,36 @@ import { Switch } from "./ui/switch";
 import axios from "axios";
 import MediaProgressBar from "./MediaProgressBar";
 import VideoPlayer from "./VideoPlayer";
-import { useStoreContext } from "@/context/authContext";
+import { CurriculumFormdataType, useStoreContext } from "@/context/authContext";
 import { Upload } from "lucide-react";
 
+
+type FileType = {
+  url: string;
+  public_id: string;
+  title: string;
+  videoUrl: string;
+  freePreview: string;
+};
 const Curriculum = () => {
   const { curriculumFormData, setCurriculumFormData } = useStoreContext();
   const [mediaUploadProgress, setMediaUploadProgress] = useState(false);
   const [progress, setProgress] = useState(0); // Upload progress
-  const [generalIndex, setGeneralIndex] = useState(null);
 
-  // Function to handle changes in individual inputs
-  const handleInputChange = (index: number, field: any, value: any) => {
-    setCurriculumFormData((prev: any) =>
-      prev.map((lecture: any, i: number) =>
+  const handleInputChange = (
+    index: number,
+    field: string,
+    value: boolean | string
+  ) => {
+    setCurriculumFormData((prev: CurriculumFormdataType[]) =>
+      prev.map((lecture, i) =>
         i === index ? { ...lecture, [field]: value } : lecture
       )
     );
   };
 
   const handleUpload = async (
-    videoFormData: any,
+    videoFormData: FormData,
     index: number,
     onProgressCallback: (progress: number) => void
   ) => {
@@ -55,8 +65,8 @@ const Curriculum = () => {
       if (res.data.success) {
         // Update the specific lecture's videoUrl and public_id
         console.log(res.data);
-        setCurriculumFormData((prev: any) =>
-          prev.map((lecture: any, i: number) =>
+        setCurriculumFormData((prev: CurriculumFormdataType[]) =>
+          prev.map((lecture: CurriculumFormdataType, i: number) =>
             i === index
               ? {
                   ...lecture,
@@ -80,8 +90,8 @@ const Curriculum = () => {
         `http://localhost:4000/api/v1/media/delete/${id}`
       );
       if (res.data.success) {
-        setCurriculumFormData((prev: any) =>
-          prev.map((lecture: any, i: number) =>
+        setCurriculumFormData((prev: CurriculumFormdataType[]) =>
+          prev.map((lecture: CurriculumFormdataType, i: number) =>
             i === index
               ? {
                   ...lecture,
@@ -115,12 +125,12 @@ const Curriculum = () => {
   // Function to remove a lecture form
   const handleRemoveLecture = (index: number, id: string) => {
     deleteVideo(id, index);
-    setCurriculumFormData((prev: any) =>
-      prev.filter((_: any, i: any) => i !== index)
+    setCurriculumFormData((prev: CurriculumFormdataType[]) =>
+      prev.filter((_, i: number) => i !== index)
     );
   };
 
-  const isCurriculumValid = (curriculumFormData: any) => {
+  const isCurriculumValid = (curriculumFormData: CurriculumFormdataType[]) => {
     if (!Array.isArray(curriculumFormData)) {
       return false; // Ensure the input is an array
     }
@@ -137,12 +147,12 @@ const Curriculum = () => {
     });
   };
 
-  const bulkUplaodInputRef = useRef<any>();
+  const bulkUplaodInputRef = useRef<HTMLInputElement>(null);
   const handleBulkUploadOpen = () => {
-    bulkUplaodInputRef.current.click();
+    bulkUplaodInputRef?.current?.click();
   };
   const handleMediaBulkUpload = async (
-    bulkFormData: any,
+    bulkFormData: FormData,
     onProgressCallback: (progress: number) => void
   ) => {
     try {
@@ -168,27 +178,29 @@ const Curriculum = () => {
 
       if (res.data.success) {
         // Create new lectures from bulk-uploaded data
-        const newLectures = res.data.data.map((file: any, index: number) => ({
-          title: ``, // Default title for the lecture
-          videoUrl: file.url, // URL from the upload response
-          public_id: file.public_id, // Public ID from the upload response
-          freePreview: false, // Default free preview to false
-        }));
+        const newLectures = res.data.data.map(
+          (file: FileType) => ({
+            title: ``, // Default title for the lecture
+            videoUrl: file.url, // URL from the upload response
+            public_id: file.public_id, // Public ID from the upload response
+            freePreview: false, // Default free preview to false
+          })
+        );
 
-        setCurriculumFormData((prev: any) => {
+        setCurriculumFormData((prev: CurriculumFormdataType[]) => {
           // Check for empty lectures in the current curriculum
           let emptyLectureIndex = prev.findIndex(
-            (lecture: any) => !lecture.title.trim() && !lecture.videoUrl.trim() // Empty title and videoUrl
+            (lecture: CurriculumFormdataType) => !lecture.title.trim() && !lecture.videoUrl.trim() // Empty title and videoUrl
           );
 
           const updatedLectures = [...prev];
 
           // Replace empty lectures with bulk-uploaded lectures
-          newLectures.forEach((newLecture: any) => {
+          newLectures.forEach((newLecture: CurriculumFormdataType) => {
             if (emptyLectureIndex !== -1) {
               updatedLectures[emptyLectureIndex] = newLecture;
               emptyLectureIndex = updatedLectures.findIndex(
-                (lecture: any) =>
+                (lecture: CurriculumFormdataType) =>
                   !lecture.title.trim() && !lecture.videoUrl.trim()
               ); // Find the next empty lecture
             } else {
@@ -312,8 +324,8 @@ const Curriculum = () => {
                         handleUpload(videoFormData, index, setProgress);
                         // handleInputChange(index, "videoUrl", file);
                       } else {
-                        setCurriculumFormData((prev: any) =>
-                          prev.map((lecture: any, i: number) =>
+                        setCurriculumFormData((prev: CurriculumFormdataType[]) =>
+                          prev.map((lecture: CurriculumFormdataType, i: number) =>
                             i === index
                               ? {
                                   ...lecture,

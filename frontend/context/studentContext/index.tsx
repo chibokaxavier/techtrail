@@ -1,40 +1,65 @@
 "use client";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+
 import {
   createContext,
   Dispatch,
   ReactNode,
   SetStateAction,
   useContext,
-  useEffect,
   useState,
 } from "react";
+import { CurriculumFormdataType } from "../authContext";
 
 interface ProviderProps {
   children: ReactNode;
 }
 
+export interface CourseList {
+  _id: string;
+  id: string;
+  instructorId: string;
+  instructorName: string;
+  // date: Date;
+  title: string;
+  category: string;
+  level: string;
+  language: string;
+  subtitle: string;
+  image: string;
+  description: string;
+  welcomeMessage: string;
+  price: string;
+  objectives: string;
+  students: [
+    {
+      studentId: string;
+      studentName: string;
+      StudentEmail: string;
+    }
+  ];
+  curriculum: CurriculumFormdataType[];
+}
+
 interface StoreContextType {
-  studentCourseList: [];
-  setStudentCourseList: Dispatch<SetStateAction<[]>>;
+  studentCourseList: CourseList[];
+  setStudentCourseList: Dispatch<SetStateAction<CourseList[]>>;
   loadingState: boolean;
   setLoadingState: Dispatch<SetStateAction<boolean>>;
   globalParamId: string | null;
   setGlobalParamId: Dispatch<SetStateAction<string | null>>;
   searchQuery: string;
   setSearchQuery: Dispatch<SetStateAction<string>>;
-  filteredCourses: any;
-  setFilteredCourses: Dispatch<SetStateAction<any>>;
+  filteredCourses: CourseList[];
+  setFilteredCourses: Dispatch<SetStateAction<CourseList[]>>;
   handleSearch: (query: string) => void;
 }
 
 export const StudentContext = createContext<StoreContextType | null>(null);
 
 export default function StudentProvider({ children }: ProviderProps) {
-  const [studentCourseList, setStudentCourseList] = useState<any>([]);
+  const [studentCourseList, setStudentCourseList] = useState<CourseList[]>([]);
   const [filteredCourses, setFilteredCourses] =
-    useState<any>(studentCourseList);
+    useState<CourseList[]>(studentCourseList);
   const [loadingState, setLoadingState] = useState(true);
   // const [globalParamId, setGlobalParamId] = useState<number | null>(null);
   const [globalParamId, setGlobalParamId] = useState<string | null>(() => {

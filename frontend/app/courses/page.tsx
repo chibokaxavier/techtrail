@@ -17,28 +17,27 @@ import {
   FilterSections,
   sortOptions,
 } from "@/config/utils";
-import { useStudentContext } from "@/context/studentContext";
+import { CourseList, useStudentContext } from "@/context/studentContext";
 import axios from "axios";
 import { ArrowUpDownIcon, Filter } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Paginator } from "primereact/paginator";
+import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
 import { Sidebar } from "primereact/sidebar";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const Page = () => {
   // const [filters, setFilters] = useState<Filters>({});
   // const [sort, setSort] = useState<FilterOption["id"]>("price-lowtohigh");
-  const { setGlobalParamId, globalParamId } = useStudentContext();
+  const { globalParamId } = useStudentContext();
   const [visible, setVisible] = useState(false);
   const [courseLoading, setCourseLoading] = useState(false);
   const searchParams = useSearchParams();
   const initialSort = "price-lowtohigh";
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const transactionsPerPage = 10;
+
   const [first, setFirst] = useState(0);
-  const [rows, setRows] = useState(5);
+  const rows = 5;
   const [totalRecords, setTotalRecords] = useState(0);
 
   const initialFilters: Filters = {};
@@ -64,12 +63,13 @@ const page = () => {
   const router = useRouter();
 
   const fetchStudentCourses = async (
-    filters: any,
-    sort: any,
+    filters: Filters,
+    sort: string,
     page = 1,
     limit = 5
   ) => {
     setCourseLoading(true);
+    //@ts-expect-error typescript error
     const query = new URLSearchParams({
       page: page.toString(),
       limit: limit.toString(),
@@ -95,14 +95,14 @@ const page = () => {
     }
   };
 
-  const onPageChange = (event: any) => {
+  const onPageChange = (event: PaginatorPageChangeEvent) => {
     setFirst(event.first);
     setCurrentPage(event.page + 1); // PrimeReact uses zero-based index
     fetchStudentCourses(filters, sort, event.page + 1, rows);
   };
   // Helper function to update query string
-  const updateQueryParams = (newFilters: Filters, sortBy: any) => {
-    const queryParams = new URLSearchParams(searchParams as any);
+  const updateQueryParams = (newFilters: Filters, sortBy: string) => {
+    const queryParams = new URLSearchParams(searchParams.toString());
 
     // Add/Update filters
     Object.entries(newFilters).forEach(([section, values]) => {
@@ -295,7 +295,7 @@ const page = () => {
                   value={sort}
                   onValueChange={handleSortChange}
                 >
-                  {sortOptions.map((sortItem: any) => (
+                  {sortOptions.map((sortItem: FilterOption) => (
                     <DropdownMenuRadioItem
                       value={sortItem.id}
                       key={sortItem.id}
@@ -312,9 +312,9 @@ const page = () => {
           </div>
           <div className="space-y-4 ">
             {filteredCourses && filteredCourses.length > 0 ? (
-              filteredCourses.map((course: any, i: number) => (
-                <Link href={`/courses/${course._id}`}>
-                  <div className="bg-black rounded-md">
+              filteredCourses.map((course: CourseList, i: number) => (
+                <Link href={`/courses/${course._id}`} key={i}>
+                  <div className="bg-black rounded-md" key={i}>
                     <Card
                       className="cursor-pointer text-white bg-inherit border-0 my-2"
                       key={course.id}
@@ -375,4 +375,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -1,7 +1,6 @@
 "use client";
 import { useStoreContext } from "@/context/authContext";
 import { usePathname, useRouter } from "next/navigation";
-import { Skeleton } from "primereact/skeleton";
 import { ReactNode, useEffect } from "react";
 
 interface Protect {

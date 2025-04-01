@@ -1,13 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -58,12 +51,9 @@ interface CourseProps {
 const InstructorCourses = () => {
   const [courseList, setCourseList] = useState([]);
   const {
-    curriculumFormData,
-    formData,
     setCurriculumFormData,
     setFormData,
-    auth,
-    currentEditedCourseId,
+
     setCurrentEditedCourseId,
   } = useStoreContext();
 
@@ -108,10 +98,7 @@ const InstructorCourses = () => {
         <CardTitle className="text-3xl font-extrabold ">All Courses</CardTitle>
         <Link href={"/instructor/add-new-course"}>
           {" "}
-          <Button
-            className="p-6"
-            onClick={resetForm}
-          >
+          <Button className="p-6" onClick={resetForm}>
             Create new course
           </Button>
         </Link>

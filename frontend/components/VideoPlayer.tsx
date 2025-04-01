@@ -1,9 +1,6 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import ReactPlayer from "react-player";
-import { Slider } from "./ui/slider";
-import { Button } from "./ui/button";
-import { Pause, Play, RotateCcw, RotateCw, Volume2, VolumeX } from "lucide-react";
 
 interface VideoPlayerProps {
   width: string;
@@ -16,27 +13,14 @@ const VideoPlayer = ({
   height = "100%",
   url,
 }: VideoPlayerProps) => {
-  const [playing, setPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.5);
-  const [muted, setMuted] = useState(false);
-  const [played, setPlayed] = useState(0);
-  const [seeking, setSeeking] = useState(false);
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [showControls, setShowControls] = useState(true);
-
+  const playing = false;
+  const volume = 0.5;
+  const muted = false;
+  const isFullScreen = false;
   const playerRef = useRef(null);
   const playerContainerRef = useRef(null);
-  const controlTimeourRef = useRef(null);
-
-  const handlePlayandPause = () => {
-    setPlaying(!playing);
-  };
   const handleProgress = () => {};
-  const handleRewind = () => {};
-  const handleForward = () => {};
-  const handleToggleMute = () => {};
-  const handleSeekMouseUp = () => {};
-  const handleSeekChange = (seek: any) => {};
+
   return (
     <div
       ref={playerContainerRef}

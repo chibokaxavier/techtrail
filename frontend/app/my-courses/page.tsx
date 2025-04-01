@@ -1,20 +1,15 @@
 "use client";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useStoreContext } from "@/context/authContext";
-import { useStudentContext } from "@/context/studentContext";
+import { CourseList } from "@/context/studentContext";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const Page = () => {
   const [courseLoading, setCourseLoading] = useState(false);
-  const [paidCourses, setPaidCourses] = useState([]);
-   const {
-      setStudentCourseList,
-      studentCourseList,
-      filteredCourses,
-      setFilteredCourses,
-    } = useStudentContext();
+  const [paidCourses, setPaidCourses] = useState<CourseList[]>([]);
+
   const { token } = useStoreContext();
   const fetchPaidCourses = async () => {
     setCourseLoading(true);
@@ -52,41 +47,44 @@ const page = () => {
         </div>
         <div className="space-y-4">
           {paidCourses && paidCourses.length > 0 ? (
-            paidCourses.map((course: any, i: number) => (
-              <Link href={`/courses/${course._id}`}>
-              <div className="bg-black rounded-md">
-                <Card className="cursor-pointer text-white bg-inherit border-0 my-2" key={course.id} >
-                  <CardContent className="flex gap-4 p-4">
-                    <div className="w-48 h-32 flex-shrink-0">
-                      <img
-                        src={course.image}
-                        alt="course-image"
-                        className="size-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-xl mb-2">
-                        {course.title}
-                      </CardTitle>
-                      <p className="text-sm  mb-1">
-                        Created by{" "}
-                        <span className="font-bold">
-                          {course?.instructorName}
-                        </span>
-                      </p>
-                      <p className="text-18  mt-3 mb-2">
-                        {`${course?.curriculum?.length} ${course?.curriculum?.length <= 1
-                          ? "Lecture"
-                          : "Lectures"
+            paidCourses.map((course: CourseList, i: number) => (
+              <Link href={`/courses/${course._id}`} key={i}>
+                <div className="bg-black rounded-md" key={i}>
+                  <Card
+                    className="cursor-pointer text-white bg-inherit border-0 my-2"
+                    key={course.id}
+                  >
+                    <CardContent className="flex gap-4 p-4">
+                      <div className="w-48 h-32 flex-shrink-0">
+                        <img
+                          src={course.image}
+                          alt="course-image"
+                          className="size-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <CardTitle className="text-xl mb-2">
+                          {course.title}
+                        </CardTitle>
+                        <p className="text-sm  mb-1">
+                          Created by{" "}
+                          <span className="font-bold">
+                            {course?.instructorName}
+                          </span>
+                        </p>
+                        <p className="text-18  mt-3 mb-2">
+                          {`${course?.curriculum?.length} ${
+                            course?.curriculum?.length <= 1
+                              ? "Lecture"
+                              : "Lectures"
                           } - ${course?.level.toUpperCase()} Level`}
-                      </p>
-                      <p className="font-bold text-lg">${course?.price}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-            </Link>
+                        </p>
+                        <p className="font-bold text-lg">${course?.price}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </Link>
             ))
           ) : courseLoading ? (
             <>
@@ -105,4 +103,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

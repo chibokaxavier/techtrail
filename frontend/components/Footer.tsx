@@ -2,13 +2,11 @@
 import { LaptopMinimal } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
-
 import { FaInstagram } from "react-icons/fa";
 import { FaPinterest } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa6";
-import { GiFoodTruck } from "react-icons/gi";
 
 const Footer = () => {
   const pathname = usePathname();

@@ -3,7 +3,7 @@ import { useStoreContext } from "@/context/authContext";
 import { useStudentContext } from "@/context/studentContext";
 import axios from "axios";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 
@@ -12,9 +12,9 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   const url = "http://localhost:4000";
   const pathname = usePathname();
-  const router = useRouter();
+ 
   const { token } = useStoreContext();
-  const { setGlobalParamId, globalParamId } = useStudentContext();
+  const {  globalParamId } = useStudentContext();
 
   useEffect(() => {
     const verifyOrder = async () => {

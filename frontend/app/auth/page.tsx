@@ -16,15 +16,14 @@ import axiosInstance from "@/api/axiosInstance";
 import { useStoreContext } from "@/context/authContext";
 import axios from "axios";
 import { Toast } from "primereact/toast";
-import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const toast = useRef<Toast>(null);
   const [activeTab, setActiveTab] = useState("signIn");
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
-  const { setToken, token, setAuth, auth } = useStoreContext();
+  const { setToken, setAuth } = useStoreContext();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
@@ -35,8 +34,7 @@ const page = () => {
     password: "",
   });
   const [errors2, setErrors2] = useState({ name: "", email: "", password: "" });
-  const router = useRouter();
-  const handleSignIn = (e: any) => {
+  const handleSignIn = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     // Update form data
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -59,7 +57,7 @@ const page = () => {
       }));
     }
   };
-  const showSuccess = (message: any) => {
+  const showSuccess = (message: string) => {
     toast.current?.show({
       severity: "success",
       summary: "Success",
@@ -67,7 +65,7 @@ const page = () => {
       life: 3000,
     });
   };
-  const showError = (message: any) => {
+  const showError = (message: string) => {
     toast.current?.show({
       severity: "error",
       summary: "Success",
@@ -76,7 +74,7 @@ const page = () => {
     });
   };
 
-  const handleSignInSubmit = async (e: any) => {
+  const handleSignInSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -120,7 +118,7 @@ const page = () => {
     errors.email !== "" ||
     errors.password !== "";
 
-  const handleSignUp = (e: any) => {
+  const handleSignUp = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     // Update form data
     setFormData2((prev) => ({ ...prev, [name]: value }));
@@ -155,7 +153,7 @@ const page = () => {
     }
   };
 
-  const handleSignUpSubmit = async (e: any) => {
+  const handleSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -338,4 +336,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

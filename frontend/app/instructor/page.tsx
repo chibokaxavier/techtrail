@@ -4,7 +4,7 @@ import Logout from "@/components/Logout";
 import Sidebar from "@/components/Sidebar";
 import React, { useState } from "react";
 
-const page = () => {
+const Page = () => {
   const [tab, setTab] = useState<string>("courses");
   return (
     <div className="flex text-white max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">
@@ -20,4 +20,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

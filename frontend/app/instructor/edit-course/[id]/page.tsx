@@ -9,7 +9,6 @@ import { useStoreContext } from "@/context/authContext";
 import axios from "axios";
 import React, { useEffect, useMemo, useRef } from "react";
 import { Toast } from "primereact/toast";
-import { useRouter } from "next/navigation";
 
 interface CurriculumFormData {
   title: string;
@@ -18,7 +17,7 @@ interface CurriculumFormData {
   public_id: string;
 }
 
-const page = ({ params }: { params: { id: string } }) => {
+const Page = ({ params }: { params: { id: string } }) => {
   const {
     curriculumFormData,
     formData,
@@ -28,7 +27,7 @@ const page = ({ params }: { params: { id: string } }) => {
     currentEditedCourseId,
     setCurrentEditedCourseId,
   } = useStoreContext();
-  const router = useRouter();
+
   const toast = useRef<Toast>(null);
   const isFormValid = useMemo(() => {
     // Validate curriculumFormData
@@ -59,7 +58,7 @@ const page = ({ params }: { params: { id: string } }) => {
 
     return isCurriculumValid && isLandingPageValid;
   }, [curriculumFormData, formData]);
-  const showSuccess = (message: any) => {
+  const showSuccess = (message: string) => {
     toast.current?.show({
       severity: "success",
       summary: "Success",
@@ -67,7 +66,7 @@ const page = ({ params }: { params: { id: string } }) => {
       life: 3000,
     });
   };
-  const showError = (message: any) => {
+  const showError = (message: string) => {
     toast.current?.show({
       severity: "error",
       summary: "Success",
@@ -93,27 +92,7 @@ const page = ({ params }: { params: { id: string } }) => {
       );
       if (res.data.success) {
         showSuccess(res.data.message);
-        // setFormData({
-        //   title: "",
-        //   category: "",
-        //   level: "",
-        //   language: "",
-        //   subtitle: "",
-        //   description: "",
-        //   price: "",
-        //   objectives: "",
-        //   welcomeMessage: "",
-        //   image: "",
-        // });
-        // setCurriculumFormData([
-        //   {
-        //     title: "",
-        //     videoUrl: "",
-        //     freePreview: false,
-        //     public_id: "",
-        //   },
-        // ]);
-        // router.back();
+       
         console.log(res.data);
       } else {
         showError(res.data.message);
@@ -240,4 +219,4 @@ const page = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default page;
+export default Page;
