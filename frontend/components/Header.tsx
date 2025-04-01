@@ -1,44 +1,18 @@
 "use client";
-import {
-  BarChart,
-  BookDown,
-  BookOpen,
-  GraduationCap,
-  LaptopMinimal,
-  Menu,
-  MoonIcon,
-  NotebookPen,
-  Search,
-  SunIcon,
-} from "lucide-react";
+import { BookOpen, LaptopMinimal, NotebookPen } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "./ui/button";
 import { useStoreContext } from "@/context/authContext";
 import { Input } from "./ui/input";
-import { Sidebar } from "primereact/sidebar";
 import MobileNav from "./MobileNav";
 import { useStudentContext } from "@/context/studentContext";
 
 const Header = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const {
-    setStudentCourseList,
-    studentCourseList,
-    handleSearch,
-    searchQuery,
-    setSearchQuery,
-    filteredCourses,
-    setFilteredCourses,
-    globalParamId,
-  } = useStudentContext();
+  // const [isDarkMode, setIsDarkMode] = useState(false);
+  const { handleSearch, searchQuery } = useStudentContext();
 
-  const [visible, setVisible] = useState(false);
-  const toggleTheme = () => {
-    setIsDarkMode((prev) => !prev);
-    document.documentElement.classList.toggle("dark", !isDarkMode);
-  };
   const pathname = usePathname();
   const { setAuth, setToken } = useStoreContext();
   const handleConfirm = () => {
@@ -46,8 +20,6 @@ const Header = () => {
     setToken(null);
     localStorage.removeItem("token");
   };
-
-  const excludedPaths = "/instructor";
 
   const isHeaderExcluded =
     pathname.includes("/instructor") || pathname.includes("/auth");

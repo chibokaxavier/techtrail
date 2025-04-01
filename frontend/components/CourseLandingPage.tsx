@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import {
@@ -7,7 +7,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -18,23 +17,24 @@ import {
 } from "@/config/utils";
 import { Textarea } from "./ui/textarea";
 import { useStoreContext } from "@/context/authContext";
-import { useRouter } from "next/navigation";
 
+type FormDataType = {
+  [key: string]: string; // Allows dynamic keys (e.g., 'name', 'email', etc.), all with string values
+};
 const CourseLandingPage = () => {
   const { formData, setFormData } = useStoreContext();
-  const router = useRouter();
 
   // Handle input changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev: any) => ({ ...prev, [name]: value }));
+    setFormData((prev: FormDataType) => ({ ...prev, [name]: value }));
   };
 
   // Handle select changes
   const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev: any) => ({ ...prev, [name]: value }));
+    setFormData((prev: FormDataType) => ({ ...prev, [name]: value }));
   };
 
   // Handle form submission
@@ -67,7 +67,7 @@ const CourseLandingPage = () => {
         <div className="space-y-1">
           <Label htmlFor="category">Category</Label>
           <Select
-          defaultValue={formData.category}
+            defaultValue={formData.category}
             onValueChange={(value) => handleSelectChange("category", value)}
           >
             <SelectTrigger>
@@ -88,7 +88,10 @@ const CourseLandingPage = () => {
         {/* Level */}
         <div className="space-y-1">
           <Label htmlFor="level">Level</Label>
-          <Select  defaultValue={formData.level} onValueChange={(value) => handleSelectChange("level", value)}>
+          <Select
+            defaultValue={formData.level}
+            onValueChange={(value) => handleSelectChange("level", value)}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select a Level" />
             </SelectTrigger>
@@ -108,7 +111,7 @@ const CourseLandingPage = () => {
         <div className="space-y-1">
           <Label htmlFor="language">Primary Language</Label>
           <Select
-           defaultValue={formData.language}
+            defaultValue={formData.language}
             onValueChange={(value) => handleSelectChange("language", value)}
           >
             <SelectTrigger>

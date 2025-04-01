@@ -7,6 +7,18 @@ import axios from "axios";
 import { useStoreContext } from "@/context/authContext";
 import MediaProgressBar from "./MediaProgressBar";
 
+interface FormType {
+  title: string;
+  category: string;
+  level: string;
+  language: string;
+  subtitle: string;
+  description: string;
+  price: string;
+  objectives: string;
+  welcomeMessage: string;
+  image: string;
+}
 const Settings = () => {
   const [mediaUploadProgress, setMediaUploadProgress] = useState(false);
   const [progress, setProgress] = useState(0); // Upload progress
@@ -44,7 +56,7 @@ const Settings = () => {
         console.log("Upload Successful:", res.data);
 
         // Update form data with uploaded image URL
-        setFormData((prev: any) => ({
+        setFormData((prev: FormType) => ({
           ...prev,
           image: res.data.data.url, // Set image URL
         }));
@@ -81,7 +93,7 @@ const Settings = () => {
                   // Start the upload and update progress
                   handleUpload(imageFormData, setProgress);
                 } else {
-                  setFormData((prev: any) => ({
+                  setFormData((prev: FormType) => ({
                     ...prev,
                     image: "",
                   }));

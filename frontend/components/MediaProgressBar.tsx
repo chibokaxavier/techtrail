@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 interface MediaProgressProps {
   isMediaUploading: boolean;
-  progress: any;
+  progress: number;
 }
 const MediaProgressBar = ({
   isMediaUploading,

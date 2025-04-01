@@ -9,19 +9,16 @@ import { useStoreContext } from "@/context/authContext";
 import axios from "axios";
 import React, { useMemo, useRef } from "react";
 import { Toast } from "primereact/toast";
-import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const {
     curriculumFormData,
     formData,
     setCurriculumFormData,
     setFormData,
     auth,
-    currentEditedCourseId,
-    setCurrentEditedCourseId,
+   
   } = useStoreContext();
-  const router = useRouter();
   const toast = useRef<Toast>(null);
   const isFormValid = useMemo(() => {
     // Validate curriculumFormData
@@ -52,7 +49,7 @@ const page = () => {
 
     return isCurriculumValid && isLandingPageValid;
   }, [curriculumFormData, formData]);
-  const showSuccess = (message: any) => {
+  const showSuccess = (message: string) => {
     toast.current?.show({
       severity: "success",
       summary: "Success",
@@ -60,7 +57,7 @@ const page = () => {
       life: 3000,
     });
   };
-  const showError = (message: any) => {
+  const showError = (message: string) => {
     toast.current?.show({
       severity: "error",
       summary: "Success",
@@ -166,4 +163,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

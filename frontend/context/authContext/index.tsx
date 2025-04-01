@@ -10,10 +10,15 @@ import {
   useEffect,
   useState,
 } from "react";
-import { StringDecoder } from "string_decoder";
 
 interface ProviderProps {
   children: ReactNode;
+}
+export interface CurriculumFormdataType {
+  title: string;
+  videoUrl: string;
+  freePreview: boolean;
+  public_id: string;
 }
 interface Auth {
   authenticate: boolean;
@@ -49,9 +54,9 @@ interface StoreContextType {
     freePreview: boolean;
     public_id: string;
   }[];
-  setCurriculumFormData: any;
+  setCurriculumFormData: Dispatch<SetStateAction<CurriculumFormdataType[]>>;
   mediaUploadProgressPercentage: number;
-  setMediaUploadProgressPercentage: any;
+  setMediaUploadProgressPercentage: Dispatch<SetStateAction<number>>;
   currentEditedCourseId: null | string;
   setCurrentEditedCourseId: Dispatch<SetStateAction<string | null>>;
 }

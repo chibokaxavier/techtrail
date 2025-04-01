@@ -2,15 +2,43 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import VideoPlayer from "@/components/VideoPlayer";
-import { useStoreContext } from "@/context/authContext";
-import { useStudentContext } from "@/context/studentContext";
+import {   useStoreContext } from "@/context/authContext";
+import { CourseList, useStudentContext } from "@/context/studentContext";
 import axios from "axios";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import { ProgressSpinner } from "primereact/progressspinner";
 import React, { useEffect, useState } from "react";
 import { FaVideo } from "react-icons/fa";
-const page = ({ params }: { params: { id: number } }) => {
-  const [courseDetail, setCourseDetail] = useState<any>(null);
+
+
+
+const Page = ({ params }: { params: { id: number } }) => {
+  const [courseDetail, setCourseDetail] = useState<CourseList>({
+    _id: "",
+    id: "",
+    instructorId: "",
+    instructorName: "",
+    title: "",
+    category: "",
+    level: "",
+    language: "",
+    subtitle: "",
+    image: "",
+    description: "",
+    welcomeMessage: "",
+    price: "",
+    objectives: "",
+    students: [
+      {
+        studentId: "",
+        studentName: "",
+        StudentEmail: "",
+      },
+    ],
+    curriculum: [
+      { title: "", videoUrl: "", freePreview: false, public_id: "" },
+    ],
+  });
   const [loading, setLoading] = useState(true);
   const { auth } = useStoreContext();
   const { setGlobalParamId, globalParamId } = useStudentContext();
@@ -36,12 +64,63 @@ const page = ({ params }: { params: { id: number } }) => {
           console.log(paid, "paid");
         }
       } else {
-        setCourseDetail(null);
+        setCourseDetail({
+          _id: "",
+          id: "",
+          instructorId: "",
+          instructorName: "",
+          title: "",
+          category: "",
+          level: "",
+          language: "",
+          subtitle: "",
+          image: "",
+          description: "",
+          welcomeMessage: "",
+          price: "",
+          objectives: "",
+          students: [
+            {
+              studentId: "",
+              studentName: "",
+              StudentEmail: "",
+            },
+          ],
+          curriculum: [
+            { title: "", videoUrl: "", freePreview: false, public_id: "" },
+          ],
+        });
         setLoading(false);
       }
     } catch (error) {
-      setCourseDetail(null);
+      setCourseDetail({
+        _id: "",
+        id: "",
+        instructorId: "",
+        instructorName: "",
+        title: "",
+        category: "",
+        level: "",
+        language: "",
+        subtitle: "",
+        image: "",
+        description: "",
+        welcomeMessage: "",
+        price: "",
+        objectives: "",
+        students: [
+          {
+            studentId: "",
+            studentName: "",
+            StudentEmail: "",
+          },
+        ],
+        curriculum: [
+          { title: "", videoUrl: "", freePreview: false, public_id: "" },
+        ],
+      });
       setLoading(false);
+      console.log(error);
     }
   };
 
@@ -78,7 +157,7 @@ const page = ({ params }: { params: { id: number } }) => {
     }
   };
   const freePreviewItem = courseDetail?.curriculum?.find(
-    (item: any) => item.freePreview
+    (item) => item.freePreview
   );
 
   useEffect(() => {
@@ -146,11 +225,15 @@ const page = ({ params }: { params: { id: number } }) => {
   return (
     <div className="max-w-screen-xl mx-auto px-4 sm:px-6 mt-20 lg:px-8 py-4">
       <div className="bg-black  p-8 rounded-lg ">
-        <h1 className="text-3xl text-white font-bold mb-4">{courseDetail?.title}</h1>
+        <h1 className="text-3xl text-white font-bold mb-4">
+          {courseDetail?.title}
+        </h1>
         <p className="text-xl mb-4 text-white">{courseDetail?.subtitle}</p>
         <div className="flex lg:flex-row flex-col  lg:items-center lg:space-x-4 text-white mt-2 text-sm">
           <span> By {courseDetail?.instructorName}</span>
-          <span>Created on {courseDetail?.date.split("T")[0]}</span>
+
+          {/* <span>Created on {courseDetail?.date.split("T")[0]}</span> */}
+
           <span className="flex items-center capitalize">
             {" "}
             <Globe className="mr-1 h-4 w-4 " /> {courseDetail?.language}{" "}
@@ -175,7 +258,7 @@ const page = ({ params }: { params: { id: number } }) => {
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {courseDetail?.objectives
                   .split(",")
-                  .map((objective: any, i: number) => (
+                  .map((objective: string, i: number) => (
                     <li className="flex items-start" key={i}>
                       <CheckCircle className="mr-2 h-5 w-5 text-green-500 flex-shrink" />
                       <span>{objective}</span>
@@ -190,7 +273,7 @@ const page = ({ params }: { params: { id: number } }) => {
             </CardHeader>
             <CardContent>
               {courseDetail?.curriculum?.map(
-                (curriculumItem: any, i: number) => (
+                (curriculumItem, i: number) => (
                   <li
                     key={i}
                     onClick={() => {
@@ -280,4 +363,4 @@ const page = ({ params }: { params: { id: number } }) => {
   );
 };
 
-export default page;
+export default Page;

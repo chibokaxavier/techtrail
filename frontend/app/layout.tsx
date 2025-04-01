@@ -1,6 +1,6 @@
 import { Text_Me_One } from "next/font/google";
 import "./globals.css";
-import AuthProvider, { useStoreContext } from "@/context/authContext";
+import AuthProvider from "@/context/authContext";
 import Header from "@/components/Header";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { PrimeReactProvider } from "primereact/api";
