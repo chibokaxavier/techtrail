@@ -9,6 +9,7 @@ import { useStoreContext } from "@/context/authContext";
 import axios from "axios";
 import React, { useEffect, useMemo, useRef } from "react";
 import { Toast } from "primereact/toast";
+import { useParams } from "next/navigation";
 
 interface CurriculumFormData {
   title: string;
@@ -17,7 +18,7 @@ interface CurriculumFormData {
   public_id: string;
 }
 
-const Page = ({ params }: { params: { id: string } }) => {
+const Page = () => {
   const {
     curriculumFormData,
     formData,
@@ -27,7 +28,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     currentEditedCourseId,
     setCurrentEditedCourseId,
   } = useStoreContext();
-
+  const { id } = useParams();
   const toast = useRef<Toast>(null);
   const isFormValid = useMemo(() => {
     // Validate curriculumFormData
@@ -92,7 +93,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       );
       if (res.data.success) {
         showSuccess(res.data.message);
-       
+
         console.log(res.data);
       } else {
         showError(res.data.message);
@@ -177,8 +178,8 @@ const Page = ({ params }: { params: { id: string } }) => {
   }, [currentEditedCourseId]);
 
   useEffect(() => {
-    if (params) setCurrentEditedCourseId(params.id);
-  }, [params]);
+    if (id) setCurrentEditedCourseId((id ?? "").toString());
+  }, [id]);
 
   return (
     <div className=" p-4  max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">

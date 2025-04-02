@@ -2,17 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import VideoPlayer from "@/components/VideoPlayer";
-import {   useStoreContext } from "@/context/authContext";
+import { useStoreContext } from "@/context/authContext";
 import { CourseList, useStudentContext } from "@/context/studentContext";
 import axios from "axios";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
+import { useParams } from "next/navigation";
 import { ProgressSpinner } from "primereact/progressspinner";
 import React, { useEffect, useState } from "react";
 import { FaVideo } from "react-icons/fa";
 
-
-
-const Page = ({ params }: { params: { id: number } }) => {
+const Page = () => {
+  const { id } = useParams();
   const [courseDetail, setCourseDetail] = useState<CourseList>({
     _id: "",
     id: "",
@@ -52,7 +52,7 @@ const Page = ({ params }: { params: { id: number } }) => {
     setLoading(true);
     try {
       const res = await axios.post(
-        `http://localhost:4000/api/v1/student/get/detail/${params.id}`,
+        `http://localhost:4000/api/v1/student/get/detail/${id}`,
         { userId: userId }
       );
 
@@ -129,7 +129,7 @@ const Page = ({ params }: { params: { id: number } }) => {
 
     setPaymentLoading(true);
     const orderData = {
-      courseId: params.id,
+      courseId: id,
       userId: auth?.user?._id,
       title: courseDetail.title,
       price: courseDetail.price,
@@ -162,9 +162,9 @@ const Page = ({ params }: { params: { id: number } }) => {
 
   useEffect(() => {
     fetchCourseDetails();
-    localStorage.setItem("globalParamId", params.id.toString());
-    console.log(params.id);
-    setGlobalParamId(params.id.toString());
+    localStorage.setItem("globalParamId", (id ?? "").toString());
+    console.log(id);
+    setGlobalParamId((id ?? "").toString());
     console.log(globalParamId);
   }, []);
 
@@ -272,57 +272,53 @@ const Page = ({ params }: { params: { id: number } }) => {
               <CardTitle>Course Curriculum</CardTitle>
             </CardHeader>
             <CardContent>
-              {courseDetail?.curriculum?.map(
-                (curriculumItem, i: number) => (
-                  <li
-                    key={i}
-                    onClick={() => {
-                      setMainVid(curriculumItem?.videoUrl);
-                      setMainTitle(curriculumItem?.title);
-                    }}
-                    className={`${
-                      curriculumItem?.freePreview || paid
-                        ? "cursor-pointer"
-                        : "cursor-not-allowed"
-                    } flex items-center mb-4`}
-                  >
-                    {curriculumItem?.freePreview ? (
-                      <PlayCircle
-                        className={`${
-                          mainTitle === curriculumItem?.title
-                            ? "text-blue-600"
-                            : ""
-                        } mr-2 size-4 hover:scale-150 transition-all duration-300 ease-in-out`}
-                      />
-                    ) : paid ? (
-                      <PlayCircle
-                        className={`${
-                          mainTitle === curriculumItem?.title
-                            ? "text-blue-600"
-                            : ""
-                        } mr-2 size-4 hover:scale-150 transition-all duration-300 ease-in-out`}
-                      />
-                    ) : (
-                      <Lock
-                        className={`${
-                          mainTitle === curriculumItem?.title
-                            ? "text-blue-600"
-                            : ""
-                        } mr-2 size-4 hover:scale-150 transition-all duration-300 ease-in-out`}
-                      />
-                    )}{" "}
-                    <span
+              {courseDetail?.curriculum?.map((curriculumItem, i: number) => (
+                <li
+                  key={i}
+                  onClick={() => {
+                    setMainVid(curriculumItem?.videoUrl);
+                    setMainTitle(curriculumItem?.title);
+                  }}
+                  className={`${
+                    curriculumItem?.freePreview || paid
+                      ? "cursor-pointer"
+                      : "cursor-not-allowed"
+                  } flex items-center mb-4`}
+                >
+                  {curriculumItem?.freePreview ? (
+                    <PlayCircle
                       className={`${
                         mainTitle === curriculumItem?.title
                           ? "text-blue-600"
                           : ""
-                      }`}
-                    >
-                      {curriculumItem?.title}
-                    </span>
-                  </li>
-                )
-              )}
+                      } mr-2 size-4 hover:scale-150 transition-all duration-300 ease-in-out`}
+                    />
+                  ) : paid ? (
+                    <PlayCircle
+                      className={`${
+                        mainTitle === curriculumItem?.title
+                          ? "text-blue-600"
+                          : ""
+                      } mr-2 size-4 hover:scale-150 transition-all duration-300 ease-in-out`}
+                    />
+                  ) : (
+                    <Lock
+                      className={`${
+                        mainTitle === curriculumItem?.title
+                          ? "text-blue-600"
+                          : ""
+                      } mr-2 size-4 hover:scale-150 transition-all duration-300 ease-in-out`}
+                    />
+                  )}{" "}
+                  <span
+                    className={`${
+                      mainTitle === curriculumItem?.title ? "text-blue-600" : ""
+                    }`}
+                  >
+                    {curriculumItem?.title}
+                  </span>
+                </li>
+              ))}
             </CardContent>
           </Card>
         </main>
