@@ -1,13 +1,14 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
-import {  useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 import { MdCancel } from "react-icons/md";
 
-const Page = ({ params }: { params: { id: string } }) => {
-  const orderId = params.id;
+const Page = () => {
+  const { id } = useParams();
+  const orderId = id;
   const url = "http://localhost:3000";
   const router = useRouter();
 

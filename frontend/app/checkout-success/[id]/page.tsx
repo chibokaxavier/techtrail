@@ -3,12 +3,12 @@ import { useStoreContext } from "@/context/authContext";
 import { useStudentContext } from "@/context/studentContext";
 import axios from "axios";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 import { FaCheckCircle } from "react-icons/fa";
-
-const Page = ({ params }: { params: { id: string } }) => {
-  const orderId = params.id;
+const Page = () => {
+  const { id } = useParams();
+  const orderId = id;
 
   const url = "http://localhost:4000";
   const pathname = usePathname();
