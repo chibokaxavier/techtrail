@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 7000;
 const corsOption = {
-  origin: "http://localhost:3000", // Replace with the frontend URL
+  origin: ["http://localhost:3000",'https://techtrail-ruby.vercel.app'], // Replace with the frontend URL
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "token"],
 };

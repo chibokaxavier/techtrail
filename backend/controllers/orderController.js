@@ -6,7 +6,7 @@ import Student from "../model/studentModel.js";
 dotenv.config();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const url = "http://localhost:3000/";
+const url = "https://techtrail-ruby.vercel.app";
 
 const placeOrder = async (req, res) => {
   try {
