@@ -1,4 +1,4 @@
-import { Text_Me_One } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/context/authContext";
 import Header from "@/components/Header";
@@ -9,10 +9,10 @@ import { Metadata } from "next";
 import StudentProvider from "@/context/studentContext";
 import Footer from "@/components/Footer";
 
-const jetBrainsMono = Text_Me_One({
+const jetBrainsMono = Poppins({
   subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-Text_Me_One",
+  weight: ["100","200","300","400","500","600","700","800","900"],
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {

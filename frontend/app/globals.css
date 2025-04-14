@@ -191,5 +191,5 @@
 }
 
 body {
-  font-family: var(--font-Text_Me_One, monospace) !important;
+  font-family: var(--font-poppins, monospace) !important;
 }

@@ -43,7 +43,7 @@ const ProtectedRoute = ({ children }: Protect) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen ">
-        <div className="w-full max-w-5xl p-8 rounded-lg shadow-lg bg-white">
+        <div className="w-full max-w-5xl p-8 rounded-lg shadow-lg ">
           {/* Course Header Section */}
           <div className="flex items-center mb-6">
             {/* Course Thumbnail Skeleton */}
