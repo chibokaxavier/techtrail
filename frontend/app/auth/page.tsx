@@ -29,6 +29,7 @@ const Page = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [signUpLoading, setSignUpLoading] = useState(false);
   const [formData2, setFormData2] = useState({
     userName: "",
     email: "",
@@ -156,7 +157,7 @@ const Page = () => {
 
   const handleSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    setSignUpLoading(true);
     try {
       const res = await axiosInstance.post("/api/v1/register", {
         ...formData2,
@@ -167,7 +168,7 @@ const Page = () => {
       if (res.data.success) {
         console.log("Success block executed");
         showSuccess(res.data.message);
-        setLoading(false);
+        setSignUpLoading(false);
         setFormData2({
           userName: "",
           email: "",
@@ -179,7 +180,7 @@ const Page = () => {
         setLoading(false);
       }
     } catch (error: unknown) {
-      setLoading(false);
+      setSignUpLoading(false);
       if (axios.isAxiosError(error)) {
         if (error.response && error.response.data) {
           console.log(
@@ -335,7 +336,7 @@ const Page = () => {
                 </CardContent>
                 <CardFooter>
                   <Button type="submit" disabled={isButton2Disabled}>
-                    {loading ?  <div className="flex gap-3 items-center">
+                    {signUpLoading ?  <div className="flex gap-3 items-center">
                         Signing you up !  <ProgressSpinner />
                       </div> : "Sign up"}
                   </Button>
