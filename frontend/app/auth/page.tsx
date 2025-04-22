@@ -118,7 +118,9 @@ const Page = () => {
     !formData.email ||
     !formData.password ||
     errors.email !== "" ||
-    errors.password !== "";
+    errors.password !== "" ||
+    loading ||
+    signUpLoading;
 
   const handleSignUp = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -201,7 +203,9 @@ const Page = () => {
     !formData2.password ||
     errors2.name !== "" ||
     errors2.email !== "" ||
-    errors2.password !== "";
+    errors2.password !== "" ||
+    loading ||
+    signUpLoading;
 
   return (
     // <ProtectedRoute authenticate={auth?.authenticate} user={auth?.user}>
@@ -272,7 +276,7 @@ const Page = () => {
                   >
                     {loading ? (
                       <div className="flex gap-3 items-center">
-                        Signing you in !  <ProgressSpinner />
+                        Signing you in ! <ProgressSpinner />
                       </div>
                     ) : (
                       "Sign in"
@@ -336,9 +340,13 @@ const Page = () => {
                 </CardContent>
                 <CardFooter>
                   <Button type="submit" disabled={isButton2Disabled}>
-                    {signUpLoading ?  <div className="flex gap-3 items-center">
-                        Signing you up !  <ProgressSpinner />
-                      </div> : "Sign up"}
+                    {signUpLoading ? (
+                      <div className="flex gap-3 items-center">
+                        Signing you up ! <ProgressSpinner />
+                      </div>
+                    ) : (
+                      "Sign up"
+                    )}
                   </Button>
                 </CardFooter>
               </form>
