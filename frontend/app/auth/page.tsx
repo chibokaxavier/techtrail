@@ -16,6 +16,7 @@ import axiosInstance from "@/api/axiosInstance";
 import { useStoreContext } from "@/context/authContext";
 import axios from "axios";
 import { Toast } from "primereact/toast";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const Page = () => {
   const toast = useRef<Toast>(null);
@@ -205,7 +206,12 @@ const Page = () => {
     // <ProtectedRoute authenticate={auth?.authenticate} user={auth?.user}>
     <div className="flex flex-col min-h-screen  ">
       <Toast ref={toast} position="bottom-right" />
-      <div className="flex items-center justify-center min-h-screen ">
+
+      <div className="flex items-center flex-col justify-center min-h-screen ">
+        <p className="text-white pb-5 text-sm">
+          Login and Sign up might take up to a minute please excercise patience,
+          Thank You
+        </p>
         <Tabs
           value={activeTab}
           defaultValue="signIn"
@@ -263,7 +269,13 @@ const Page = () => {
                     type="submit"
                     disabled={isButtonDisabled}
                   >
-                    {loading ? "Signing you in !" : "Sign in"}
+                    {loading ? (
+                      <div className="flex gap-3 items-center">
+                        Signing you in !  <ProgressSpinner />
+                      </div>
+                    ) : (
+                      "Sign in"
+                    )}
                   </Button>
                 </CardFooter>
               </form>
@@ -323,7 +335,9 @@ const Page = () => {
                 </CardContent>
                 <CardFooter>
                   <Button type="submit" disabled={isButton2Disabled}>
-                    {loading ? "Signing you up !" : "Sign up"}
+                    {loading ?  <div className="flex gap-3 items-center">
+                        Signing you up !  <ProgressSpinner />
+                      </div> : "Sign up"}
                   </Button>
                 </CardFooter>
               </form>
