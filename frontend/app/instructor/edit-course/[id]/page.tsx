@@ -88,7 +88,7 @@ const Page = () => {
     };
     try {
       const res = await axios.put(
-        `http://localhost:4000/api/v1/course/update/${currentEditedCourseId}`,
+        `https://techtrail-x074.onrender.com/api/v1/course/update/${currentEditedCourseId}`,
         finalFormData
       );
       if (res.data.success) {

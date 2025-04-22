@@ -80,7 +80,7 @@ export default function AuthProvider({ children }: ProviderProps) {
   >(null);
   const checkAuth = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/v1/checkStatus", {
+      const res = await axios.get("https://techtrail-x074.onrender.com/api/v1/checkStatus", {
         headers: { token },
       });
       if (res.data.success) {

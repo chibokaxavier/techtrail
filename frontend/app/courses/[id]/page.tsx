@@ -139,7 +139,7 @@ const Page = () => {
     };
     try {
       const res = await axios.post(
-        "http://localhost:4000/api/v1/order/place",
+        "https://techtrail-x074.onrender.com/api/v1/order/place",
         orderData
       );
       console.log(res.data);

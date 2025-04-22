@@ -45,7 +45,7 @@ const Curriculum = () => {
       setMediaUploadProgress(true);
 
       const res = await axios.post(
-        "http://localhost:4000/api/v1/media/upload",
+        "https://techtrail-x074.onrender.com/api/v1/media/upload",
         videoFormData,
         {
           onUploadProgress: (progressEvent) => {
@@ -87,7 +87,7 @@ const Curriculum = () => {
   const deleteVideo = async (id: string, index: number) => {
     try {
       const res = await axios.delete(
-        `http://localhost:4000/api/v1/media/delete/${id}`
+        `https://techtrail-x074.onrender.com/api/v1/media/delete/${id}`
       );
       if (res.data.success) {
         setCurriculumFormData((prev: CurriculumFormdataType[]) =>
@@ -159,7 +159,7 @@ const Curriculum = () => {
       setMediaUploadProgress(true);
 
       const res = await axios.post(
-        "http://localhost:4000/api/v1/media/bulk-upload",
+        "https://techtrail-x074.onrender.com/api/v1/media/bulk-upload",
         bulkFormData,
         {
           onUploadProgress: (progressEvent) => {

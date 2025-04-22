@@ -82,7 +82,7 @@ const InstructorCourses = () => {
   };
 
   const fetchCourses = async () => {
-    const res = await axios.get("http://localhost:4000/api/v1/course/get");
+    const res = await axios.get("https://techtrail-x074.onrender.com/api/v1/course/get");
     if (res.data.success) {
       console.log(res.data.data);
       setCourseList(res.data.data);

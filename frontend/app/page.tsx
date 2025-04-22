@@ -28,7 +28,7 @@ export default function Home() {
 
   const fetchStudentCourses = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/v1/student/get");
+      const res = await axios.get("https://techtrail-x074.onrender.com/api/v1/student/get");
       console.log(res.data.data);
       if (res.data.success) {
         setStudentCourseList(res.data.data);

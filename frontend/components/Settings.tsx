@@ -34,7 +34,7 @@ const Settings = () => {
 
       // Perform the upload
       const res = await axios.post(
-        "http://localhost:4000/api/v1/media/upload",
+        "https://techtrail-x074.onrender.com/api/v1/media/upload",
         imageFormData,
         {
           onUploadProgress: (progressEvent) => {
