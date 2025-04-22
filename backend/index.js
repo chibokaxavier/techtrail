@@ -12,14 +12,18 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 7000;
 const corsOption = {
-  origin: ["http://localhost:3000",'https://techtrail-ruby.vercel.app'], // Replace with the frontend URL
+  origin: [
+    "http://localhost:3000",
+    "https://techtrail-ruby.vercel.app",
+    "https://techtraill.vercel.app",
+  ], // Replace with the frontend URL
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "token"],
 };
 const connectDb = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("mongoose connected to the database"); 
+    console.log("mongoose connected to the database");
     app.listen(port, () => {
       console.log(`listening on ${port}`);
     });
