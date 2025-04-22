@@ -259,8 +259,8 @@ const Page = () => {
                 {courseDetail?.objectives
                   .split(",")
                   .map((objective: string, i: number) => (
-                    <li className="flex items-start" key={i}>
-                      <CheckCircle className="mr-2 h-5 w-5 text-green-500 flex-shrink" />
+                    <li className="flex gap-3 items-start" key={i}>
+                      <CheckCircle size={40} className=" text-green-500 flex-shrink" />
                       <span>{objective}</span>
                     </li>
                   ))}
@@ -276,24 +276,16 @@ const Page = () => {
                 <li
                   key={i}
                   onClick={() => {
-                    setMainVid(curriculumItem?.videoUrl);
-                    setMainTitle(curriculumItem?.title);
+                    if (curriculumItem?.freePreview || paid) {
+                      setMainVid(curriculumItem?.videoUrl);
+                      setMainTitle(curriculumItem?.title);
+                    }
                   }}
-                  className={`${
-                    curriculumItem?.freePreview || paid
-                      ? "cursor-pointer"
-                      : "cursor-not-allowed"
-                  } flex items-center mb-4`}
+                  className={`flex items-center mb-4 ${
+                    curriculumItem?.freePreview || paid ? "cursor-pointer" : "cursor-not-allowed"
+                  }`}
                 >
-                  {curriculumItem?.freePreview ? (
-                    <PlayCircle
-                      className={`${
-                        mainTitle === curriculumItem?.title
-                          ? "text-blue-600"
-                          : ""
-                      } mr-2 size-4 hover:scale-150 transition-all duration-300 ease-in-out`}
-                    />
-                  ) : paid ? (
+                  {curriculumItem?.freePreview || paid ? (
                     <PlayCircle
                       className={`${
                         mainTitle === curriculumItem?.title
@@ -307,9 +299,10 @@ const Page = () => {
                         mainTitle === curriculumItem?.title
                           ? "text-blue-600"
                           : ""
-                      } mr-2 size-4 hover:scale-150 transition-all duration-300 ease-in-out`}
+                      } mr-2 size-4`}
                     />
-                  )}{" "}
+                  )}
+
                   <span
                     className={`${
                       mainTitle === curriculumItem?.title ? "text-blue-600" : ""
@@ -317,7 +310,7 @@ const Page = () => {
                   >
                     {curriculumItem?.title}
                   </span>
-                </li>
+                </li> 
               ))}
             </CardContent>
           </Card>

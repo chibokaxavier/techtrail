@@ -13,32 +13,50 @@ const ProtectedRoute = ({ children }: Protect) => {
   const { auth, loading } = useStoreContext();
 
   useEffect(() => {
-    // console.log(auth);
     if (!loading) {
-      if (!auth?.authenticate && !pathName.includes("/auth")) {
+      const isAuthenticated = auth?.authenticate;
+      const userRole = auth?.user?.role;
+
+      // If not authenticated and not on auth page → redirect to /auth
+      if (!isAuthenticated && !pathName.includes("/auth")) {
         router.push("/auth");
-      } else if (
-        auth?.authenticate &&
-        auth.user?.role !== "instructor" &&
-        pathName.includes("/instructor")
-      ) {
-        router.push("/");
-      } else if (auth?.authenticate && pathName.includes("/auth")) {
-        // Redirect authenticated users away from the /auth page
-        if (auth?.user?.role === "instructor") {
-          router.push(`/instructor`);
-        } else {
-          router.push(`/`);
+      }
+
+      // Authenticated but on /auth → redirect to correct dashboard
+      else if (isAuthenticated && pathName.includes("/auth")) {
+        switch (userRole) {
+          case "admin":
+            router.push("/admin");
+            break;
+          case "instructor":
+            router.push("/instructor");
+            break;
+          default:
+            router.push("/");
         }
-      } else if (
-        auth?.authenticate &&
-        auth.user?.role === "instructor" &&
+      }
+
+      // Authenticated instructor accessing non-instructor route (and not admin)
+      else if (
+        isAuthenticated &&
+        userRole === "instructor" &&
         !pathName.includes("/instructor")
       ) {
         router.push("/instructor");
       }
+
+      // Non-admin trying to access /admin route
+      else if (
+        isAuthenticated &&
+        pathName.includes("/admin") &&
+        userRole !== "admin"
+      ) {
+        router.push("/");
+      }
+
+      // Admin can go anywhere — no redirect
     }
-  }, [auth, pathName, router]);
+  }, [auth, pathName, router, loading]);
 
   if (loading) {
     return (
@@ -85,14 +103,17 @@ const ProtectedRoute = ({ children }: Protect) => {
   }
 
   if (
-    (!auth?.authenticate && !pathName.includes("/auth")) ||
-    (auth?.authenticate && pathName.includes("/auth")) ||
+    (!auth?.authenticate && !pathName.includes("/auth")) || // Not logged in & not on /auth
     (auth?.authenticate &&
-      auth.user?.role !== "instructor" &&
-      pathName.includes("/instructor")) ||
+      pathName.includes("/auth") &&
+      auth.user?.role !== "admin") || // Authenticated (not admin) on /auth
     (auth?.authenticate &&
       auth.user?.role === "instructor" &&
-      !pathName.includes("/instructor"))
+      !pathName.includes("/instructor")) || // Instructor not on /instructor
+    (auth?.authenticate &&
+      auth.user?.role !== "instructor" &&
+      pathName.includes("/instructor") &&
+      auth.user?.role !== "admin") // Non-instructor (not admin) on /instructor
   ) {
     return null;
   }

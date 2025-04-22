@@ -135,7 +135,7 @@ export default function Home() {
                     />{" "}
                     <div className="p-4 ">
                       <h3 className="mb-2 font-bold">{course?.title}</h3>
-                      <h3>{course?.description}</h3>
+                      <h3 className="  truncate">{course?.description}</h3>
                       <p className="text-sm text-gray-700 mb-2">
                         {course?.instructorName}
                       </p>
