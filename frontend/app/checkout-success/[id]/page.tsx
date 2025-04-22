@@ -10,7 +10,7 @@ const Page = () => {
   const { id } = useParams();
   const orderId = id;
 
-  const url = "http://localhost:4000";
+  const url = "https://techtrail-x074.onrender.com";
   const pathname = usePathname();
  
   const { token } = useStoreContext();

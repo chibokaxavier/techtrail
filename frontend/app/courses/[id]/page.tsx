@@ -52,7 +52,7 @@ const Page = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        `http://localhost:4000/api/v1/student/get/detail/${id}`,
+        `https://techtrail-x074.onrender.com/api/v1/student/get/detail/${id}`,
         { userId: userId }
       );
 

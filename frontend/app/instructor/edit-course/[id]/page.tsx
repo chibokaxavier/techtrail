@@ -118,7 +118,7 @@ const Page = () => {
   const fetchCurrentCourse = async (id: string) => {
     try {
       const res = await axios.get(
-        `http://localhost:4000/api/v1/course/get/details/${id}`
+        `https://techtrail-x074.onrender.com/api/v1/course/get/details/${id}`
       );
       if (res.data.success) {
         console.log(res.data);

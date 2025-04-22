@@ -78,7 +78,7 @@ const Page = () => {
     });
     try {
       const res = await axios.get(
-        `http://localhost:4000/api/v1/student/get?${query}`
+        `https://techtrail-x074.onrender.com/api/v1/student/get?${query}`
       );
       console.log(res.data);
       if (res.data.success) {

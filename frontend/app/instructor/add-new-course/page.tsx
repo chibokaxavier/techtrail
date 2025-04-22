@@ -78,7 +78,7 @@ const Page = () => {
     };
     try {
       const res = await axios.post(
-        "http://localhost:4000/api/v1/course/add",
+        "https://techtrail-x074.onrender.com/api/v1/course/add",
         finalFormData
       );
       if (res.data.success) {

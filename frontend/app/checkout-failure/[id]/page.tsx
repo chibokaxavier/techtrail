@@ -9,7 +9,7 @@ import { MdCancel } from "react-icons/md";
 const Page = () => {
   const { id } = useParams();
   const orderId = id;
-  const url = "http://localhost:3000";
+  const url = "https://techtrail-x074.onrender.com";
   const router = useRouter();
 
   useEffect(() => {

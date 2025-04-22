@@ -15,7 +15,7 @@ const Page = () => {
     setCourseLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:4000/api/v1/course/getPaidCourses`,
+        `https://techtrail-x074.onrender.com/api/v1/course/getPaidCourses`,
         {
           headers: { token },
         }
