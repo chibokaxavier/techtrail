@@ -70,7 +70,7 @@ const Page = () => {
   const showError = (message: string) => {
     toast.current?.show({
       severity: "error",
-      summary: "Success",
+      summary: "Erro",
       detail: message,
       life: 3000,
     });

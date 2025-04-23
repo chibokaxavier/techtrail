@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addNewCourse,
+  deleteCourse,
   getAllCourses,
   getCourseDetailsById,
   getPaidCourses,
@@ -15,5 +16,6 @@ courseRouter.get("/get", getAllCourses);
 courseRouter.get("/get/details/:id", getCourseDetailsById);
 courseRouter.put("/update/:id", updateCourseById);
 courseRouter.get("/getPaidCourses", authMiddleware, getPaidCourses);
+courseRouter.delete("/delete/:id", authMiddleware, deleteCourse);
 
 export default courseRouter;

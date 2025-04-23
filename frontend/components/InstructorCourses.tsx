@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
 import { DeleteIcon, Edit } from "lucide-react";
+import { Toast } from "primereact/toast";
 import Link from "next/link";
 import axios from "axios";
 import { useStoreContext } from "@/context/authContext";
@@ -50,6 +51,8 @@ interface CourseProps {
 
 const InstructorCourses = () => {
   const [courseList, setCourseList] = useState([]);
+    const { token } = useStoreContext();
+  const toast = useRef<Toast>(null);
   const {
     setCurriculumFormData,
     setFormData,
@@ -82,10 +85,60 @@ const InstructorCourses = () => {
   };
 
   const fetchCourses = async () => {
-    const res = await axios.get("https://techtrail-x074.onrender.com/api/v1/course/get");
+    const res = await axios.get(
+      "https://techtrail-x074.onrender.com/api/v1/course/get"
+    );
     if (res.data.success) {
       console.log(res.data.data);
       setCourseList(res.data.data);
+    }
+  };
+
+  const showSuccess = (message: string) => {
+    toast.current?.show({
+      severity: "success",
+      summary: "Success",
+      detail: message,
+      life: 3000,
+    });
+  };
+  const showError = (message: string) => {
+    toast.current?.show({
+      severity: "error",
+      summary: "Error",
+      detail: message,
+      life: 3000,
+    });
+  };
+
+  const deleteCourse = async (id: string) => {
+    try {
+      const res = await axios.delete(
+        `https://techtrail-x074.onrender.com/api/v1/course/delete/${id}` , {
+          headers: { token },
+        }
+      );
+      if (res.data.success) {
+        showSuccess(res.data.message);
+
+        console.log(res.data);
+      } else {
+        showError(res.data.message);
+      }
+    } catch (error: unknown) {
+      console.error("Error occurred:", error);
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.data) {
+          console.log(
+            "Error response from server:",
+            error.response.data.message
+          );
+          showError(error.response.data.message);
+        }
+      } else {
+        console.log("Unknown error occurred");
+        showError("An unexpected error occurred.");
+      }
     }
   };
   useEffect(() => {
@@ -94,6 +147,7 @@ const InstructorCourses = () => {
 
   return (
     <Card className="bg-black text-white">
+      <Toast ref={toast} position="bottom-right" />
       <CardHeader className="flex justify-between flex-row items-center">
         <CardTitle className="text-3xl font-extrabold ">All Courses</CardTitle>
         <Link href={"/instructor/add-new-course"}>
@@ -132,7 +186,11 @@ const InstructorCourses = () => {
                         </Button>{" "}
                       </Link>
 
-                      <Button variant="destructive" size="sm">
+                      <Button
+                        variant="destructive"
+                        onClick={() => deleteCourse(course._id)}
+                        size="sm"
+                      >
                         <DeleteIcon />
                       </Button>
                     </TableCell>
