@@ -213,7 +213,7 @@ const Page = () => {
       <Toast ref={toast} position="bottom-right" />
 
       <div className="flex items-center flex-col justify-center min-h-screen ">
-        <p className="text-white pb-5 text-sm">
+        <p className="text-white pb-5 text-center text-sm">
           Login and Sign up might take up to a minute please excercise patience,
           Thank You
         </p>

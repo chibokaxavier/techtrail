@@ -58,7 +58,7 @@ const ProtectedRoute = ({ children }: Protect) => {
     }
   }, [auth, pathName, router, loading]);
 
-  if (loading) {
+  if (loading && !pathName.includes("/auth")) {
     return (
       <div className="flex items-center justify-center min-h-screen ">
         <div className="w-full max-w-5xl p-8 rounded-lg shadow-lg ">
