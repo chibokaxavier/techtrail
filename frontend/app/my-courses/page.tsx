@@ -1,22 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
 import { useStoreContext } from "@/context/authContext";
 import { CourseList } from "@/context/studentContext";
 import axiosInstance from "@/api/axiosInstance";
-import axios from "axios";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, Clock, PlayCircle, Trophy, Layout, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+/**
+ * High-Fidelity Modernized My Courses Page for TechTrail
+ */
 const Page = () => {
   const [courseLoading, setCourseLoading] = useState(false);
   const [paidCourses, setPaidCourses] = useState<CourseList[]>([]);
   const { token, auth } = useStoreContext();
 
-  const fetchPaidCourses = async () => {
+  const fetchPaidCourses = useCallback(async () => {
     setCourseLoading(true);
     try {
       const res = await axiosInstance.get(`/api/v1/course/getPaidCourses`, {
@@ -31,11 +32,11 @@ const Page = () => {
     } finally {
       setCourseLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     if (token) fetchPaidCourses();
-  }, [token]);
+  }, [token, fetchPaidCourses]);
 
   return (
     <div className="min-h-screen bg-[#050505] text-white pt-24">
@@ -74,7 +75,7 @@ const Page = () => {
             {courseLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-80 shimmer border border-white/10 rounded-3xl" />
+                   <div key={i} className="h-80 shimmer border border-white/10 rounded-3xl" />
                 ))}
               </div>
             ) : paidCourses && paidCourses.length > 0 ? (
@@ -138,8 +139,10 @@ const Page = () => {
                                 />
                              </div>
                              
-                             <Button className="w-full mt-6 bg-white/5 border border-white/10 hover:bg-blue-600 transition-all rounded-xl py-6 group-hover:border-blue-500">
-                                Continue Trail <ChevronRight className="ml-1 size-4 group-hover:translate-x-1 transition-transform" />
+                             <Button asChild className="w-full mt-6 bg-white/5 border border-white/10 hover:bg-blue-600 transition-all rounded-xl py-6 group-hover:border-blue-500">
+                                <Link href={`/courses/${course._id}`}>
+                                   Continue Trail <ChevronRight className="ml-1 size-4 group-hover:translate-x-1 transition-transform" />
+                                </Link>
                              </Button>
                           </div>
                         </div>

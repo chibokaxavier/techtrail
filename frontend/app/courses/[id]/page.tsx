@@ -1,17 +1,19 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import VideoPlayer from "@/components/VideoPlayer";
 import { useStoreContext } from "@/context/authContext";
 import { CourseList, useStudentContext } from "@/context/studentContext";
 import axiosInstance from "@/api/axiosInstance";
-import axios from "axios";
 import { CheckCircle, Globe, Lock, PlayCircle, Clock, BookOpen, User, Star, Share2, Target, Layout } from "lucide-react";
 import { useParams } from "next/navigation";
 import { ProgressSpinner } from "primereact/progressspinner";
-import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import { motion } from "framer-motion";
 
+/**
+ * High-Fidelity Modernized Course Details Page for TechTrail
+ */
 const Page = () => {
   const { id } = useParams();
   const [courseDetail, setCourseDetail] = useState<CourseList>({
@@ -34,14 +36,14 @@ const Page = () => {
   });
   const [loading, setLoading] = useState(true);
   const { auth } = useStoreContext();
-  const { setGlobalParamId, globalParamId } = useStudentContext();
+  const { setGlobalParamId } = useStudentContext();
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paid, setPaid] = useState(false);
   const userId = auth?.user?._id;
   const [mainVid, setMainVid] = useState("");
   const [mainTitle, setMainTitle] = useState("");
 
-  const fetchCourseDetails = async () => {
+  const fetchCourseDetails = useCallback(async () => {
     setLoading(true);
     try {
       const res = await axiosInstance.post(`/api/v1/student/get/detail/${id}`, { userId });
@@ -54,7 +56,7 @@ const Page = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, userId]);
 
   const placeOrder = async () => {
     setPaymentLoading(true);
@@ -79,12 +81,17 @@ const Page = () => {
     }
   };
 
-  const freePreviewItem = courseDetail?.curriculum?.find(item => item.freePreview);
+  const freePreviewItem = useMemo(() => 
+    courseDetail?.curriculum?.find(item => item.freePreview), 
+    [courseDetail?.curriculum]
+  );
 
   useEffect(() => {
     fetchCourseDetails();
-    setGlobalParamId((id ?? "").toString());
-  }, []);
+    if (id) {
+      setGlobalParamId(id.toString());
+    }
+  }, [id, fetchCourseDetails, setGlobalParamId]);
 
   useEffect(() => {
     if (freePreviewItem) {
