@@ -1,10 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import axiosInstance from "@/api/axiosInstance";
-import axios from "axios";
 import { useStoreContext } from "@/context/authContext";
 import MediaProgressBar from "./MediaProgressBar";
 
