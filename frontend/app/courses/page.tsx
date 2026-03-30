@@ -20,22 +20,22 @@ import {
 } from "@/config/utils";
 import { CourseList, useStudentContext } from "@/context/studentContext";
 import axiosInstance from "@/api/axiosInstance";
-import axios from "axios";
 import { ArrowUpDownIcon, Filter, Layers, Users, BookOpen, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
 import { Sidebar } from "primereact/sidebar";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+/**
+ * High-Fidelity Modernized Courses Page for TechTrail
+ */
 const Page = () => {
-  const { globalParamId } = useStudentContext();
   const [visible, setVisible] = useState(false);
   const [courseLoading, setCourseLoading] = useState(false);
   const searchParams = useSearchParams();
   const initialSort = "price-lowtohigh";
-  const [currentPage, setCurrentPage] = useState(1);
 
   const [first, setFirst] = useState(0);
   const rows = 5;
@@ -62,7 +62,7 @@ const Page = () => {
   } = useStudentContext();
   const router = useRouter();
 
-  const fetchStudentCourses = async (
+  const fetchStudentCourses = useCallback(async (
     filters: Filters,
     sort: string,
     page = 1,
@@ -89,15 +89,14 @@ const Page = () => {
     } finally {
       setCourseLoading(false);
     }
-  };
+  }, [setStudentCourseList, setFilteredCourses]);
 
   const onPageChange = (event: PaginatorPageChangeEvent) => {
     setFirst(event.first);
-    setCurrentPage(event.page + 1);
     fetchStudentCourses(filters, sort, event.page + 1, rows);
   };
 
-  const updateQueryParams = (newFilters: Filters, sortBy: string) => {
+  const updateQueryParams = useCallback((newFilters: Filters, sortBy: string) => {
     const queryParams = new URLSearchParams(searchParams.toString());
     Object.entries(newFilters).forEach(([section, values]) => {
       if (values.length > 0) {
@@ -108,7 +107,7 @@ const Page = () => {
     });
     queryParams.set("sort", sortBy);
     router.push(`?${queryParams.toString()}`, { scroll: false });
-  };
+  }, [searchParams, router]);
 
   const handleCheckedChange = (
     sectionId: FilterSections,
@@ -141,13 +140,13 @@ const Page = () => {
       setFilters(JSON.parse(storedFilters));
     }
     setLoadingState(false);
-  }, []);
+  }, [setLoadingState]);
 
   useEffect(() => {
     if (!loadingState) {
       fetchStudentCourses(filters, sort);
     }
-  }, [filters, sort, loadingState]);
+  }, [filters, sort, loadingState, fetchStudentCourses]);
 
   useEffect(() => {
     const params: Filters = {};

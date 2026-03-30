@@ -352,7 +352,7 @@ const Page = () => {
           </Tabs>
 
           <p className="mt-8 text-center text-sm text-gray-500">
-            By continuing, you agree to TechTrail's <button className="text-gray-400 hover:underline">Terms of Service</button> and <button className="text-gray-400 hover:underline">Privacy Policy</button>.
+            By continuing, you agree to TechTrail&apos;s <button className="text-gray-400 hover:underline">Terms of Service</button> and <button className="text-gray-400 hover:underline">Privacy Policy</button>.
           </p>
         </motion.div>
       </div>
