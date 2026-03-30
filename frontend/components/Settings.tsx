@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import axiosInstance from "@/api/axiosInstance";
 import axios from "axios";
 import { useStoreContext } from "@/context/authContext";
 import MediaProgressBar from "./MediaProgressBar";
@@ -33,8 +34,8 @@ const Settings = () => {
       setMediaUploadProgress(true);
 
       // Perform the upload
-      const res = await axios.post(
-        "https://techtrail-x074.onrender.com/api/v1/media/upload",
+      const res = await axiosInstance.post(
+        "/api/v1/media/upload",
         imageFormData,
         {
           onUploadProgress: (progressEvent) => {

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { courseCategories } from "@/config/utils";
 import { CourseList, useStudentContext } from "@/context/studentContext";
 import { useCarousel } from "@/hooks/useCarousel";
-import axios from "axios";
+import axiosInstance from "@/api/axiosInstance";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,7 +28,7 @@ export default function Home() {
 
   const fetchStudentCourses = async () => {
     try {
-      const res = await axios.get("https://techtrail-x074.onrender.com/api/v1/student/get");
+      const res = await axiosInstance.get("/api/v1/student/get");
       console.log(res.data.data);
       if (res.data.success) {
         setStudentCourseList(res.data.data);

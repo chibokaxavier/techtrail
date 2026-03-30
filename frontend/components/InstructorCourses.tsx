@@ -15,6 +15,7 @@ import { Button } from "./ui/button";
 import { DeleteIcon, Edit } from "lucide-react";
 import { Toast } from "primereact/toast";
 import Link from "next/link";
+import axiosInstance from "@/api/axiosInstance";
 import axios from "axios";
 import { useStoreContext } from "@/context/authContext";
 
@@ -85,8 +86,8 @@ const InstructorCourses = () => {
   };
 
   const fetchCourses = async () => {
-    const res = await axios.get(
-      "https://techtrail-x074.onrender.com/api/v1/course/get"
+    const res = await axiosInstance.get(
+      "/api/v1/course/get"
     );
     if (res.data.success) {
       console.log(res.data.data);
@@ -113,8 +114,8 @@ const InstructorCourses = () => {
 
   const deleteCourse = async (id: string) => {
     try {
-      const res = await axios.delete(
-        `https://techtrail-x074.onrender.com/api/v1/course/delete/${id}` , {
+      const res = await axiosInstance.delete(
+        `/api/v1/course/delete/${id}` , {
           headers: { token },
         }
       );

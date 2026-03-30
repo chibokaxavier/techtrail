@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import VideoPlayer from "@/components/VideoPlayer";
 import { useStoreContext } from "@/context/authContext";
 import { CourseList, useStudentContext } from "@/context/studentContext";
+import axiosInstance from "@/api/axiosInstance";
 import axios from "axios";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -51,8 +52,8 @@ const Page = () => {
   const fetchCourseDetails = async () => {
     setLoading(true);
     try {
-      const res = await axios.post(
-        `https://techtrail-x074.onrender.com/api/v1/student/get/detail/${id}`,
+      const res = await axiosInstance.post(
+        `/api/v1/student/get/detail/${id}`,
         { userId: userId }
       );
 
@@ -138,8 +139,8 @@ const Page = () => {
       image: courseDetail.image,
     };
     try {
-      const res = await axios.post(
-        "https://techtrail-x074.onrender.com/api/v1/order/place",
+      const res = await axiosInstance.post(
+        "/api/v1/order/place",
         orderData
       );
       console.log(res.data);

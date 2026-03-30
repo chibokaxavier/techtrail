@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import axiosInstance from "@/api/axiosInstance";
 import { useRouter } from "next/navigation";
 import {
   createContext,
@@ -80,7 +80,7 @@ export default function AuthProvider({ children }: ProviderProps) {
   >(null);
   const checkAuth = async () => {
     try {
-      const res = await axios.get("https://techtrail-x074.onrender.com/api/v1/checkStatus", {
+      const res = await axiosInstance.get("/api/v1/checkStatus", {
         headers: { token },
       });
       if (res.data.success) {

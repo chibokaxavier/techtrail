@@ -18,6 +18,7 @@ import {
   sortOptions,
 } from "@/config/utils";
 import { CourseList, useStudentContext } from "@/context/studentContext";
+import axiosInstance from "@/api/axiosInstance";
 import axios from "axios";
 import { ArrowUpDownIcon, Filter } from "lucide-react";
 import Link from "next/link";
@@ -77,8 +78,8 @@ const Page = () => {
       sortBy: sort,
     });
     try {
-      const res = await axios.get(
-        `https://techtrail-x074.onrender.com/api/v1/student/get?${query}`
+      const res = await axiosInstance.get(
+        `/api/v1/student/get?${query}`
       );
       console.log(res.data);
       if (res.data.success) {

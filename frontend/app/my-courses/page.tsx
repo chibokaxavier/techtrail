@@ -2,6 +2,7 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useStoreContext } from "@/context/authContext";
 import { CourseList } from "@/context/studentContext";
+import axiosInstance from "@/api/axiosInstance";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -14,8 +15,8 @@ const Page = () => {
   const fetchPaidCourses = async () => {
     setCourseLoading(true);
     try {
-      const res = await axios.get(
-        `https://techtrail-x074.onrender.com/api/v1/course/getPaidCourses`,
+      const res = await axiosInstance.get(
+        `/api/v1/course/getPaidCourses`,
         {
           headers: { token },
         }
