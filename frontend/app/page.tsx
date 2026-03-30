@@ -5,11 +5,13 @@ import { courseCategories } from "@/config/utils";
 import { CourseList, useStudentContext } from "@/context/studentContext";
 import axiosInstance from "@/api/axiosInstance";
 import { motion, useScroll, useTransform } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
-import { GraduationCap, Rocket, Target, Zap, ArrowRight, Star, Users } from "lucide-react";
+import { useEffect, useState, useRef, useCallback } from "react";
+import { Rocket, Zap, ArrowRight, Star, Users } from "lucide-react";
 
+/**
+ * High-Fidelity Modernized Landing Page for TechTrail
+ */
 export default function Home() {
   const {
     setStudentCourseList,
@@ -29,12 +31,14 @@ export default function Home() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
-    setShuffledCourses(
-      [...filteredCourses].sort(() => Math.random() - 0.5).slice(0, 4)
-    );
+    if (filteredCourses.length > 0) {
+      setShuffledCourses(
+        [...filteredCourses].sort(() => Math.random() - 0.5).slice(0, 4)
+      );
+    }
   }, [filteredCourses]);
 
-  const fetchStudentCourses = async () => {
+  const fetchStudentCourses = useCallback(async () => {
     try {
       const res = await axiosInstance.get("/api/v1/student/get");
       if (res.data.success) {
@@ -42,13 +46,13 @@ export default function Home() {
         setFilteredCourses(res.data.data);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Failed to fetch featured courses:", error);
     }
-  };
+  }, [setStudentCourseList, setFilteredCourses]);
 
   useEffect(() => {
     fetchStudentCourses();
-  }, []);
+  }, [fetchStudentCourses]);
 
   return (
     <div ref={containerRef} className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
@@ -139,7 +143,6 @@ export default function Home() {
               >
                 <div className="size-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-blue-600/10 group-hover:border-blue-500/50 group-hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] transition-all">
                    <div className="text-gray-400 group-hover:text-blue-500 transition-colors">
-                      {/* Using icons based on label could be better, but we'll use a generic one or map them */}
                       <Rocket className="size-6" />
                    </div>
                 </div>
@@ -207,7 +210,7 @@ export default function Home() {
                   </Link>
                 </motion.div>
               ))
-            : [1,2,3,4].map(i => <div key={i} className="h-96 bg-white/5 border border-white/10 rounded-3xl animate-pulse"></div>)
+            : [1,2,3,4].map(i => <div key={i} className="h-96 shimmer border border-white/10 rounded-3xl" />)
           }
         </div>
       </section>
