@@ -1,5 +1,5 @@
 "use client";
-import { LaptopMinimal, Mail, Phone, MapPin, Sparkles, Send } from "lucide-react";
+import { LaptopMinimal, Mail, MapPin, Sparkles, Send } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { FaInstagram, FaYoutube, FaTwitter, FaFacebook, FaLinkedin } from "react-icons/fa";
