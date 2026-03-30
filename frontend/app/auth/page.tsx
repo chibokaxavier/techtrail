@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import axiosInstance from "@/api/axiosInstance";
 import { useStoreContext } from "@/context/authContext";
 import axios from "axios";
-import { Toast } from "primereact/toast";
+import { toast } from "sonner";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { motion, AnimatePresence } from "framer-motion";
 import { GraduationCap, Sparkles, ShieldCheck, Zap } from "lucide-react";
@@ -20,7 +20,6 @@ import { GraduationCap, Sparkles, ShieldCheck, Zap } from "lucide-react";
  * Modern, High-Fidelity Authentication Page for TechTrail
  */
 const Page = () => {
-  const toast = useRef<Toast>(null);
   const [activeTab, setActiveTab] = useState("signIn");
   const { setToken, setAuth } = useStoreContext();
 
@@ -56,42 +55,24 @@ const Page = () => {
     }
   };
 
-  const showSuccess = (message: string) => {
-    toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: message,
-      life: 3000,
-    });
-  };
-
-  const showError = (message: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: message,
-      life: 3000,
-    });
-  };
-
   const handleSignInSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
       const res = await axiosInstance.post("/api/v1/login", formData);
       if (res.data.success) {
-        showSuccess(res.data.message);
+        toast.success(res.data.message);
         localStorage.setItem("token", res.data.token);
         setAuth({ authenticate: true, user: res.data.validUser });
         setToken(res.data.token);
       } else {
-        showError(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data) {
-        showError(error.response.data.message);
+        toast.error(error.response.data.message);
       } else {
-        showError("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.");
       }
     } finally {
       setLoading(false);
@@ -137,17 +118,17 @@ const Page = () => {
         role: "student",
       });
       if (res.data.success) {
-        showSuccess(res.data.message);
+        toast.success(res.data.message);
         setFormData2({ userName: "", email: "", password: "" });
         setActiveTab("signIn");
       } else {
-        showError(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data) {
-        showError(error.response.data.message);
+        toast.error(error.response.data.message);
       } else {
-        showError("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.");
       }
     } finally {
       setSignUpLoading(false);
@@ -159,7 +140,6 @@ const Page = () => {
 
   return (
     <div className="flex min-h-screen bg-[#050505] text-white selection:bg-blue-500/30 overflow-hidden">
-      <Toast ref={toast} position="bottom-right" />
       
       {/* Left Side: Branding & Visuals Section */}
       <div className="hidden lg:flex w-1/2 relative flex-col justify-center px-16 bg-gradient-to-br from-blue-900/20 via-black to-black border-r border-white/5">

@@ -8,6 +8,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { Metadata } from "next";
 import StudentProvider from "@/context/studentContext";
 import Footer from "@/components/Footer";
+import { Toaster } from "sonner";
 
 const jetBrainsMono = Poppins({
   subsets: ["latin"],
@@ -36,6 +37,7 @@ export default function RootLayout({
       <body
         className={` ${jetBrainsMono.variable} ${jetBrainsMono.variable} antialiased`}
       >
+        <Toaster richColors position="top-right" />
         <AuthProvider>
           <StudentProvider>
             <PrimeReactProvider>

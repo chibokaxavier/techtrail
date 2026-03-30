@@ -9,8 +9,9 @@ import studentRouter from "./routes/studentRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 dotenv.config();
 
-const app = express();
+const app = express();  
 const port = process.env.PORT || 7000;
+mongoose.set("bufferCommands", false);
 const corsOption = {
   origin: [
     "http://localhost:3000",
@@ -24,11 +25,8 @@ const connectDb = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("mongoose connected to the database");
-    app.listen(port, () => {
-      console.log(`listening on ${port}`);
-    });
   } catch (error) {
-    console.log(error.message);
+    console.log("MongoDB Connection Error:", error.message);
   }
 };
 app.use(express.json());
@@ -38,5 +36,9 @@ app.use("/api/v1/media", mediaRouter);
 app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/student", studentRouter);
 app.use("/api/v1/order", orderRouter);
+
+app.listen(port, () => {
+  console.log(`listening on ${port}`);
+});
 
 connectDb();

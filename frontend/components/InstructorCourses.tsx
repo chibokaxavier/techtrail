@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
 import { DeleteIcon, Edit } from "lucide-react";
-import { Toast } from "primereact/toast";
+import { toast } from "sonner";
 import Link from "next/link";
 import axiosInstance from "@/api/axiosInstance";
 import axios from "axios";
@@ -53,7 +53,6 @@ interface CourseProps {
 const InstructorCourses = () => {
   const [courseList, setCourseList] = useState([]);
     const { token } = useStoreContext();
-  const toast = useRef<Toast>(null);
   const {
     setCurriculumFormData,
     setFormData,
@@ -95,22 +94,6 @@ const InstructorCourses = () => {
     }
   };
 
-  const showSuccess = (message: string) => {
-    toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: message,
-      life: 3000,
-    });
-  };
-  const showError = (message: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: message,
-      life: 3000,
-    });
-  };
 
   const deleteCourse = async (id: string) => {
     try {
@@ -120,11 +103,11 @@ const InstructorCourses = () => {
         }
       );
       if (res.data.success) {
-        showSuccess(res.data.message);
+        toast.success(res.data.message);
 
         console.log(res.data);
       } else {
-        showError(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (error: unknown) {
       console.error("Error occurred:", error);
@@ -134,11 +117,11 @@ const InstructorCourses = () => {
             "Error response from server:",
             error.response.data.message
           );
-          showError(error.response.data.message);
+          toast.error(error.response.data.message);
         }
       } else {
         console.log("Unknown error occurred");
-        showError("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.");
       }
     }
   };
@@ -148,7 +131,6 @@ const InstructorCourses = () => {
 
   return (
     <Card className="bg-black text-white">
-      <Toast ref={toast} position="bottom-right" />
       <CardHeader className="flex justify-between flex-row items-center">
         <CardTitle className="text-3xl font-extrabold ">All Courses</CardTitle>
         <Link href={"/instructor/add-new-course"}>

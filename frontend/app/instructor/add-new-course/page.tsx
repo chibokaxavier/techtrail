@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStoreContext } from "@/context/authContext";
+import axiosInstance from "@/api/axiosInstance";
 import axios from "axios";
-import React, { useMemo, useRef } from "react";
-import { Toast } from "primereact/toast";
+import React, { useMemo } from "react";
+import { toast } from "sonner";
 
 const Page = () => {
   const {
@@ -19,7 +20,6 @@ const Page = () => {
     auth,
    
   } = useStoreContext();
-  const toast = useRef<Toast>(null);
   const isFormValid = useMemo(() => {
     // Validate curriculumFormData
     const isCurriculumValid =
@@ -49,22 +49,6 @@ const Page = () => {
 
     return isCurriculumValid && isLandingPageValid;
   }, [curriculumFormData, formData]);
-  const showSuccess = (message: string) => {
-    toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: message,
-      life: 3000,
-    });
-  };
-  const showError = (message: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Success",
-      detail: message,
-      life: 3000,
-    });
-  };
 
   const handleCreateCourse = async () => {
     const finalFormData = {
@@ -77,12 +61,12 @@ const Page = () => {
       isPublished: true,
     };
     try {
-      const res = await axios.post(
-        "https://techtrail-x074.onrender.com/api/v1/course/add",
+      const res = await axiosInstance.post(
+        "/api/v1/course/add",
         finalFormData
       );
       if (res.data.success) {
-        showSuccess(res.data.message);
+        toast.success(res.data.message);
         setFormData({
           title: "",
           category: "",
@@ -105,7 +89,7 @@ const Page = () => {
         ]);
         // router.back();
       } else {
-        showError(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (error: unknown) {
       console.error("Error occurred:", error);
@@ -115,18 +99,17 @@ const Page = () => {
             "Error response from server:",
             error.response.data.message
           );
-          showError(error.response.data.message);
+          toast.error(error.response.data.message);
         }
       } else {
         console.log("Unknown error occurred");
-        showError("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.");
       }
     }
   };
 
   return (
     <div className="  p-4  max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">
-      <Toast ref={toast}  />
       <div className="flex  justify-between">
         <h1 className="text-3xl font-extrabold mb-5">Create a new course</h1>
         <Button
