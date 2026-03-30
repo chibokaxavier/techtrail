@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStoreContext } from "@/context/authContext";
+import axiosInstance from "@/api/axiosInstance";
 import axios from "axios";
-import React, { useEffect, useMemo, useRef } from "react";
-import { Toast } from "primereact/toast";
+import React, { useEffect, useMemo } from "react";
+import { toast } from "sonner";
 import { useParams } from "next/navigation";
 
 interface CurriculumFormData {
@@ -29,7 +30,6 @@ const Page = () => {
     setCurrentEditedCourseId,
   } = useStoreContext();
   const { id } = useParams();
-  const toast = useRef<Toast>(null);
   const isFormValid = useMemo(() => {
     // Validate curriculumFormData
     const isCurriculumValid =
@@ -59,24 +59,8 @@ const Page = () => {
 
     return isCurriculumValid && isLandingPageValid;
   }, [curriculumFormData, formData]);
-  const showSuccess = (message: string) => {
-    toast.current?.show({
-      severity: "success",
-      summary: "Success",
-      detail: message,
-      life: 3000,
-    });
-  };
-  const showError = (message: string) => {
-    toast.current?.show({
-      severity: "error",
-      summary: "Success",
-      detail: message,
-      life: 3000,
-    });
-  };
 
-  const handleCreateCourse = async () => {
+  const handleUpdateCourse = async () => {
     const finalFormData = {
       instructorId: auth?.user?._id,
       instructorName: auth?.user?.userName,
@@ -87,16 +71,15 @@ const Page = () => {
       isPublished: true,
     };
     try {
-      const res = await axios.put(
-        `https://techtrail-x074.onrender.com/api/v1/course/update/${currentEditedCourseId}`,
+      const res = await axiosInstance.put(
+        `/api/v1/course/update/${currentEditedCourseId}`,
         finalFormData
       );
       if (res.data.success) {
-        showSuccess(res.data.message);
-
+        toast.success(res.data.message);
         console.log(res.data);
       } else {
-        showError(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (error: unknown) {
       console.error("Error occurred:", error);
@@ -106,19 +89,19 @@ const Page = () => {
             "Error response from server:",
             error.response.data.message
           );
-          showError(error.response.data.message);
+          toast.error(error.response.data.message);
         }
       } else {
         console.log("Unknown error occurred");
-        showError("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.");
       }
     }
   };
 
   const fetchCurrentCourse = async (id: string) => {
     try {
-      const res = await axios.get(
-        `https://techtrail-x074.onrender.com/api/v1/course/get/details/${id}`
+      const res = await axiosInstance.get(
+        `/api/v1/course/get/details/${id}`
       );
       if (res.data.success) {
         console.log(res.data);
@@ -164,11 +147,11 @@ const Page = () => {
             "Error response from server:",
             error.response.data.message
           );
-          showError(error.response.data.message);
+          toast.error(error.response.data.message);
         }
       } else {
         console.log("Unknown error occurred");
-        showError("An unexpected error occurred.");
+        toast.error("An unexpected error occurred.");
       }
     }
   };
@@ -183,13 +166,12 @@ const Page = () => {
 
   return (
     <div className=" p-4  max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">
-      <Toast ref={toast} position="bottom-right" />
       <div className="flex  justify-between">
         <h1 className="text-3xl font-extrabold mb-5">Edit course</h1>
         <Button
           disabled={!isFormValid}
           className="text-sm tracking-wider font-bold px-8"
-          onClick={handleCreateCourse}
+          onClick={handleUpdateCourse}
         >
           Update
         </Button>
