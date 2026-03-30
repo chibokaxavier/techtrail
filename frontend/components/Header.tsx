@@ -1,5 +1,5 @@
 "use client";
-import { BookOpen, LaptopMinimal, NotebookPen, LogOut, Search, Sparkles } from "lucide-react";
+import { LaptopMinimal, LogOut, Search, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
@@ -8,7 +8,7 @@ import { useStoreContext } from "@/context/authContext";
 import { Input } from "./ui/input";
 import MobileNav from "./MobileNav";
 import { useStudentContext } from "@/context/studentContext";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 const Header = () => {
   const { handleSearch, searchQuery } = useStudentContext();
