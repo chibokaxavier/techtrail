@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStoreContext } from "@/context/authContext";
 import axiosInstance from "@/api/axiosInstance";
 import axios from "axios";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useCallback } from "react";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
 
@@ -19,6 +19,9 @@ interface CurriculumFormData {
   public_id: string;
 }
 
+/**
+ * Modernized High-Fidelity Course Editor for TechTrail
+ */
 const Page = () => {
   const {
     curriculumFormData,
@@ -30,8 +33,8 @@ const Page = () => {
     setCurrentEditedCourseId,
   } = useStoreContext();
   const { id } = useParams();
+
   const isFormValid = useMemo(() => {
-    // Validate curriculumFormData
     const isCurriculumValid =
       curriculumFormData.every((item) => {
         return (
@@ -44,7 +47,6 @@ const Page = () => {
         );
       }) && curriculumFormData.some((item) => item.freePreview === true);
 
-    // Validate formData
     const isLandingPageValid =
       formData.title.trim() !== "" &&
       formData.category.trim() !== "" &&
@@ -77,34 +79,23 @@ const Page = () => {
       );
       if (res.data.success) {
         toast.success(res.data.message);
-        console.log(res.data);
       } else {
         toast.error(res.data.message);
       }
     } catch (error: unknown) {
       console.error("Error occurred:", error);
       if (axios.isAxiosError(error)) {
-        if (error.response && error.response.data) {
-          console.log(
-            "Error response from server:",
-            error.response.data.message
-          );
-          toast.error(error.response.data.message);
-        }
+        toast.error(error.response?.data?.message || "An error occurred.");
       } else {
-        console.log("Unknown error occurred");
         toast.error("An unexpected error occurred.");
       }
     }
   };
 
-  const fetchCurrentCourse = async (id: string) => {
+  const fetchCurrentCourse = useCallback(async (courseId: string) => {
     try {
-      const res = await axiosInstance.get(
-        `/api/v1/course/get/details/${id}`
-      );
+      const res = await axiosInstance.get(`/api/v1/course/get/details/${courseId}`);
       if (res.data.success) {
-        console.log(res.data);
         const {
           title,
           category,
@@ -122,7 +113,7 @@ const Page = () => {
           title: title || "",
           category: category || "",
           level: level || "",
-          language: language || "", // Assuming language is missing in the provided data
+          language: language || "",
           subtitle: subtitle || "",
           description: description || "",
           price: price || "",
@@ -134,68 +125,62 @@ const Page = () => {
           (curriculum || []).map((item: CurriculumFormData) => ({
             title: item.title || "",
             videoUrl: item.videoUrl || "",
-            freePreview: item.freePreview || false, // Assuming default value if not provided
+            freePreview: item.freePreview || false,
             public_id: item.public_id || "",
           }))
         );
       }
     } catch (error: unknown) {
-      console.error("Error occurred:", error);
+      console.error("Error fetching course:", error);
       if (axios.isAxiosError(error)) {
-        if (error.response && error.response.data) {
-          console.log(
-            "Error response from server:",
-            error.response.data.message
-          );
-          toast.error(error.response.data.message);
-        }
-      } else {
-        console.log("Unknown error occurred");
-        toast.error("An unexpected error occurred.");
+        toast.error(error.response?.data?.message || "Failed to fetch course details.");
       }
     }
-  };
+  }, [setFormData, setCurriculumFormData]);
 
   useEffect(() => {
     if (currentEditedCourseId) fetchCurrentCourse(currentEditedCourseId);
-  }, [currentEditedCourseId]);
+  }, [currentEditedCourseId, fetchCurrentCourse]);
 
   useEffect(() => {
-    if (id) setCurrentEditedCourseId((id ?? "").toString());
-  }, [id]);
+    if (id) setCurrentEditedCourseId(id.toString());
+  }, [id, setCurrentEditedCourseId]);
 
   return (
-    <div className=" p-4  max-w-screen-xl mx-auto px-4  py-5 sm:px-6 lg:px-8">
-      <div className="flex  justify-between">
-        <h1 className="text-3xl font-extrabold mb-5">Edit course</h1>
+    <div className="p-4 max-w-screen-xl mx-auto py-5 pt-24 sm:px-6 lg:px-8">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+           <h1 className="text-4xl font-black tracking-tighter">Edit <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Trail Node</span></h1>
+           <p className="text-gray-500 text-sm italic">Synchronizing alterations to the knowledge frontier.</p>
+        </div>
         <Button
           disabled={!isFormValid}
-          className="text-sm tracking-wider font-bold px-8"
+          className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-10 py-6 font-bold shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all active:scale-95"
           onClick={handleUpdateCourse}
         >
-          Update
+          Push Changes
         </Button>
       </div>
-      <Card>
-        <CardContent>
-          <div className="container mx-auto p-4">
-            <Tabs defaultValue="curriculum">
-              <TabsList>
-                <TabsTrigger value="curriculum">Curiculum</TabsTrigger>
-                <TabsTrigger value="landing">Course landing page</TabsTrigger>
-                <TabsTrigger value="settings">Settings</TabsTrigger>
-              </TabsList>
-              <TabsContent value="curriculum">
-                <Curriculum />
-              </TabsContent>
-              <TabsContent value="landing">
-                <CourseLandingPage />
-              </TabsContent>{" "}
-              <TabsContent value="settings">
-                <Settings />
-              </TabsContent>
-            </Tabs>
-          </div>
+      <Card className="bg-white/[0.02] border-white/10 rounded-[32px] overflow-hidden backdrop-blur-3xl">
+        <CardContent className="p-8">
+          <Tabs defaultValue="curriculum" className="w-full">
+            <TabsList className="bg-white/5 border border-white/10 p-1 rounded-2xl mb-12 flex w-fit">
+              <TabsTrigger value="curriculum" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-xl px-12 py-3 font-bold uppercase tracking-widest text-[10px]">Curriculum</TabsTrigger>
+              <TabsTrigger value="landing" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-xl px-12 py-3 font-bold uppercase tracking-widest text-[10px]">Trail Node Details</TabsTrigger>
+              <TabsTrigger value="settings" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-xl px-12 py-3 font-bold uppercase tracking-widest text-[10px]">Settings</TabsTrigger>
+            </TabsList>
+            <div className="mt-8">
+               <TabsContent value="curriculum">
+                 <Curriculum />
+               </TabsContent>
+               <TabsContent value="landing">
+                 <CourseLandingPage />
+               </TabsContent>
+               <TabsContent value="settings">
+                 <Settings />
+               </TabsContent>
+            </div>
+          </Tabs>
         </CardContent>
       </Card>
     </div>
