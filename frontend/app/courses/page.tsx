@@ -262,7 +262,7 @@ const Page = () => {
             visible={visible}
             onHide={() => setVisible(false)}
             className="w-full bg-[#050505] border-r border-white/10"
-            content={({ closeIcon, hide }) => (
+            content={({ hide }) => (
                <div className="h-full overflow-y-auto">
                   <div className="flex justify-end p-4">
                      <button onClick={hide} className="p-2 hover:bg-white/10 rounded-full transition-colors">
