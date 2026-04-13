@@ -221,9 +221,12 @@ const Curriculum = () => {
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row justify-between">
-        <CardTitle>Create course curriculum</CardTitle>
+    <div className="space-y-6 animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div>
+           <h2 className="text-2xl font-black tracking-tight text-white mb-2">Curriculum Builder</h2>
+           <p className="text-gray-400 text-sm">Upload video modules and structure your learning trails.</p>
+        </div>
         <div>
           <Input
             type="file"
@@ -243,76 +246,91 @@ const Curriculum = () => {
               }
             }}
           />
-          <Button variant="outline" onClick={handleBulkUploadOpen}>
-            <Upload className="w-4 h-5 mr-2" /> Bulk upload
+          <Button 
+            variant="outline" 
+            onClick={handleBulkUploadOpen}
+            className="bg-white/5 border-white/10 hover:bg-white/10 text-white rounded-xl shadow-lg transition-all h-12 px-6"
+          >
+            <Upload className="w-4 h-5 mr-2 text-blue-400" /> Bulk Upload
           </Button>
         </div>
-      </CardHeader>
-      <CardContent>
-        <Button
-          onClick={handleNewLecture}
-          disabled={!isCurriculumValid(curriculumFormData)}
-        >
-          Add lecture
-        </Button>
-        <div className="mt-4 space-y-4">
-          {curriculumFormData.map((curriculum, index) => (
-            <div className="border p-5 rounded-md" key={index}>
-              <div className="flex gap-5 items-center">
-                <h3 className="font-semibold">Lecture {index + 1}</h3>
-                <Input
-                  name="title"
-                  placeholder="Enter lecture title"
-                  value={curriculum.title}
-                  onChange={(e) =>
-                    handleInputChange(index, "title", e.target.value)
-                  }
-                  className="max-w-96"
-                />
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    checked={curriculum.freePreview}
-                    id={`freePreview.${index + 1}`}
-                    onCheckedChange={(checked) =>
-                      handleInputChange(index, "freePreview", checked)
-                    }
-                  />
-                  <Label htmlFor={`freePreview.${index + 1}`}>
-                    Free Preview
-                  </Label>
-                </div>
-                <Button
-                  variant="destructive"
-                  onClick={() =>
-                    handleRemoveLecture(index, curriculum.public_id)
-                  }
-                >
-                  Remove
-                </Button>
+      </div>
+
+      <div className="space-y-4">
+        {curriculumFormData.map((curriculum, index) => (
+          <div className="bg-white/[0.02] border border-white/10 p-6 rounded-2xl relative overflow-hidden backdrop-blur-md transition-all hover:bg-white/[0.03]" key={index}>
+            {/* Edge decorative line */}
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-purple-500 opacity-50"></div>
+            
+            <div className="flex flex-col xl:flex-row gap-5 xl:items-center">
+              <div className="min-w-32">
+                 <h3 className="text-xl font-bold text-white tracking-tight">Lecture {index + 1}</h3>
               </div>
-              <div className="mt-4">
-                {curriculum.videoUrl ? (
-                  <div className="flex gap-3 ">
+              <Input
+                name="title"
+                placeholder="Enter lecture title..."
+                value={curriculum.title}
+                onChange={(e) =>
+                  handleInputChange(index, "title", e.target.value)
+                }
+                className="flex-1 bg-white/5 border-white/10 h-12 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-white placeholder:text-gray-600 transition-all font-medium"
+              />
+              <div className="flex items-center space-x-3 bg-white/5 p-2 pr-4 rounded-xl border border-white/5">
+                 <div className="bg-white/5 p-2 rounded-lg">
+                    <Switch
+                      checked={curriculum.freePreview}
+                      id={`freePreview.${index + 1}`}
+                      className="data-[state=checked]:bg-blue-600"
+                      onCheckedChange={(checked) =>
+                        handleInputChange(index, "freePreview", checked)
+                      }
+                    />
+                 </div>
+                <Label htmlFor={`freePreview.${index + 1}`} className="text-gray-300 font-semibold cursor-pointer">
+                  Free Preview
+                </Label>
+              </div>
+              <Button
+                variant="ghost"
+                className="text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl h-12 w-12 xl:w-auto p-0 xl:px-4 shrink-0 transition-colors"
+                onClick={() =>
+                  handleRemoveLecture(index, curriculum.public_id)
+                }
+              >
+                <span className="hidden xl:inline">Remove</span>
+                <span className="xl:hidden">✕</span>
+              </Button>
+            </div>
+            
+            <div className="mt-6">
+              {curriculum.videoUrl ? (
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center p-4 bg-black/40 rounded-xl border border-white/5">
+                  <div className="rounded-lg overflow-hidden border border-white/10 shadow-xl shadow-black/50">
                     <VideoPlayer
                       url={curriculum.videoUrl}
-                      width="450px"
-                      height="200px"
+                      width="350px"
+                      height="197px"
                     />
+                  </div>
+                  <div className="flex flex-col gap-3 w-full sm:w-auto">
                     <Button
+                      className="bg-white/10 hover:bg-white/20 text-white rounded-xl h-10 w-full sm:w-auto transition-colors"
                       onClick={() => deleteVideo(curriculum.public_id, index)}
                     >
-                      Replace video
-                    </Button>{" "}
+                      Replace Video
+                    </Button>
                     <Button
-                      className="bg-red-700"
+                      className="bg-red-600/20 text-red-500 hover:bg-red-600/40 hover:text-red-100 rounded-xl h-10 w-full sm:w-auto transition-colors"
                       onClick={() =>
                         handleRemoveLecture(index, curriculum.public_id)
                       }
                     >
-                      Delete lecture
+                      Delete Lecture
                     </Button>
                   </div>
-                ) : (
+                </div>
+              ) : (
+                <div className="relative">
                   <Input
                     type="file"
                     accept="video/*"
@@ -322,7 +340,6 @@ const Curriculum = () => {
                         const videoFormData = new FormData();
                         videoFormData.append("file", file);
                         handleUpload(videoFormData, index, setProgress);
-                        // handleInputChange(index, "videoUrl", file);
                       } else {
                         setCurriculumFormData((prev: CurriculumFormdataType[]) =>
                           prev.map((lecture: CurriculumFormdataType, i: number) =>
@@ -337,20 +354,36 @@ const Curriculum = () => {
                         );
                       }
                     }}
-                    className="mb-4 cursor-pointer"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   />
-                )}
-              </div>
+                  <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-white/10 hover:border-blue-500/50 hover:bg-blue-500/5 rounded-xl transition-all cursor-pointer">
+                     <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center mb-3">
+                        <Upload className="w-6 h-6 text-blue-400" />
+                     </div>
+                     <p className="text-white font-semibold mb-1">Click to browse or drag & drop</p>
+                     <p className="text-gray-500 text-sm">MP4, WebM, or OGG video format</p>
+                  </div>
+                </div>
+              )}
             </div>
-          ))}
-        </div>
-        {/* Include the MediaProgressBar */}
-        <MediaProgressBar
-          isMediaUploading={mediaUploadProgress}
-          progress={progress}
-        />
-      </CardContent>
-    </Card>
+          </div>
+        ))}
+        
+        <Button
+          onClick={handleNewLecture}
+          disabled={!isCurriculumValid(curriculumFormData)}
+          className="w-full bg-white/5 hover:bg-white/10 border-2 border-dashed border-white/20 text-white h-16 rounded-2xl transition-all active:scale-[0.99] disabled:opacity-50 mt-4 font-bold tracking-wider"
+        >
+          + Add New Lecture
+        </Button>
+      </div>
+      
+      {/* Include the MediaProgressBar */}
+      <MediaProgressBar
+        isMediaUploading={mediaUploadProgress}
+        progress={progress}
+      />
+    </div>
   );
 };
 

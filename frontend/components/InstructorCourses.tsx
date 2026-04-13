@@ -130,68 +130,80 @@ const InstructorCourses = () => {
   }, []);
 
   return (
-    <Card className="bg-black text-white">
-      <CardHeader className="flex justify-between flex-row items-center">
-        <CardTitle className="text-3xl font-extrabold ">All Courses</CardTitle>
+    <Card className="bg-white/[0.02] border-white/10 backdrop-blur-md rounded-2xl text-white shadow-2xl relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+      <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-white/5 pb-6">
+        <div>
+          <CardTitle className="text-3xl font-black tracking-tight mb-2">My Courses</CardTitle>
+          <p className="text-gray-400 text-sm">Manage your published and draft courses</p>
+        </div>
         <Link href={"/instructor/add-new-course"}>
-          {" "}
-          <Button className="p-6" onClick={resetForm}>
-            Create new course
+          <Button 
+            onClick={resetForm}
+            className="mt-4 sm:mt-0 h-12 px-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all active:scale-[0.98] border-0"
+          >
+            Create New Course
           </Button>
         </Link>
       </CardHeader>
 
-      <CardContent className="">
-        {" "}
+      <CardContent className="pt-6 overflow-x-auto">
         <Table>
-          <TableCaption>A list of your courses</TableCaption>
+          <TableCaption className="text-gray-500 mt-4">A complete list of your created courses</TableCaption>
           <TableHeader>
-            <TableRow>
-              <TableHead>Course</TableHead>
-              <TableHead>Students</TableHead>
-              <TableHead>Revenue</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+            <TableRow className="border-white/5 hover:bg-white/[0.02]">
+              <TableHead className="text-gray-400 font-semibold h-12">Course Title</TableHead>
+              <TableHead className="text-gray-400 font-semibold h-12">Students</TableHead>
+              <TableHead className="text-gray-400 font-semibold h-12">Revenue</TableHead>
+              <TableHead className="text-right text-gray-400 font-semibold h-12">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {courseList && courseList.length > 0
-              ? courseList.map((course: CourseProps, index: number) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">
-                      {course?.title}
-                    </TableCell>
-                    <TableCell>{course?.students?.length}</TableCell>
-                    <TableCell> ${course?.price}</TableCell>
-                    <TableCell className="text-right">
-                      <Link href={`instructor/edit-course/${course._id}`}>
-                        <Button variant="ghost" size="sm">
-                          <Edit />
-                        </Button>{" "}
-                      </Link>
-
-                      <Button
-                        variant="destructive"
-                        onClick={() => deleteCourse(course._id)}
-                        size="sm"
-                      >
-                        <DeleteIcon />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              : ""}
+            {courseList && courseList.length > 0 ? (
+              courseList.map((course: CourseProps, index: number) => (
+                <TableRow key={index} className="border-white/5 hover:bg-white/[0.02] transition-colors">
+                  <TableCell className="font-medium text-white py-4 flex items-center gap-3">
+                     <span className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center overflow-hidden">
+                        {course.image ? (
+                           <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
+                        ) : (
+                           <span className="text-blue-500 text-xs font-bold font-mono">IMG</span>
+                        )}
+                     </span>
+                     {course?.title}
+                  </TableCell>
+                  <TableCell className="text-gray-300">{course?.students?.length}</TableCell>
+                  <TableCell className="text-gray-300 font-mono">${course?.price}</TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                       <Link href={`/instructor/edit-course/${course._id}`}>
+                         <Button variant="ghost" size="sm" className="h-9 w-9 p-0 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 hover:text-blue-300 rounded-lg">
+                           <Edit className="w-4 h-4" />
+                         </Button>
+                       </Link>
+   
+                       <Button
+                         variant="ghost"
+                         onClick={() => deleteCourse(course._id)}
+                         size="sm"
+                         className="h-9 w-9 p-0 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 rounded-lg"
+                       >
+                         <DeleteIcon className="w-4 h-4" />
+                       </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow className="border-white/5 hover:bg-transparent">
+                <TableCell colSpan={4} className="h-32 text-center text-gray-500">
+                   No courses found. Time to create your first trail!
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={3}>Total</TableCell>
-              <TableCell className="text-right">$2,500.00</TableCell>
-            </TableRow>
-          </TableFooter>
         </Table>
       </CardContent>
-      {/* <CardFooter>
-        <Button></Button>
-      </CardFooter> */}
     </Card>
   );
 };
