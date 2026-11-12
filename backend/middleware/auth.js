@@ -21,6 +21,6 @@ const authMiddleware = async (req, res, next) => {
       error: error.message,
     });
   }
-};
+}; 
 
 export default authMiddleware;

@@ -5,7 +5,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Switch } from "./ui/switch";
-import axios from "axios";
+import axiosInstance from "@/api/axiosInstance";
 import MediaProgressBar from "./MediaProgressBar";
 import VideoPlayer from "./VideoPlayer";
 import { CurriculumFormdataType, useStoreContext } from "@/context/authContext";
@@ -44,8 +44,8 @@ const Curriculum = () => {
     try {
       setMediaUploadProgress(true);
 
-      const res = await axios.post(
-        "https://techtrail-x074.onrender.com/api/v1/media/upload",
+      const res = await axiosInstance.post(
+        "/api/v1/media/upload",
         videoFormData,
         {
           onUploadProgress: (progressEvent) => {
@@ -86,8 +86,8 @@ const Curriculum = () => {
 
   const deleteVideo = async (id: string, index: number) => {
     try {
-      const res = await axios.delete(
-        `https://techtrail-x074.onrender.com/api/v1/media/delete/${id}`
+      const res = await axiosInstance.delete(
+        `/api/v1/media/delete/${id}`
       );
       if (res.data.success) {
         setCurriculumFormData((prev: CurriculumFormdataType[]) =>
@@ -158,8 +158,8 @@ const Curriculum = () => {
     try {
       setMediaUploadProgress(true);
 
-      const res = await axios.post(
-        "https://techtrail-x074.onrender.com/api/v1/media/bulk-upload",
+      const res = await axiosInstance.post(
+        "/api/v1/media/bulk-upload",
         bulkFormData,
         {
           onUploadProgress: (progressEvent) => {
