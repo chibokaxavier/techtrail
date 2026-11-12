@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import axiosInstance from "@/api/axiosInstance";
@@ -74,7 +73,7 @@ const Settings = () => {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="mb-8">
          <h2 className="text-2xl font-black tracking-tight text-white mb-2">Trail Presentation</h2>
-         <p className="text-gray-400 text-sm">Elevate your trail's aesthetic with a high quality thumbnail.</p>
+         <p className="text-gray-400 text-sm">Elevate your trail&apos;s aesthetic with a high quality thumbnail.</p>
       </div>
       
       <div className="bg-white/[0.02] border border-white/10 p-6 sm:p-8 rounded-3xl relative overflow-hidden backdrop-blur-md">

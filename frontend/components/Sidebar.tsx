@@ -1,5 +1,5 @@
 "use client";
-import { BarChart, BookOpen, LogOut, LayoutDashboard } from "lucide-react";
+import { BookOpen, LogOut, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Sidebar = ({
